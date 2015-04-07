@@ -1,0 +1,32 @@
+package com.fivehundredtwelve.event.service;
+
+import com.fivehundredtwelve.event.dao.ParticipantDao;
+import com.fivehundredtwelve.event.model.Participant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * Created by anna on 07.04.15.
+ */
+
+@Service("participantService")
+public class ParticipantServiceImpl implements ParticipantService {
+
+    @Autowired
+    private ParticipantDao dao;
+
+    @Transactional
+    @Override
+    public void saveParticipant(Participant participant) {
+        dao.saveParticipant(participant);
+    }
+
+    @Override
+    public List<Participant> getAllParticipants() {
+        return dao.getAllParticipants();
+    }
+}
+

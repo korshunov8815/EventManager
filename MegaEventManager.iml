@@ -17,6 +17,8 @@
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/applicationContext.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/web-servlet.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/META-INF/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/META-INF/applicationContext.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -24,7 +26,9 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="com.fivehundredtwelve.event.persistence.unit" value="dataSource" />
+        </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>

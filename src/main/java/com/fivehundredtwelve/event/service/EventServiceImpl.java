@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by anna on 06.04.15.
  */
-@Service("storageService")
+@Service("eventService")
 public class EventServiceImpl implements EventService{
 
     @Autowired
