@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.service;
 
 import com.fivehundredtwelve.event.model.Event;
+import com.fivehundredtwelve.event.model.Participant;
 
 import java.util.List;
 
@@ -11,5 +12,6 @@ public interface EventService {
 
     public void saveEvent(Event event);
     public List<Event> getAllEvents();
+    public void addParticipantToEvent(Event e, Participant participant);
 
 }

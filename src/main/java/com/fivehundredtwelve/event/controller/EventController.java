@@ -40,8 +40,19 @@ public class EventController {
         participant1.setEvents(events);
 
 
-        //eService.saveEvent(event1);
-        pService.saveParticipant(participant1);
+        eService.saveEvent(event1);
+
+        Participant participant2 = new Participant();
+        participant2.setName("petya");
+        participant2.setEmail("petya@mail.ru");
+        eService.addParticipantToEvent(event1, participant2);
+
+
+        Participant participant3 = new Participant();
+        participant3.setName("anya");
+        participant3.setEmail("anya@mail.ru");
+        eService.addParticipantToEvent(event1, participant3);
+
         StringBuilder sb = new StringBuilder();
         logger.info("list of events");
         for (Event event: eService.getAllEvents()) {

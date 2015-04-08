@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Event;
+import com.fivehundredtwelve.event.model.Participant;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ import java.util.List;
 public interface EventDao {
     public void saveEvent(Event event);
     public List<Event> getAllEvents();
+    public void addParticipantToEvent(Event e, Participant participant);
 }

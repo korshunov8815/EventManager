@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Event;
+import com.fivehundredtwelve.event.model.Participant;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,5 +24,15 @@ public class EventDaoImpl implements EventDao {
     @Override
     public List<Event> getAllEvents() {
         return em.createQuery("from Event", Event.class).getResultList();
+    }
+
+    @Override
+    public void addParticipantToEvent(Event e, Participant p) {
+        Event event = em.find(Event.class, e.getId());
+        event.getParticipants().add(p);
+        em.persist(event);
+        Participant participant = em.find(Participant.class, p.getId());
+        participant.getEvents().add(event);
+        em.persist(participant);
     }
 }
