@@ -32,10 +32,15 @@ public class EventController {
         HashSet<Participant> participants = new HashSet<Participant>();
         participants.add(participant1);
 
-        //TODO relations :(
-        //event1.setParticipants(participants);
 
-        eService.saveEvent(event1);
+        //TODO relations :(
+        event1.setParticipants(participants);
+        HashSet<Event> events = new HashSet<Event>();
+        events.add(event1);
+        participant1.setEvents(events);
+
+
+        //eService.saveEvent(event1);
         pService.saveParticipant(participant1);
         StringBuilder sb = new StringBuilder();
         logger.info("list of events");
