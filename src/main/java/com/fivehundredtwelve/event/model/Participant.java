@@ -42,9 +42,23 @@ public class Participant {
         this.email = email;
     }
 
+    public Participant() {
+    }
+
+    public Participant(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public Participant(String email) {
+        this.email = email;
+        this.name = "no name";
+    }
+
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
+
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     public Set<Event> getEvents() {
         return events;

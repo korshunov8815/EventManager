@@ -20,13 +20,18 @@ public class EventServiceImpl implements EventService{
 
     @Transactional
     @Override
-    public void saveEvent(Event event) {
-        dao.saveEvent(event);
+    public Event saveEvent(Event event) {
+        return dao.saveEvent(event);
     }
 
     @Override
     public List<Event> getAllEvents() {
         return dao.getAllEvents();
+    }
+
+    @Override
+    public Event getEventById(int id) {
+        return dao.getEventById(id);
     }
 
     @Transactional

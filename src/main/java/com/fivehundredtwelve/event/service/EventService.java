@@ -10,8 +10,9 @@ import java.util.List;
  */
 public interface EventService {
 
-    public void saveEvent(Event event);
+    public Event saveEvent(Event event);
     public List<Event> getAllEvents();
     public void addParticipantToEvent(Event e, Participant participant);
+    public Event getEventById(int id);
 
 }

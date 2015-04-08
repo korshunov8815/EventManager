@@ -17,13 +17,20 @@ public class EventDaoImpl implements EventDao {
     private EntityManager em;
 
     @Override
-    public void saveEvent(Event event) {
+    public Event saveEvent(Event event) {
+        System.out.println("hey");
         em.persist(event);
+        return getEventById(event.getId());
     }
 
     @Override
     public List<Event> getAllEvents() {
         return em.createQuery("from Event", Event.class).getResultList();
+    }
+
+    @Override
+    public Event getEventById(int id) {
+        return em.find(Event.class, id);
     }
 
     @Override

@@ -15,6 +15,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
 
     @PersistenceContext
     private EntityManager em;
+
     @Override
     public void saveParticipant(Participant participant) {
         em.persist(participant);
@@ -23,5 +24,12 @@ public class ParticipantDaoImpl implements ParticipantDao {
     @Override
     public List<Participant> getAllParticipants() {
         return em.createQuery("from Participant", Participant.class).getResultList();
+    }
+
+    @Override
+    public boolean ifParticipantExistByEmail(String mail) {
+        if (em.createQuery("SELECT p FROM Participant p WHERE p.email LIKE :email").setParameter("email", mail).getResultList().size() > 0)
+            return true;
+        else return false;
     }
 }

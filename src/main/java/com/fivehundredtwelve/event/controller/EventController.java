@@ -21,40 +21,19 @@ public class EventController {
 
     private static final Logger logger = Logger.getLogger(EventController.class);
 
-
     @RequestMapping("/events")
     public String seeEvents() {
         ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
         EventService eService = (EventService)context.getBean("eventService");
         ParticipantService pService = (ParticipantService)context.getBean("participantService");
-        Participant participant1 = getParticipant();
-        Event event1 = getEvent();
-        HashSet<Participant> participants = new HashSet<Participant>();
-        participants.add(participant1);
+        Event event1 = eService.saveEvent(new Event("first book", "so good"));
 
-
-        //TODO relations :(
-        event1.setParticipants(participants);
-        HashSet<Event> events = new HashSet<Event>();
-        events.add(event1);
-        participant1.setEvents(events);
-
-
-        eService.saveEvent(event1);
-
-        Participant participant2 = new Participant();
-        participant2.setName("petya");
-        participant2.setEmail("petya@mail.ru");
-        eService.addParticipantToEvent(event1, participant2);
-
-
-        Participant participant3 = new Participant();
-        participant3.setName("anya");
-        participant3.setEmail("anya@mail.ru");
-        eService.addParticipantToEvent(event1, participant3);
+        eService.addParticipantToEvent(event1, new Participant("vanya","vanya@mail.ru"));
+        eService.addParticipantToEvent(event1, new Participant("petya","petya@mail.ru"));
+        eService.addParticipantToEvent(event1, new Participant("anya","anya@mail.ru"));
 
         StringBuilder sb = new StringBuilder();
-        logger.info("list of events");
+        logger.info("list of events and participants");
         for (Event event: eService.getAllEvents()) {
             sb.append(event.toString()+"\n");
             logger.info(event);
@@ -65,20 +44,6 @@ public class EventController {
         }
 
         return sb.toString();
-    }
-
-    public static Event getEvent() {
-        Event event = new Event();
-        event.setTitle("first book");
-        event.setDescription("so good");
-        return event;
-    }
-
-    public static Participant getParticipant() {
-        Participant participant = new Participant();
-        participant.setName("vanya");
-        participant.setEmail("vanya@mail.ru");
-        return participant;
     }
 
 }

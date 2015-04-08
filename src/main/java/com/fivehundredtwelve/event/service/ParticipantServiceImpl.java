@@ -18,6 +18,11 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Autowired
     private ParticipantDao dao;
 
+    @Override
+    public boolean ifParticipantExistByEmail(String email) {
+        return dao.ifParticipantExistByEmail(email);
+    }
+
     @Transactional
     @Override
     public void saveParticipant(Participant participant) {

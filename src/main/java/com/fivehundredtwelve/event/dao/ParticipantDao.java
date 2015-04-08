@@ -10,5 +10,5 @@ import java.util.List;
 public interface ParticipantDao {
     public void saveParticipant(Participant participant);
     public List<Participant> getAllParticipants();
-
+    public boolean ifParticipantExistByEmail(String email);
 }

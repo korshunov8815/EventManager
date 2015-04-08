@@ -43,6 +43,15 @@ public class Event {
         this.description = description;
     }
 
+    public Event() {
+    }
+
+    public Event(String title, String description) {
+        this.title = title;
+        this.description = description;
+
+    }
+
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "events")
     public Set<Participant> getParticipants() {
         return participants;
