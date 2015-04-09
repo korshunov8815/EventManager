@@ -37,11 +37,12 @@ public class EventController {
         eService.addParticipantToEvent(event1, new Participant("petya", "petya@mail.ru"));
         eService.addParticipantToEvent(event1, new Participant("anya","anya@mail.ru"));
         eService.addParticipantToEvent(event2,participant1);
-        tService.addTaskToParticipant(participant1, new Task("buy cake"));
+        Task task1 = new Task("buy cake");
         Task task2 = new Task("get musik");
-        tService.saveTask(task2);
-        tService.addTaskToParticipant(participant1, task2);
-
+        eService.addTaskToEvent(task1, event1);
+        eService.addTaskToEvent(task2, event1);
+        pService.addTaskToParticipant(participant1, task1);
+        pService.addTaskToParticipant(participant1, task2);
 
         StringBuilder sb = new StringBuilder();
         logger.info("list of events and participants");

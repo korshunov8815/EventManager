@@ -2,6 +2,7 @@ package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Task;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -41,5 +42,17 @@ public class EventDaoImpl implements EventDao {
         Participant participant = em.find(Participant.class, p.getId());
         event.getParticipants().add(participant);
         participant.getEvents().add(event);
+    }
+
+    @Override
+    public Task addTaskToEvent(Task t, Event e) {
+        Event event = em.find(Event.class, e.getId());
+        if (t.getId() == 0) {
+            em.persist(t);
+        }
+        Task task = em.find(Task.class, t.getId());
+        event.getTasks().add(task);
+        task.setTaskEventKeeper(event);
+        return task;
     }
 }

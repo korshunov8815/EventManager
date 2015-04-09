@@ -10,6 +10,7 @@ public class Task {
     private int id;
     private String content;
     private Participant taskKeeper;
+    private Event taskEventKeeper;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,16 @@ public class Task {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "event_id")
+    public Event getTaskEventKeeper() {
+        return taskEventKeeper;
+    }
+
+    public void setTaskEventKeeper(Event taskEventKeeper) {
+        this.taskEventKeeper = taskEventKeeper;
     }
 
     @ManyToOne(cascade = CascadeType.ALL)

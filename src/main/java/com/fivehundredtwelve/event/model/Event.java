@@ -14,6 +14,7 @@ public class Event {
     private int id;
     private String title;
     private String description;
+    private Set<Task> tasks;
 
     private Set<Participant> participants = new HashSet<Participant>();
 
@@ -59,6 +60,16 @@ public class Event {
     public void setParticipants(Set<Participant> participants) {
         this.participants = participants;
     }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskEventKeeper")
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
 
     @Override
     public String toString() {

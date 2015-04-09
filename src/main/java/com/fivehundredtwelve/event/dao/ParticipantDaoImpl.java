@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Task;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -31,5 +32,16 @@ public class ParticipantDaoImpl implements ParticipantDao {
         if (em.createQuery("SELECT p FROM Participant p WHERE p.email LIKE :email").setParameter("email", mail).getResultList().size() > 0)
             return true;
         else return false;
+    }
+
+    @Override
+    public void addTaskToParticipant(Participant p, Task t) {
+        Participant participant = em.find(Participant.class, p.getId());
+        if (t.getId() == 0) {
+            em.persist(t);
+        }
+        Task task = em.find(Task.class, t.getId());
+        participant.getTasks().add(task);
+        task.setTaskKeeper(participant);
     }
 }

@@ -14,4 +14,5 @@ public interface EventDao {
     public List<Event> getAllEvents();
     public void addParticipantToEvent(Event e, Participant participant);
     public Event getEventById(int id);
+    public Task addTaskToEvent(Task t, Event e);
 }

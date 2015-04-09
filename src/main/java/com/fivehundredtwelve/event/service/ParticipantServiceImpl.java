@@ -2,6 +2,7 @@ package com.fivehundredtwelve.event.service;
 
 import com.fivehundredtwelve.event.dao.ParticipantDao;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,12 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public List<Participant> getAllParticipants() {
         return dao.getAllParticipants();
+    }
+
+    @Transactional
+    @Override
+    public void addTaskToParticipant(Participant participant, Task task) {
+        dao.addTaskToParticipant(participant, task);
     }
 }
 

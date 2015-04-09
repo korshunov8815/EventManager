@@ -2,6 +2,7 @@ package com.fivehundredtwelve.event.service;
 
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Task;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ public interface EventService {
     public List<Event> getAllEvents();
     public void addParticipantToEvent(Event e, Participant participant);
     public Event getEventById(int id);
+    public Task addTaskToEvent(Task t, Event e);
 
 }

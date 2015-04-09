@@ -29,9 +29,4 @@ public class TaskServiceImpl implements TaskService {
         return dao.getAllTasks();
     }
 
-    @Transactional
-    @Override
-    public void addTaskToParticipant(Participant participant, Task task) {
-        dao.addTaskToParticipant(participant, task);
-    }
 }

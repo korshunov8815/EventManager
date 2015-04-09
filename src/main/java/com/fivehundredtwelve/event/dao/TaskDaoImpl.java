@@ -30,14 +30,4 @@ public class TaskDaoImpl implements TaskDao {
         return em.createQuery("from Task", Task.class).getResultList();
     }
 
-    @Override
-    public void addTaskToParticipant(Participant p, Task t) {
-        Participant participant = em.find(Participant.class, p.getId());
-        if (t.getId() == 0) {
-            em.persist(t);
-        }
-        Task task = em.find(Task.class, t.getId());
-        participant.getTasks().add(task);
-        task.setTaskKeeper(participant);
-    }
 }
