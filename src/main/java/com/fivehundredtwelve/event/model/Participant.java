@@ -15,6 +15,7 @@ public class Participant {
     private String name;
     private String email;
     private Set<Event> events = new HashSet<Event>();
+    private Set<Task> tasks = new HashSet<Task>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +59,6 @@ public class Participant {
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
-
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     public Set<Event> getEvents() {
         return events;
@@ -68,12 +68,20 @@ public class Participant {
         this.events = events;
     }
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
     @Override
     public String toString() {
-        return "Participant{" +
+        return '{' +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                '}'+"\n";
+                '}';
     }
 }

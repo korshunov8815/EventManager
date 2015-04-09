@@ -2,6 +2,7 @@ package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Task;
 
 import java.util.List;
 

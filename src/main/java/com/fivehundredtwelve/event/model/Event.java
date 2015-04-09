@@ -52,7 +52,7 @@ public class Event {
 
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "events")
+    @ManyToMany(cascade = CascadeType.ALL)
     public Set<Participant> getParticipants() {
         return participants;
     }
@@ -66,7 +66,7 @@ public class Event {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                '}'+"\n";
+                '}';
     }
 
 
