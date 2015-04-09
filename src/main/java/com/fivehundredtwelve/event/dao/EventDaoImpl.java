@@ -18,7 +18,6 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public Event saveEvent(Event event) {
-        System.out.println("hey");
         em.persist(event);
         return getEventById(event.getId());
     }
@@ -36,10 +35,11 @@ public class EventDaoImpl implements EventDao {
     @Override
     public void addParticipantToEvent(Event e, Participant p) {
         Event event = em.find(Event.class, e.getId());
-        event.getParticipants().add(p);
-        em.persist(event);
+        if (p.getId() == 0) {
+            em.persist(p);
+        }
         Participant participant = em.find(Participant.class, p.getId());
+        event.getParticipants().add(participant);
         participant.getEvents().add(event);
-        em.persist(participant);
     }
 }

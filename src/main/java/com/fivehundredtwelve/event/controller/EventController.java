@@ -26,11 +26,15 @@ public class EventController {
         ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
         EventService eService = (EventService)context.getBean("eventService");
         ParticipantService pService = (ParticipantService)context.getBean("participantService");
-        Event event1 = eService.saveEvent(new Event("first book", "so good"));
+        Event event1 = eService.saveEvent(new Event("first", "so good"));
+        Event event2 = eService.saveEvent(new Event("second", "not so good"));
 
-        eService.addParticipantToEvent(event1, new Participant("vanya","vanya@mail.ru"));
-        eService.addParticipantToEvent(event1, new Participant("petya","petya@mail.ru"));
+        Participant participant1 = new Participant("vanya","vanya@mail.ru");
+        eService.addParticipantToEvent(event1, participant1);
+        eService.addParticipantToEvent(event1, new Participant("petya", "petya@mail.ru"));
         eService.addParticipantToEvent(event1, new Participant("anya","anya@mail.ru"));
+        System.out.println("done");
+        eService.addParticipantToEvent(event2,participant1);
 
         StringBuilder sb = new StringBuilder();
         logger.info("list of events and participants");
