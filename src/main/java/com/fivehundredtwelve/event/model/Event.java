@@ -53,7 +53,7 @@ public class Event {
 
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<Participant> getParticipants() {
         return participants;
     }
@@ -73,12 +73,12 @@ public class Event {
 
     @Override
     public String toString() {
-        return "Event{" +
+        return "{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", tasks=" + tasks +
+                ", participants=" + participants +
                 '}';
     }
-
-
 }

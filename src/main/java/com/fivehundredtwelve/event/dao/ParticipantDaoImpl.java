@@ -35,7 +35,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
     }
 
     @Override
-    public void addTaskToParticipant(Participant p, Task t) {
+    public void addTaskToParticipant(Task t, Participant p) {
         Participant participant = em.find(Participant.class, p.getId());
         if (t.getId() == 0) {
             em.persist(t);

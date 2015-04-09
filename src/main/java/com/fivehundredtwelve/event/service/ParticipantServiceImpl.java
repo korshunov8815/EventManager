@@ -37,8 +37,8 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Transactional
     @Override
-    public void addTaskToParticipant(Participant participant, Task task) {
-        dao.addTaskToParticipant(participant, task);
+    public void addTaskToParticipant(Task task, Participant participant) {
+        dao.addTaskToParticipant(task, participant);
     }
 }
 

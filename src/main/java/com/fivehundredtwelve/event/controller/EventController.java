@@ -9,10 +9,9 @@ import com.fivehundredtwelve.event.service.TaskService;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashSet;
 
 /**
  * @author anna
@@ -22,40 +21,50 @@ import java.util.HashSet;
 public class EventController {
 
     private static final Logger logger = Logger.getLogger(EventController.class);
+    private static ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
+    private static EventService eService = (EventService)context.getBean("eventService");
+    private static ParticipantService pService = (ParticipantService)context.getBean("participantService");
+    private static TaskService tService = (TaskService)context.getBean("taskService");
 
-    @RequestMapping("/events")
-    public String seeEvents() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
-        EventService eService = (EventService)context.getBean("eventService");
-        ParticipantService pService = (ParticipantService)context.getBean("participantService");
-        TaskService tService = (TaskService)context.getBean("taskService");
+    @RequestMapping("/test")
+    public void seeEvents() {
         Event event1 = eService.saveEvent(new Event("first", "so good"));
         Event event2 = eService.saveEvent(new Event("second", "not so good"));
-
+        Event event3 = eService.saveEvent(new Event("third", "boring"));
         Participant participant1 = new Participant("vanya","vanya@mail.ru");
-        eService.addParticipantToEvent(event1, participant1);
-        eService.addParticipantToEvent(event1, new Participant("petya", "petya@mail.ru"));
-        eService.addParticipantToEvent(event1, new Participant("anya","anya@mail.ru"));
-        eService.addParticipantToEvent(event2,participant1);
+        Participant participant2 = new Participant("petya", "petya@mail.ru");
+        Participant participant3 = new Participant("anya","anya@mail.ru");
         Task task1 = new Task("buy cake");
         Task task2 = new Task("get musik");
+        Task task3 = new Task("inflate baloons");
+        eService.addParticipantToEvent(participant1, event1);
+        eService.addParticipantToEvent(participant2, event2);
+        eService.addParticipantToEvent(participant3, event3);
+        eService.addParticipantToEvent(participant1, event3);
+        eService.addParticipantToEvent(participant2, event3);
         eService.addTaskToEvent(task1, event1);
-        eService.addTaskToEvent(task2, event1);
-        pService.addTaskToParticipant(participant1, task1);
-        pService.addTaskToParticipant(participant1, task2);
+        eService.addTaskToEvent(task2, event3);
+        eService.addTaskToEvent(task3, event3);
+        pService.addTaskToParticipant(task1, participant1);
+        pService.addTaskToParticipant(task3, participant1);
+        pService.addTaskToParticipant(task2, participant2);
+    }
 
-        StringBuilder sb = new StringBuilder();
-        logger.info("list of events and participants");
-        for (Event event: eService.getAllEvents()) {
-            logger.info(event);
+    @RequestMapping(value="/events/{eventId}")
+    public String getEventById(@PathVariable String eventId) {
+        String result = "not found";
+        try {
+            int id = Integer.parseInt(eventId);
+            Event event = eService.getEventById(id);
+            if (event!=null) result = event.toString();
         }
-        for (Participant participant : pService.getAllParticipants()) {
-            logger.info(participant);
-        }
-        for (Task task : tService.getAllTasks()) {
-            logger.info(task);
-        }
-        return sb.append(eService.getAllEvents()).append(pService.getAllParticipants()).append(tService.getAllTasks()).toString();
+        catch (NumberFormatException e){}
+        return result;
+    }
+
+    @RequestMapping(value = "/events")
+    public String getAllEvent() {
+        return eService.getAllEvents().toString();
     }
 
 }

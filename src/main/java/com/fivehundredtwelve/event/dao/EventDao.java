@@ -12,7 +12,7 @@ import java.util.List;
 public interface EventDao {
     public Event saveEvent(Event event);
     public List<Event> getAllEvents();
-    public void addParticipantToEvent(Event e, Participant participant);
+    public void addParticipantToEvent(Participant participant, Event e);
     public Event getEventById(int id);
     public Task addTaskToEvent(Task t, Event e);
 }

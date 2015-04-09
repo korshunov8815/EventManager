@@ -12,5 +12,5 @@ public interface ParticipantDao {
     public void saveParticipant(Participant participant);
     public List<Participant> getAllParticipants();
     public boolean ifParticipantExistByEmail(String email);
-    public void addTaskToParticipant(Participant participant, Task task);
+    public void addTaskToParticipant(Task task, Participant participant);
 }

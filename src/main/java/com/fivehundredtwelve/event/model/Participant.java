@@ -56,7 +56,7 @@ public class Participant {
         this.name = "no name";
     }
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})

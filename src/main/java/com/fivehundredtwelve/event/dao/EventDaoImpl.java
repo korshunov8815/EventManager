@@ -34,7 +34,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public void addParticipantToEvent(Event e, Participant p) {
+    public void addParticipantToEvent(Participant p, Event e) {
         Event event = em.find(Event.class, e.getId());
         if (p.getId() == 0) {
             em.persist(p);

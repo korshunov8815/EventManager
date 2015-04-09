@@ -37,8 +37,8 @@ public class EventServiceImpl implements EventService{
 
     @Transactional
     @Override
-    public void addParticipantToEvent(Event e, Participant participant) {
-        dao.addParticipantToEvent(e,participant);
+    public void addParticipantToEvent(Participant participant, Event e) {
+        dao.addParticipantToEvent(participant, e);
     }
 
     @Transactional
