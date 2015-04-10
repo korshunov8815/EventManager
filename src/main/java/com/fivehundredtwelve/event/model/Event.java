@@ -15,6 +15,7 @@ public class Event {
     private String title;
     private String description;
     private Set<Task> tasks;
+    private int eventCreatorId;
 
     private Set<Participant> participants = new HashSet<Participant>();
 
@@ -44,13 +45,21 @@ public class Event {
         this.description = description;
     }
 
-    public Event() {
+    @Column(name = "eventCreatorId", nullable = false)
+    public int getEventCreatorId() {
+        return eventCreatorId;
+    }
+    public void setEventCreatorId(int eventCreatorId) {
+        this.eventCreatorId = eventCreatorId;
     }
 
-    public Event(String title, String description) {
+    public Event(String title, String description, int id) {
         this.title = title;
         this.description = description;
+        this.eventCreatorId = id;
+    }
 
+    public Event() {
     }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

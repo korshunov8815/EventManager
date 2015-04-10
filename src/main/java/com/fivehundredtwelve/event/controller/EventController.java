@@ -9,9 +9,7 @@ import com.fivehundredtwelve.event.service.TaskService;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author anna
@@ -28,9 +26,9 @@ public class EventController {
 
     @RequestMapping("/test")
     public void seeEvents() {
-        Event event1 = eService.saveEvent(new Event("first", "so good"));
-        Event event2 = eService.saveEvent(new Event("second", "not so good"));
-        Event event3 = eService.saveEvent(new Event("third", "boring"));
+        Event event1 = eService.saveEvent(new Event("first", "so good", 1));
+        Event event2 = eService.saveEvent(new Event("second", "not so good", 2));
+        Event event3 = eService.saveEvent(new Event("third", "boring", 1));
         Participant participant1 = new Participant("vanya","vanya@mail.ru");
         Participant participant2 = new Participant("petya", "petya@mail.ru");
         Participant participant3 = new Participant("anya","anya@mail.ru");
@@ -62,9 +60,27 @@ public class EventController {
         return result;
     }
 
-    @RequestMapping(value = "/events")
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
     public String getAllEvent() {
         return eService.getAllEvents().toString();
     }
+
+    @RequestMapping(value = "/events", method = RequestMethod.POST)
+    public String createEvent(@RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String id) {
+        System.out.println("cought");
+        String res = "can't create event, participant with such id doesn't exist";
+        try {
+            int intId = Integer.parseInt(id);
+            if (pService.getParticipantById(intId)!=null) {
+                Event event = eService.saveEvent(new Event(t, d, intId));
+                res = event.toString();
+            }
+        }
+        catch (NumberFormatException e){}
+        return res;
+    }
+
+
+
 
 }

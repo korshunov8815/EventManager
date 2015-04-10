@@ -13,4 +13,5 @@ public interface ParticipantDao {
     public List<Participant> getAllParticipants();
     public boolean ifParticipantExistByEmail(String email);
     public void addTaskToParticipant(Task task, Participant participant);
+    public Participant getParticipantById(int id);
 }

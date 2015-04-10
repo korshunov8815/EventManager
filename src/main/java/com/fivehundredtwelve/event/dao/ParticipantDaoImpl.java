@@ -44,4 +44,9 @@ public class ParticipantDaoImpl implements ParticipantDao {
         participant.getTasks().add(task);
         task.setTaskKeeper(participant);
     }
+
+    @Override
+    public Participant getParticipantById(int id) {
+        return em.find(Participant.class, id);
+    }
 }

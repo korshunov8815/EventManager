@@ -40,5 +40,10 @@ public class ParticipantServiceImpl implements ParticipantService {
     public void addTaskToParticipant(Task task, Participant participant) {
         dao.addTaskToParticipant(task, participant);
     }
+
+    @Override
+    public Participant getParticipantById(int id) {
+        return dao.getParticipantById(id);
+    }
 }
 
