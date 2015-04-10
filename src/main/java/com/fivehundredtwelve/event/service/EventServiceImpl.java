@@ -46,4 +46,10 @@ public class EventServiceImpl implements EventService{
     public Task addTaskToEvent(Task t, Event e) {
         return dao.addTaskToEvent(t,e);
     }
+
+    @Transactional
+    @Override
+    public Event editEvent(int id, String title, String description) {
+        return dao.editEvent(id, title, description);
+    }
 }

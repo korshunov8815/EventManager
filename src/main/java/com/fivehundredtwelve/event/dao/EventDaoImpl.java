@@ -55,4 +55,13 @@ public class EventDaoImpl implements EventDao {
         task.setTaskEventKeeper(event);
         return task;
     }
+
+    @Override
+    public Event editEvent(int id, String title, String description) {
+        Event event = em.find(Event.class, id);
+        event.setDescription(description);
+        event.setTitle(title);
+        //em.merge(event);
+        return em.find(Event.class, id);
+    }
 }

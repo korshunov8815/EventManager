@@ -16,5 +16,6 @@ public interface EventService {
     public void addParticipantToEvent(Participant p, Event e);
     public Event getEventById(int id);
     public Task addTaskToEvent(Task t, Event e);
+    public Event editEvent(int id, String title, String description);
 
 }

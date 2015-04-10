@@ -48,17 +48,6 @@ public class EventController {
         pService.addTaskToParticipant(task2, participant2);
     }
 
-    @RequestMapping(value="/events/{eventId}")
-    public String getEventById(@PathVariable String eventId) {
-        String result = "not found";
-        try {
-            int id = Integer.parseInt(eventId);
-            Event event = eService.getEventById(id);
-            if (event!=null) result = event.toString();
-        }
-        catch (NumberFormatException e){}
-        return result;
-    }
 
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     public String getAllEvent() {
@@ -79,8 +68,38 @@ public class EventController {
         catch (NumberFormatException e){}
         return res;
     }
-
-
-
-
+    @RequestMapping(value="/events/{eventId}", method = RequestMethod.GET)
+    public String getEventById(@PathVariable final String eventId) {
+        String result = "not found";
+        try {
+            int id = Integer.parseInt(eventId);
+            Event event = eService.getEventById(id);
+            if (event!=null) result = event.toString();
+        }
+        catch (NumberFormatException e){}
+        return result;
+    }
+    @RequestMapping(value = "/events/{eventId}", method = RequestMethod.POST)
+    public String editEvent(@PathVariable final String eventId, @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId) {
+        String res = "no such participant";
+        try {
+            int eId = Integer.parseInt(eventId);
+            int pId = Integer.parseInt(partId);
+            Event event = eService.getEventById(eId);
+            Participant participant = pService.getParticipantById(pId);
+            if (participant!=null) {
+                if (event != null) {
+                    if (event.getEventCreatorId() == pId) {
+                        res = eService.editEvent(eId, t, d).toString();
+                    } else {
+                        res = "no rights to edit event";
+                    }
+                } else {
+                    res = "event not found";
+                }
+            }
+        }
+        catch (NumberFormatException e){}
+        return res;
+    }
 }
