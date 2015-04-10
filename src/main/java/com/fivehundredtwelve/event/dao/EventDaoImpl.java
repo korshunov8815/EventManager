@@ -61,7 +61,7 @@ public class EventDaoImpl implements EventDao {
         Event event = em.find(Event.class, id);
         event.setDescription(description);
         event.setTitle(title);
-        //em.merge(event);
+        em.flush();
         return em.find(Event.class, id);
     }
 }
