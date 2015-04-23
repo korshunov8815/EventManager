@@ -24,6 +24,8 @@ public class EventController {
     private static ParticipantService pService = (ParticipantService)context.getBean("participantService");
     private static TaskService tService = (TaskService)context.getBean("taskService");
 
+
+
     @RequestMapping("/test")
     public void seeEvents() {
         Event event1 = eService.saveEvent(new Event("first", "so good", 1));

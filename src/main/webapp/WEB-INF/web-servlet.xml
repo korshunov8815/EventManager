@@ -16,5 +16,5 @@
     <mvc:resources mapping="/**" location="/view/"/>
 
     <!-- index.html on start -->
-    <mvc:view-controller path="/" view-name="/index.html"/>
+    <mvc:view-controller path="/" view-name="index.html"/>
 </beans>

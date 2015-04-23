@@ -1,5 +1,135 @@
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <title>Organise</title>
+    <link rel="stylesheet" href="css/foundation.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!-- Наши стили -->
+</head>
 <body>
-<a href="/test">Click to fill database with testing values</a>
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+        <li class="name">
+            <h1><a href="#">Organise</a></h1>
+        </li>
+    </ul>
+
+    <section class="top-bar-section">
+        <!-- Right Nav Section -->
+        <ul class="right">
+            <li><a href="#">Участники</a></li>
+            <li><a href="#">Трекер задач</a></li>
+            <li><a href="#">Флудилка</a></li>
+            <li><a class="add-button" href="#" data-reveal-id="myModal"><span>+</span></a></li>
+        </ul>
+    </section>
+</nav>
+
+<div class="row">
+    <div class="large-8 small-12 columns">
+        <div class="panel">
+            <h3>Организуй свое мероприятие</h3>
+
+            <h2>Начало в 9.00</h2>
+
+            <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
+                rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt,
+                explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
+                consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui
+                dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora
+                incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
+                exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem
+                vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum,
+                qui dolorem eum fugiat, quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos
+                ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
+                excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt
+                mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
+                distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id,
+                quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
+                autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates
+                repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut
+                reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+        </div>
+    </div>
+    <div class="large-4 hidden-for-medium-down columns">
+        <div class="panel chat">
+            <div>
+                <h3>Chat</h3>
+            </div>
+            <div id="messages">
+                <div>Anna: Когда начало?</div>
+                <div>Anton: Дура, в описание смотри</div>
+            </div>
+            <form id="send-message">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <div class="row collapse">
+                            <div class="small-10 columns">
+                                <input name="text-message" type="text" placeholder="Message">
+                            </div>
+                            <div class="small-2 columns">
+                                <button class="button postfix" id="send-button" type="submit">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel">
+            <div>
+                Tracker
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="reveal-modal" data-reveal>
+    <h2>Пригласить участников</h2>
+
+    <p class="lead">Укажите e-mail адрес участников, которых хотите пригласить</p>
+
+    <form>
+        <div class="row collapse">
+            <div class="small-1 columns" style="margin-right: 0">
+                <img src="http://gravatar.com/avatar/?s=37&d=mm" alt=""/>
+            </div>
+            <div class="small-10 columns">
+                <input type="email" name="email" placeholder="e-mail"/>
+            </div>
+            <div class="small-1 columns">
+                <div class="placeholder"></div>
+                <span class="postfix add-button">
+                    +
+                </span>
+            </div>
+        </div>
+        <!--<div class="row collapse">-->
+            <!--<div class="small-1 columns" style="margin-right: 0">-->
+                <!--<img src="http://gravatar.com/avatar/?s=37&d=mm" alt=""/>-->
+            <!--</div>-->
+            <!--<div class="small-10 columns">-->
+                <!--<input type="email" name="email" placeholder="e-mail"/>-->
+            <!--</div>-->
+            <!--<div class="small-1 columns">-->
+                <!--<span class="postfix">-->
+                    <!--+-->
+                <!--</span>-->
+            <!--</div>-->
+        <!--</div>-->
+    </form>
+    <div class="add_participant"><a href="#"><span>+</span> Добавить участника</a></div>
+    <!--<div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>-->
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+<script src="js/vendor/jquery.js"></script>
+<script src="js/vendor/modernizr.js"></script>
+<script src="js/foundation.min.js"></script>
+<script src="js/md5.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<!-- Наши скрипты -->
+<script>
+    $(document).foundation();
+</script>
 </body>
 </html>
