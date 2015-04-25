@@ -3,11 +3,14 @@ package com.fivehundredtwelve.event.dao;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Task;
+import com.fivehundredtwelve.event.service.EventService;
+import com.fivehundredtwelve.event.service.ParticipantService;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by anna on 06.04.15.
@@ -63,5 +66,21 @@ public class EventDaoImpl implements EventDao {
         event.setTitle(title);
         em.flush();
         return em.find(Event.class, id);
+    }
+
+    @Override
+    public Event deleteEvent(int id, ParticipantService ps){
+        Event event = em.find(Event.class, id);
+        List<Participant> participants = ps.getAllParticipants();
+        for (int i = 0; i < participants.size(); i++) {
+            participants.get(i).getEvents().remove(event);
+        }
+        for (int i = 0; i < event.getParticipants().size(); i++) {
+            event.getParticipants().remove(0);
+        }
+        System.out.println(event.getParticipants().size());
+
+        //em.remove(event);
+        return event;
     }
 }

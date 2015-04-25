@@ -62,7 +62,7 @@ public class Event {
     public Event() {
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "events")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events")
     public Set<Participant> getParticipants() {
         return participants;
     }

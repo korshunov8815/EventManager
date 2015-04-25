@@ -17,5 +17,6 @@ public interface EventService {
     public Event getEventById(int id);
     public Task addTaskToEvent(Task t, Event e);
     public Event editEvent(int id, String title, String description);
+    public Event deleteEvent(int id, ParticipantService ps);
 
 }

@@ -1,5 +1,7 @@
 package com.fivehundredtwelve.event.controller;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Task;
@@ -10,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 /**
  * @author anna
@@ -23,8 +27,6 @@ public class EventController {
     private static EventService eService = (EventService)context.getBean("eventService");
     private static ParticipantService pService = (ParticipantService)context.getBean("participantService");
     private static TaskService tService = (TaskService)context.getBean("taskService");
-
-
 
     @RequestMapping("/test")
     public void seeEvents() {
@@ -59,9 +61,13 @@ public class EventController {
 
     @RequestMapping(value = "/events", method = RequestMethod.POST)
 //    public String createEvent(@RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "userId") final String id) {
-    public String createEvent(@RequestBody String data) {
-        System.out.println(data);
+    public String createEvent(@RequestBody String s) {
+        System.out.println(s);
         String res = "can't create event, participant with such id doesn't exist";
+        try {
+            Event event = new ObjectMapper().readValue(s, Event.class);
+            res = event.toString();
+
 //        try {
 //            int intId = Integer.parseInt(id);
 //            if (pService.getParticipantById(intId)!=null) {
@@ -70,6 +76,14 @@ public class EventController {
 //            }
 //        }
 //        catch (NumberFormatException e){}
+        }
+        catch (JsonParseException e) {
+            res = "invalid input";
+        }
+        catch (IOException e) {
+            res = "invalid input";
+        }
+        System.out.println(res);
         return res;
     }
     @RequestMapping(value="/events/{eventId}", method = RequestMethod.GET)
@@ -97,6 +111,31 @@ public class EventController {
                         res = eService.editEvent(eId, t, d).toString();
                     } else {
                         res = "no rights to edit event";
+                    }
+                } else {
+                    res = "event not found";
+                }
+            }
+        }
+        catch (NumberFormatException e){}
+        return res;
+    }
+
+    // delete an event
+    @RequestMapping(value = "/events/{eventId}", method = RequestMethod.DELETE)
+    public String deleteEvent(@PathVariable final String eventId, @RequestParam(value = "id") final String partId) {
+        String res = "no such participant";
+        try {
+            int eId = Integer.parseInt(eventId);
+            int pId = Integer.parseInt(partId);
+            Event event = eService.getEventById(eId);
+            Participant participant = pService.getParticipantById(pId);
+            if (participant!=null) {
+                if (event != null) {
+                    if (event.getEventCreatorId() == pId) {
+                        res = eService.deleteEvent(eId, pService).toString();
+                    } else {
+                        res = "no rights to delete event";
                     }
                 } else {
                     res = "event not found";

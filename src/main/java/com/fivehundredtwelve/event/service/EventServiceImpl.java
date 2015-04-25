@@ -52,4 +52,10 @@ public class EventServiceImpl implements EventService{
     public Event editEvent(int id, String title, String description) {
         return dao.editEvent(id, title, description);
     }
+
+    @Transactional
+    @Override
+    public Event deleteEvent(int id, ParticipantService ps) {
+       return dao.deleteEvent(id, ps);
+    }
 }
