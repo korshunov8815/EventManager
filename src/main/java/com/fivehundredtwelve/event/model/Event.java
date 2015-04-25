@@ -83,11 +83,10 @@ public class Event {
     @Override
     public String toString() {
         return "{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", tasks=" + tasks +
-                ", participants=" + participants +
+                "\"id\":" + id +
+                ", \"title\":\"" + title + '\"' +
+                ", \"description\":\"" + description + '\"' +
+                ", \"tasks\":" + tasks +
                 '}';
     }
 }

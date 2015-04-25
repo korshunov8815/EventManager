@@ -53,21 +53,23 @@ public class EventController {
 
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     public String getAllEvent() {
+        logger.info("/events");
         return eService.getAllEvents().toString();
     }
 
     @RequestMapping(value = "/events", method = RequestMethod.POST)
-    public String createEvent(@RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String id) {
-        System.out.println("cought");
+//    public String createEvent(@RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "userId") final String id) {
+    public String createEvent(@RequestBody String data) {
+        System.out.println(data);
         String res = "can't create event, participant with such id doesn't exist";
-        try {
-            int intId = Integer.parseInt(id);
-            if (pService.getParticipantById(intId)!=null) {
-                Event event = eService.saveEvent(new Event(t, d, intId));
-                res = event.toString();
-            }
-        }
-        catch (NumberFormatException e){}
+//        try {
+//            int intId = Integer.parseInt(id);
+//            if (pService.getParticipantById(intId)!=null) {
+//                Event event = eService.saveEvent(new Event(t, d, intId));
+//                res = event.toString();
+//            }
+//        }
+//        catch (NumberFormatException e){}
         return res;
     }
     @RequestMapping(value="/events/{eventId}", method = RequestMethod.GET)

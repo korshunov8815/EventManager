@@ -60,8 +60,8 @@ public class Task {
     @Override
     public String toString() {
         return "{" +
-                "id=" + id +
-                ", content='" + content + '\'' +
+                "\"id\":" + id +
+                ", \"content\":\"" + content + '\"' +
                 '}';
     }
 }
