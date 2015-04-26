@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.controller;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
@@ -65,23 +66,24 @@ public class EventController {
         System.out.println(s);
         String res = "can't create event, participant with such id doesn't exist";
         try {
-            Event event = new ObjectMapper().readValue(s, Event.class);
-            res = event.toString();
-
-//        try {
-//            int intId = Integer.parseInt(id);
-//            if (pService.getParticipantById(intId)!=null) {
-//                Event event = eService.saveEvent(new Event(t, d, intId));
-//                res = event.toString();
-//            }
-//        }
-//        catch (NumberFormatException e){}
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode newEventJson = mapper.readTree(s);
+            String newEventTitle = newEventJson.get("title").toString().replaceAll("^\"|\"$", "");;
+            String newEventDescr = newEventJson.get("description").toString().replaceAll("^\"|\"$", "");;
+            int newEventuserID = Integer.parseInt(newEventJson.get("userId").toString().replaceAll("^\"|\"$", ""));
+            try { // нахрена он тут ??
+            if (pService.getParticipantById(newEventuserID)!=null) {
+                Event event = eService.saveEvent(new Event(newEventTitle, newEventDescr, newEventuserID));
+                res = event.toString();
+            }
+        }
+        catch (NumberFormatException e){}
         }
         catch (JsonParseException e) {
-            res = "invalid input";
+            res = "Json parse error";
         }
         catch (IOException e) {
-            res = "invalid input";
+            res = "IOException";
         }
         System.out.println(res);
         return res;
