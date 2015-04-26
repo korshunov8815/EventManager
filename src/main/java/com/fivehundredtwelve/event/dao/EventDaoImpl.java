@@ -5,6 +5,7 @@ import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
+import com.fivehundredtwelve.event.service.TaskService;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -75,12 +76,10 @@ public class EventDaoImpl implements EventDao {
         for (int i = 0; i < participants.size(); i++) {
             participants.get(i).getEvents().remove(event);
         }
-        for (int i = 0; i < event.getParticipants().size(); i++) {
-            event.getParticipants().remove(0);
-        }
-        System.out.println(event.getParticipants().size());
-
-        //em.remove(event);
+        em.flush();
+        em.remove(event);
+        em.flush();
         return event;
     }
+
 }

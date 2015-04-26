@@ -30,7 +30,7 @@ public class Task {
         this.content = content;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "event_id")
     public Event getTaskEventKeeper() {
         return taskEventKeeper;
@@ -40,7 +40,7 @@ public class Task {
         this.taskEventKeeper = taskEventKeeper;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "participant_id")
     public Participant getTaskKeeper() {
         return taskKeeper;

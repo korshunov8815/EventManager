@@ -1,5 +1,8 @@
 package com.fivehundredtwelve.event.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,7 +73,8 @@ public class Event {
         this.participants = participants;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskEventKeeper")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "taskEventKeeper")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     public Set<Task> getTasks() {
         return tasks;
     }
