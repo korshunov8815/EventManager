@@ -53,15 +53,16 @@ public class EventController {
         pService.addTaskToParticipant(task2, participant2);
     }
 
-
-    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    //dont forget to use 'produces' param to make output in UTF-8 (Russian language support) !!!
+    @RequestMapping(value = "/events", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8"   )
     public String getAllEvent() {
         logger.info("/events");
+        String answer = eService.getAllEvents().toString();
+        System.out.println(answer);
         return eService.getAllEvents().toString();
     }
 
-    @RequestMapping(value = "/events", method = RequestMethod.POST)
-//    public String createEvent(@RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "userId") final String id) {
+    @RequestMapping(value = "/events", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String createEvent(@RequestBody String s) {
         System.out.println(s);
         String res = "can't create event, participant with such id doesn't exist";
@@ -71,13 +72,13 @@ public class EventController {
             String newEventTitle = newEventJson.get("title").toString().replaceAll("^\"|\"$", "");;
             String newEventDescr = newEventJson.get("description").toString().replaceAll("^\"|\"$", "");;
             int newEventuserID = Integer.parseInt(newEventJson.get("userId").toString().replaceAll("^\"|\"$", ""));
-            try { // нахрена он тут ??
             if (pService.getParticipantById(newEventuserID)!=null) {
                 Event event = eService.saveEvent(new Event(newEventTitle, newEventDescr, newEventuserID));
                 res = event.toString();
             }
         }
-        catch (NumberFormatException e){}
+        catch (NumberFormatException e){
+            res = "NumberFormatException (probably userId is not a number)";
         }
         catch (JsonParseException e) {
             res = "Json parse error";
@@ -86,9 +87,11 @@ public class EventController {
             res = "IOException";
         }
         System.out.println(res);
+        //баги - если вызвать NumberFormatException, а потом попробовать нормально доабвить ивент
+        //то какого-то хрена эксепшн будет включен в json, но на работу это не влияет
         return res;
     }
-    @RequestMapping(value="/events/{eventId}", method = RequestMethod.GET)
+    @RequestMapping(value="/events/{eventId}", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public String getEventById(@PathVariable final String eventId) {
         String result = "not found";
         try {
@@ -99,7 +102,7 @@ public class EventController {
         catch (NumberFormatException e){}
         return result;
     }
-    @RequestMapping(value = "/events/{eventId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/events/{eventId}", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String editEvent(@PathVariable final String eventId, @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId) {
         String res = "no such participant";
         try {
@@ -124,7 +127,7 @@ public class EventController {
     }
 
     // delete an event
-    @RequestMapping(value = "/events/{eventId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/events/{eventId}", method = RequestMethod.DELETE,produces = "text/plain;charset=UTF-8")
     public String deleteEvent(@PathVariable final String eventId, @RequestParam(value = "id") final String partId) {
         String res = "no such participant";
         try {
