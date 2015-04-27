@@ -57,8 +57,6 @@ public class EventController {
     @RequestMapping(value = "/events", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8"   )
     public String getAllEvent() {
         logger.info("/events");
-        String answer = eService.getAllEvents().toString();
-        System.out.println(answer);
         return eService.getAllEvents().toString();
     }
 
