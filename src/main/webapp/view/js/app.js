@@ -37,3 +37,22 @@ eventManagerApp.controller("MainPageCtrl", ["$scope", "Event", "$http",
             $scope.form.$save();
         };
     }]);
+
+eventManagerApp.controller("AuthCtrl", ["$scope", "$http",
+    function ($scope, $http) {
+        $scope.form = {
+            username: null,
+            password: null
+        };
+
+        $scope.login = function () {
+            $http.post("/auth", $scope.data).then(
+                function (data, status, headers, config) {
+                    console.log("Good job!");
+                },
+                function (data, status, headers, config) {
+                    console.log("Some trouble, я думаю.");
+                });
+        }
+
+    }]);

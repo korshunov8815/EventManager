@@ -48,7 +48,14 @@
                 </form>
             </div>
 
-
+            <div ng-controller="AuthCtrl">
+                <h3>Формочка для аутентификации (тоже для Ани)</h3>
+                <form>
+                    <input type="text" ng-model="form.username">
+                    <input type="password" ng-model="form.password">
+                    <button type="submit" ng-click="login()">Login</button>
+                </form>
+            </div>
 
             <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
                 rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt,
