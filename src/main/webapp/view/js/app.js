@@ -46,7 +46,7 @@ eventManagerApp.controller("AuthCtrl", ["$scope", "$http",
         };
 
         $scope.login = function () {
-            $http.post("/auth", $scope.data).then(
+            $http.post("/auth", $scope.form).then(
                 function (data, status, headers, config) {
                     console.log("Good job!");
                 },
