@@ -14,6 +14,7 @@ public class Participant {
     private int id;
     private String name;
     private String email;
+    private String password;
     private Set<Event> events = new HashSet<Event>();
     private Set<Task> tasks = new HashSet<Task>();
 
@@ -43,17 +44,24 @@ public class Participant {
         this.email = email;
     }
 
+    @Column(name="password", nullable = true)
+    public String getPassword() {return password;}
+    public void setPassword(String password) { this.password=password;}
+
+
     public Participant() {
     }
 
-    public Participant(String name, String email) {
+    public Participant(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
-    public Participant(String email) {
+    public Participant(String email, String password) {
         this.email = email;
-        this.name = "no name";
+        this.name = "unnamed jerk";
+        this.password = password;
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -82,6 +90,7 @@ public class Participant {
                 "\"id\":" + id +
                 ", \"name\":\"" + name + '\"' +
                 ", \"email\":\"" + email + '\"' +
+                ", \"password\":\""+password +'\"' +
                 '}';
     }
 }

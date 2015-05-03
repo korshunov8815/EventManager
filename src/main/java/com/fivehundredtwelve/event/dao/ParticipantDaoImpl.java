@@ -18,8 +18,9 @@ public class ParticipantDaoImpl implements ParticipantDao {
     private EntityManager em;
 
     @Override
-    public void saveParticipant(Participant participant) {
+    public Participant saveParticipant(Participant participant) {
         em.persist(participant);
+        return participant;
     }
 
     @Override

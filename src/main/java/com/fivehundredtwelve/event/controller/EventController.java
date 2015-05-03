@@ -3,6 +3,7 @@ package com.fivehundredtwelve.event.controller;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Task;
@@ -62,7 +63,6 @@ public class EventController {
 
     @RequestMapping(value = "/events", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String createEvent(@RequestBody String s) {
-        System.out.println(s);
         String res = "can't create event, participant with such id doesn't exist";
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -122,6 +122,35 @@ public class EventController {
         }
         catch (NumberFormatException e){}
         return res;
+    }
+
+
+    //create an user
+    //assign this to registration page !!!
+    @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public String registerUser(@RequestBody String s) {
+        String res = "some error";
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode newEventJson = mapper.readTree(s);
+            String newUserEmail = newEventJson.get("username").toString().replaceAll("^\"|\"$", "");
+            String password = newEventJson.get("password").toString().replaceAll("^\"|\"$", "");
+            password = AuthorizationUtils.encodeMD5(password);
+            Participant participant = pService.saveParticipant(new Participant(newUserEmail, password));
+            res = participant.toString();
+        }
+        catch (NumberFormatException e){
+            res = "NumberFormatException (probably userId is not a number)";
+        }
+        catch (JsonParseException e) {
+            res = "Json parse error";
+        }
+        catch (IOException e) {
+            res = "IOException";
+        }
+        System.out.println(res);
+        return res;
+
     }
 
     // delete an event

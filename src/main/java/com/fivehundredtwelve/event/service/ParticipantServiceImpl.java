@@ -26,8 +26,8 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Transactional
     @Override
-    public void saveParticipant(Participant participant) {
-        dao.saveParticipant(participant);
+    public Participant saveParticipant(Participant participant) {
+        return dao.saveParticipant(participant);
     }
 
     @Override
