@@ -26,5 +26,8 @@
         <module name="MegaEventManager" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="MegaEventManager" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -13,8 +13,11 @@ import com.fivehundredtwelve.event.service.TaskService;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 
 /**
@@ -156,8 +159,9 @@ public class EventController {
     //auth an user
     //assign this to registration page !!!
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String authUser(@RequestBody String s) {
+    public ResponseEntity<String> authUser(@RequestBody String s) {
         String res = "some error";
+        boolean isSuccessful = false;
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode newEventJson = mapper.readTree(s);
@@ -167,7 +171,10 @@ public class EventController {
             if (!pService.ifParticipantExistByEmail(loginEmail)) res = "no such user"; else {
                 Participant participant = pService.getParticipantByEmail(loginEmail);
                 String truePass = participant.getPassword();
-                if (truePass.equals(password)) res = "auth succesful";
+                if (truePass.equals(password))  {
+                    res = "auth succesful";
+                    isSuccessful = true;
+                }
                 else res = "your password is shit";
             }
 
@@ -181,8 +188,8 @@ public class EventController {
         catch (IOException e) {
             res = "IOException";
         }
-        System.out.println(res);
-        return res;
+        if(!isSuccessful) return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<String>(HttpStatus.OK);
 
     }
 

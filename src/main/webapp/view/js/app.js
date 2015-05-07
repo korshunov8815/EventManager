@@ -48,6 +48,7 @@ eventManagerApp.controller("RegCtrl", ["$scope", "$http",
         $scope.login = function () {
             $http.post("/registration", $scope.form).then(
                 function (data, status, headers, config) {
+                    console.log(data);
                     console.log("Good job!");
                 },
                 function (data, status, headers, config) {
