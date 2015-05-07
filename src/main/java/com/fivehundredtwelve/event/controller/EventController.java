@@ -127,13 +127,13 @@ public class EventController {
 
     //create an user
     //assign this to registration page !!!
-    @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String registerUser(@RequestBody String s) {
         String res = "some error";
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode newEventJson = mapper.readTree(s);
-            String newUserEmail = newEventJson.get("username").toString().replaceAll("^\"|\"$", "");
+            String newUserEmail = newEventJson.get("mail").toString().replaceAll("^\"|\"$", "");
             String password = newEventJson.get("password").toString().replaceAll("^\"|\"$", "");
             password = AuthorizationUtils.encodeMD5(password);
             Participant participant = pService.saveParticipant(new Participant(newUserEmail, password));
@@ -152,6 +152,43 @@ public class EventController {
         return res;
 
     }
+
+    //auth an user
+    //assign this to registration page !!!
+    @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public String authUser(@RequestBody String s) {
+        String res = "some error";
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode newEventJson = mapper.readTree(s);
+            String loginEmail = newEventJson.get("mail").toString().replaceAll("^\"|\"$", "");
+            String password = newEventJson.get("password").toString().replaceAll("^\"|\"$", "");
+            password = AuthorizationUtils.encodeMD5(password);
+            if (!pService.ifParticipantExistByEmail(loginEmail)) res = "no such user"; else {
+                Participant participant = pService.getParticipantByEmail(loginEmail);
+                String truePass = participant.getPassword();
+                if (truePass.equals(password)) res = "auth succesful";
+                else res = "your password is shit";
+            }
+
+        }
+        catch (NumberFormatException e){
+            res = "NumberFormatException (probably userId is not a number)";
+        }
+        catch (JsonParseException e) {
+            res = "Json parse error";
+        }
+        catch (IOException e) {
+            res = "IOException";
+        }
+        System.out.println(res);
+        return res;
+
+    }
+
+
+
+
 
     // delete an event
     @RequestMapping(value = "/events/{eventId}", method = RequestMethod.DELETE,produces = "text/plain;charset=UTF-8")

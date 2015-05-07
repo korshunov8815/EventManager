@@ -38,10 +38,29 @@ eventManagerApp.controller("MainPageCtrl", ["$scope", "Event", "$http",
         };
     }]);
 
+eventManagerApp.controller("RegCtrl", ["$scope", "$http",
+    function ($scope, $http) {
+        $scope.form = {
+            mail: null,
+            password: null
+        };
+
+        $scope.login = function () {
+            $http.post("/registration", $scope.form).then(
+                function (data, status, headers, config) {
+                    console.log("Good job!");
+                },
+                function (data, status, headers, config) {
+                    console.log("Some trouble, я думаю.");
+                });
+        }
+
+    }]);
+
 eventManagerApp.controller("AuthCtrl", ["$scope", "$http",
     function ($scope, $http) {
         $scope.form = {
-            username: null,
+            mail: null,
             password: null
         };
 
@@ -56,3 +75,4 @@ eventManagerApp.controller("AuthCtrl", ["$scope", "$http",
         }
 
     }]);
+

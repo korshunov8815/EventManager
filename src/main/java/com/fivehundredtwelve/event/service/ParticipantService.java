@@ -15,6 +15,7 @@ public interface ParticipantService {
     public boolean ifParticipantExistByEmail(String email);
     public void addTaskToParticipant(Task task, Participant participant);
     public Participant getParticipantById(int id);
+    public Participant getParticipantByEmail (String email);
 
 }
 

@@ -45,5 +45,8 @@ public class ParticipantServiceImpl implements ParticipantService {
     public Participant getParticipantById(int id) {
         return dao.getParticipantById(id);
     }
+
+    @Override
+    public Participant getParticipantByEmail(String email) {return dao.getParticipantByEmail(email);}
 }
 

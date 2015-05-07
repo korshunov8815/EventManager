@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -49,5 +50,12 @@ public class ParticipantDaoImpl implements ParticipantDao {
     @Override
     public Participant getParticipantById(int id) {
         return em.find(Participant.class, id);
+    }
+
+    @Override
+    public Participant getParticipantByEmail(String email) {
+        Query q1 = em.createQuery("SELECT p FROM Participant p WHERE p.email LIKE :email").setParameter("email",email);
+        Participant participant = (Participant)q1.getSingleResult();
+        return participant;
     }
 }
