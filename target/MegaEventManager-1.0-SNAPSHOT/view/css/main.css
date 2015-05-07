@@ -1,0 +1,21 @@
+.chat {
+	padding	: 0;
+}
+	.chat form input, .chat form button {
+		margin-bottom: 0;
+	}
+
+.add-button {
+	font-size: 2em !important;
+}
+.add_participant span {
+    color: green;
+    font-weight: bold;
+}
+.postfix span {
+    color: green;
+}
+
+input.ng-invalid-email {
+	color: red;
+}

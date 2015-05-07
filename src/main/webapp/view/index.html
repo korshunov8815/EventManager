@@ -25,20 +25,20 @@
         <ul class="right">
             <li><a href="#">Участники</a></li>
             <li><a href="#">Трекер задач</a></li>
-            <li><a href="#">Флудилка</a></li>
+            <!-- <li><a href="#">Флудилка</a></li> -->
             <li><a class="add-button" href="#" data-reveal-id="myModal"><span>+</span></a></li>
         </ul>
     </section>
 </nav>
 
 <div class="row">
-    <div class="large-8 small-12 columns">
+    <div class="large-8 small-8 columns">
         <div class="panel">
             <h3>Организуй свое мероприятие</h3>
 
             <h2>Начало в 9.00</h2>
 
-            <div ng-controller="MainPageCtrl">
+            <!-- <div ng-controller="MainPageCtrl">
                 <h3>Формочка для Ани</h3>
                 <form>
                     <input type="text" ng-model="form.title"/>
@@ -46,9 +46,9 @@
                     <input type="text" ng-model="form.userId" value="1"/>
                     <button type="submit" ng-click="submit(form)">Нажми меня</button>
                 </form>
-            </div>
+            </div> -->
 
-            <div ng-controller="RegCtrl">
+            <!-- <div ng-controller="RegCtrl">
                 <h3>Формочка для регистрации (тоже для Ани)</h3>
                 <form>
                     <input type="text" ng-model="form.mail">
@@ -64,11 +64,9 @@
                     <input type="password" ng-model="form.password">
                     <button type="submit" ng-click="login()">Login</button>
                 </form>
-            </div>
+            </div> -->
 
-
-
-            <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
+            <!-- <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
                 rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt,
                 explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
                 consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui
@@ -84,38 +82,39 @@
                 quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
                 autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates
                 repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut
-                reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+                reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p> -->
         </div>
     </div>
-    <div class="large-4 hidden-for-medium-down columns">
-        <div class="panel chat">
-            <div>
-                <h3>Chat</h3>
-            </div>
-            <div id="messages">
-                <div>Anna: Когда начало?</div>
-                <div>Anton: Дура, в описание смотри</div>
-            </div>
-            <form id="send-message">
-                <div class="row">
-                    <div class="large-12 columns">
-                        <div class="row collapse">
-                            <div class="small-10 columns">
-                                <input name="text-message" type="text" placeholder="Message">
-                            </div>
-                            <div class="small-2 columns">
-                                <button class="button postfix" id="send-button" type="submit">Send</button>
-                            </div>
-                        </div>
-                    </div>
+    <div class="large-4 small-4 columns">
+        <div class="panel chat" ng-controller="AuthCtrl">
+            <div ng-hide="logged()">
+                <div>
+                    <h3>Login/Register</h3>
                 </div>
-            </form>
+                <form>
+                    <input type="email" ng-model="form.mail" placeholder="email">
+                    <span ng-hide="form.mail">Нормальный адрес укажи</span>
+                    <input type="password" ng-model="form.password" placeholder="password">
+                    <span ng-hide="form.password">и пароль</span>
+                    <div>
+                    <button ng-click="login()">Login</button>
+                    <button ng-click="register()">Register</button>
+                    <div>{{ message }}</div>
+                    </div>
+                </form>
+            </div>
+            <div ng-show="logged()">
+                <div>
+                    Profile
+                </div>
+                <button ng-click="logout()">Logout</button>
+            </div>
         </div>
-        <div class="panel">
+        <!-- <div class="panel">
             <div>
                 Tracker
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 <div id="myModal" class="reveal-modal" data-reveal>

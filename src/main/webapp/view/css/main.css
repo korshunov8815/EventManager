@@ -15,3 +15,7 @@
 .postfix span {
     color: green;
 }
+
+input.ng-invalid-email {
+	color: red;
+}

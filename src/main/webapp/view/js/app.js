@@ -1,9 +1,5 @@
 "use strict";
 
-
-console.log("hello");
-
-
 var eventManagerApp = angular.module("EventManagerApp", ["ngResource"]);
 
 eventManagerApp.factory("Event", ["$resource",
@@ -38,42 +34,83 @@ eventManagerApp.controller("MainPageCtrl", ["$scope", "Event", "$http",
         };
     }]);
 
-eventManagerApp.controller("RegCtrl", ["$scope", "$http",
-    function ($scope, $http) {
-        $scope.form = {
-            mail: null,
-            password: null
+eventManagerApp.controller("AuthCtrl", ["$scope", "$http", "AuthService",
+    function ($scope, $http, AuthService) {
+
+        $scope.clear = function () {
+            $scope.form = {
+                mail: null,
+                password: null
+            };
         };
 
+        $scope.clear();
+
         $scope.login = function () {
-            $http.post("/registration", $scope.form).then(
+            $scope.message = AuthService.login($scope.form);
+            console.log(AuthService.logged());
+            $scope.clear();
+        }
+
+        $scope.register = function () {
+            $scope.message = AuthService.register($scope.form);
+            console.log(AuthService.logged());
+            $scope.clear();
+        }
+
+        $scope.logout = function () {
+            AuthService.logout();
+        }
+
+        $scope.logged = function () {
+            return AuthService.logged();
+        }
+    }]);
+
+eventManagerApp.factory("AuthService", function($http) {
+    var logged = false;
+
+    var login = function (form) {
+        var message = 'wo';
+        $http.post("/auth", form).then(
+                function (data, status, headers, config) {
+                    logged = true;
+                    message = "";
+                },
+                function (data, status, headers, config) {
+                    message = "Some trouble, я думаю.";
+                });
+        return message;
+    };
+
+    var logout = function () {
+        logged = false;
+        console.log("logout");
+    };
+
+    var register = function (form) {
+        var message = "register";
+        
+        $http.post("/registration", form).then(
                 function (data, status, headers, config) {
                     console.log(data);
-                    console.log("Good job!");
+                    message = "";
                 },
                 function (data, status, headers, config) {
-                    console.log("Some trouble, я думаю.");
+                    message = "Some trouble, я чувствую. Возможно, пользователь с таким мылом уже есть";
                 });
-        }
 
-    }]);
+        return message;
+    };
 
-eventManagerApp.controller("AuthCtrl", ["$scope", "$http",
-    function ($scope, $http) {
-        $scope.form = {
-            mail: null,
-            password: null
-        };
+    var isLogged = function () {
+        return logged;
+    };
 
-        $scope.login = function () {
-            $http.post("/auth", $scope.form).then(
-                function (data, status, headers, config) {
-                    console.log("Good job!");
-                },
-                function (data, status, headers, config) {
-                    console.log("Some trouble, я думаю.");
-                });
-        }
-
-    }]);
-
+    return {
+        login: login,
+        logout: logout,
+        register: register,
+        logged: isLogged
+    }
+})
