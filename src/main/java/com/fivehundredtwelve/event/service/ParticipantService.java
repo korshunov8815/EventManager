@@ -1,7 +1,9 @@
 package com.fivehundredtwelve.event.service;
 
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
+import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ public interface ParticipantService {
     public void addTaskToParticipant(Task task, Participant participant);
     public Participant getParticipantById(int id);
     public Participant getParticipantByEmail (String email);
+    public void addSessionToParticipant (Session session, Participant participant);
 
 }
 

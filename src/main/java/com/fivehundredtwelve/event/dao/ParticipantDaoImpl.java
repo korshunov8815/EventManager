@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 import org.springframework.stereotype.Repository;
 
@@ -57,5 +58,14 @@ public class ParticipantDaoImpl implements ParticipantDao {
         Query q1 = em.createQuery("SELECT p FROM Participant p WHERE p.email LIKE :email").setParameter("email",email);
         Participant participant = (Participant)q1.getSingleResult();
         return participant;
+    }
+
+    @Override
+    public void addSessionToParticipant (Session s, Participant p){
+        Participant participant = em.find(Participant.class, p.getId());
+        em.persist(s);
+        Session session = em.find(Session.class, s.getSessionID());
+        participant.getSessions().add(session);
+        session.setSessionOwner(participant);
     }
 }

@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
+import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.internet.InternetAddress;
+import javax.sound.midi.Soundbank;
 import java.io.IOException;
 
 /**
@@ -32,6 +34,7 @@ public class EventController {
     private static EventService eService = (EventService)context.getBean("eventService");
     private static ParticipantService pService = (ParticipantService)context.getBean("participantService");
     private static TaskService tService = (TaskService)context.getBean("taskService");
+    private static SessionService sService = (SessionService)context.getBean("sessionService");
 
     @RequestMapping("/test")
     public void seeEvents() {
@@ -131,7 +134,8 @@ public class EventController {
     //create an user
     //assign this to registration page !!!
     @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public String registerUser(@RequestBody String s) {
+    public ResponseEntity<String> registerUser(@RequestBody String s) {
+        boolean ifSuccessful = false;
         String res = "some error";
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -141,6 +145,7 @@ public class EventController {
             password = AuthorizationUtils.encodeMD5(password);
             Participant participant = pService.saveParticipant(new Participant(newUserEmail, password));
             res = participant.toString();
+            ifSuccessful = true;
         }
         catch (NumberFormatException e){
             res = "NumberFormatException (probably userId is not a number)";
@@ -151,8 +156,8 @@ public class EventController {
         catch (IOException e) {
             res = "IOException";
         }
-        System.out.println(res);
-        return res;
+        if (ifSuccessful) return new ResponseEntity<String>(res,HttpStatus.OK);
+        else return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -172,7 +177,11 @@ public class EventController {
                 Participant participant = pService.getParticipantByEmail(loginEmail);
                 String truePass = participant.getPassword();
                 if (truePass.equals(password))  {
-                    res = "auth succesful";
+                    String sessionID = String.valueOf(System.currentTimeMillis())+participant.getEmail();
+                    sessionID = AuthorizationUtils.encodeMD5(sessionID);
+                    Session session = new Session(sessionID);
+                    pService.addSessionToParticipant(session, participant);
+                    res = session.toString();
                     isSuccessful = true;
                 }
                 else res = "your password is shit";
@@ -189,13 +198,9 @@ public class EventController {
             res = "IOException";
         }
         if(!isSuccessful) return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<String>(HttpStatus.OK);
+        else return new ResponseEntity<String>(res,HttpStatus.OK);
 
     }
-
-
-
-
 
     // delete an event
     @RequestMapping(value = "/events/{eventId}", method = RequestMethod.DELETE,produces = "text/plain;charset=UTF-8")

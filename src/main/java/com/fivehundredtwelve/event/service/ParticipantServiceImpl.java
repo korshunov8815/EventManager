@@ -2,6 +2,7 @@ package com.fivehundredtwelve.event.service;
 
 import com.fivehundredtwelve.event.dao.ParticipantDao;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,11 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Override
     public Participant getParticipantByEmail(String email) {return dao.getParticipantByEmail(email);}
+
+    @Transactional
+    @Override
+    public void addSessionToParticipant (Session session, Participant participant){
+        dao.addSessionToParticipant(session,participant);
+    }
 }
 

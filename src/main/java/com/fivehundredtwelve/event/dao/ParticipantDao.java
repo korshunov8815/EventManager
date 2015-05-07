@@ -1,6 +1,7 @@
 package com.fivehundredtwelve.event.dao;
 
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface ParticipantDao {
     public void addTaskToParticipant(Task task, Participant participant);
     public Participant getParticipantById(int id);
     public Participant getParticipantByEmail (String mail);
+    public void addSessionToParticipant (Session session, Participant participant);
 }
