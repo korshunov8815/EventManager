@@ -17,6 +17,8 @@ public class Participant {
     private String password;
     private Set<Event> events = new HashSet<Event>();
     private Set<Task> tasks = new HashSet<Task>();
+    private Set<Session> sessions = new HashSet<Session>();
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,19 +73,30 @@ public class Participant {
     public Set<Event> getEvents() {
         return events;
     }
-
     public void setEvents(Set<Event> events) {
         this.events = events;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
-    public Set<Task> getTasks() {
-        return tasks;
-    }
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
+    public Set<Task> getTasks() {return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
+
+
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "sessionOwner")
+    public Set<Session> getSessions() {
+        return sessions;
+    }
+    public void setSessions(Set<Session> sessions) {
+        this.sessions = sessions;
+    }
+
+
+
+
     @Override
     public String toString() {
         return '{' +

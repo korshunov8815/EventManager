@@ -36,21 +36,26 @@ eventManagerApp.controller("MainPageCtrl", ["$scope", "Event", "$http",
 
 eventManagerApp.controller("AuthCtrl", ["$scope", "$http", "AuthService",
     function ($scope, $http, AuthService) {
-        $scope.form = {
-            mail: null,
-            password: null
+
+        $scope.clear = function () {
+            $scope.form = {
+                mail: null,
+                password: null
+            };
         };
+
+        $scope.clear();
 
         $scope.login = function () {
             $scope.message = AuthService.login($scope.form);
             console.log(AuthService.logged());
-            
+            $scope.clear();
         }
 
         $scope.register = function () {
-            AuthService.register($scope.form);
+            $scope.message = AuthService.register($scope.form);
             console.log(AuthService.logged());
-            
+            $scope.clear();
         }
 
         $scope.logout = function () {
@@ -65,16 +70,17 @@ eventManagerApp.controller("AuthCtrl", ["$scope", "$http", "AuthService",
 eventManagerApp.factory("AuthService", function($http) {
     var logged = false;
 
-
-    var login = function (form) {        
+    var login = function (form) {
+        var message = 'wo';
         $http.post("/auth", form).then(
                 function (data, status, headers, config) {
                     logged = true;
-                    return "";
+                    message = "";
                 },
                 function (data, status, headers, config) {
-                    return "Some trouble, я думаю.";
+                    message = "Some trouble, я думаю.";
                 });
+        return message;
     };
 
     var logout = function () {
@@ -83,15 +89,18 @@ eventManagerApp.factory("AuthService", function($http) {
     };
 
     var register = function (form) {
-        console.log("register");
+        var message = "register";
+        
         $http.post("/registration", form).then(
                 function (data, status, headers, config) {
                     console.log(data);
-                    console.log("Good job!");
+                    message = "";
                 },
                 function (data, status, headers, config) {
-                    console.log("Some trouble, я думаю.");
+                    message = "Some trouble, я чувствую. Возможно, пользователь с таким мылом уже есть";
                 });
+
+        return message;
     };
 
     var isLogged = function () {
