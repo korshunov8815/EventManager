@@ -71,14 +71,17 @@ eventManagerApp.factory("AuthService", function($http) {
     var logged = false;
 
     var login = function (form) {
-        var message = 'wo';
+        var message = 'вообще, это сообщение должно сигнализировать о том, что логин или пароль неверный. (если будет написано на этом месте Errror) можешь глянуть в консоль';
         $http.post("/auth", form).then(
                 function (data, status, headers, config) {
                     logged = true;
-                    message = "";
+                    console.log("logged=" + logged);
+                    message = "Должно быть все ок. Вы не должны этого видеть";
+
                 },
                 function (data, status, headers, config) {
-                    message = "Some trouble, я думаю.";
+                    console.log("logged=" + logged);
+                    message = "Errror";
                 });
         return message;
     };
