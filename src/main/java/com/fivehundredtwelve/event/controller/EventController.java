@@ -18,11 +18,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-<<<<<<< HEAD
-=======
-import javax.sound.midi.Soundbank;
->>>>>>> e015640144f9688a046a63ac37705f1d1af74dc3
 import java.io.IOException;
 
 /**
