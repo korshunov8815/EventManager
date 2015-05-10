@@ -1,3 +1,5 @@
 .idea
 target
 MegaEventManager.iml
+eventmanager.sublime-project
+eventmanager.sublime-workspace
