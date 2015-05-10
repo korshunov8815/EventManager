@@ -18,7 +18,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author anna
@@ -163,6 +163,7 @@ public class EventController {
     //assign this to registration page !!!
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> authUser(@RequestBody String s) {
+        System.out.println("baba");
         String res = "some error";
         boolean isSuccessful = false;
         try {
@@ -195,6 +196,7 @@ public class EventController {
         catch (IOException e) {
             res = "IOException";
         }
+        System.out.println(res);
         if(!isSuccessful) return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<String>(res,HttpStatus.OK);
 

@@ -41,7 +41,8 @@ public class Session {
     @Override
     public String toString() {
         return "{" +
-                "\"sessionID\":" + sessionID +
+                "\"sessionID\":\"" + sessionID + '\"' +
                 '}';
+
     }
 }
