@@ -80,7 +80,7 @@ eventManagerApp.factory("AuthService", function($http) {
 
                 },
                 function (data, status, headers, config) {
-                    console.log("logged=" + logged);
+                    console.log("Error logged=" + logged);
                     message = "Errror";
                 });
         return message;
