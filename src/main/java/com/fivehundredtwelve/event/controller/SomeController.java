@@ -88,9 +88,8 @@ public class SomeController {
     }
 
     //auth an user
-    //assign this to registration page !!!
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody Session authUser(@RequestBody String s) {
+    public @ResponseBody ResponseEntity<Session> authUser(@RequestBody String s) {
         String res = "some error";
         boolean isSuccessful = false;
         Session session = new Session();
@@ -108,13 +107,13 @@ public class SomeController {
                     sessionID = AuthorizationUtils.encodeMD5(sessionID);
                     session.setSessionID(sessionID);
                     pService.addSessionToParticipant(session, participant);
-                    res = session.toString();
                     isSuccessful = true;
                 }
                 else res = "your password is shit";
             }
 
         }
+
         catch (NumberFormatException e){
             res = "NumberFormatException (probably userId is not a number)";
         }
@@ -124,8 +123,8 @@ public class SomeController {
         catch (IOException e) {
             res = "IOException";
         }
-        System.out.println(res);
-        return session;
+        if (isSuccessful) return new ResponseEntity<Session>(session,HttpStatus.OK);
+         else  return new ResponseEntity<Session>(HttpStatus.BAD_REQUEST);
 
     }
 }

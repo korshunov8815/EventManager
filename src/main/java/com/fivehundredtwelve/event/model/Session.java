@@ -1,5 +1,6 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class Session {
     public Session(){};
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "participant_id")
     private Participant sessionOwner;
     public Participant getSessionOwner() {

@@ -1,5 +1,7 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -87,6 +89,7 @@ public class Participant {
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "sessionOwner")
+    @JsonManagedReference
     public Set<Session> getSessions() {
         return sessions;
     }
