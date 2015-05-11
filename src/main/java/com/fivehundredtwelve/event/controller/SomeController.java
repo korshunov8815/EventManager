@@ -60,7 +60,7 @@ public class SomeController {
 
     //create an user
     @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
+    public @ResponseBody ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
         boolean ifSuccessful = false;
         Participant newParticipant = new Participant();
         if (!pService.ifParticipantExistByEmail(participant.getEmail())) {

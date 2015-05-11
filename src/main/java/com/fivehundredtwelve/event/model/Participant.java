@@ -1,5 +1,6 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -72,6 +73,7 @@ public class Participant {
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
+    @JsonBackReference(value="event-participants")
     public Set<Event> getEvents() {
         return events;
     }

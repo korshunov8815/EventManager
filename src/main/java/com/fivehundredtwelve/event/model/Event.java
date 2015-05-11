@@ -67,6 +67,7 @@ public class Event {
     }
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events")
+    @JsonManagedReference(value="event-participants")
     public Set<Participant> getParticipants() {
         return participants;
     }

@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author anna
@@ -33,12 +35,17 @@ public class EventController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String getAllEvent() {
+
+    //job done
+    @RequestMapping(method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody
+    List<Event> getAllEvent() {
         logger.info("/events");
-        return eService.getAllEvents().toString();
+        return eService.getAllEvents();
     }
 
+
+    //not done yet
     @RequestMapping(method = RequestMethod.POST)
     public String createEvent(@RequestBody String s) {
         String res = "can't create event, participant with such id doesn't exist";
@@ -63,23 +70,26 @@ public class EventController {
             res = "IOException";
         }
         System.out.println(res);
-        //баги - если вызвать NumberFormatException, а потом попробовать нормально доабвить ивент
-        //то какого-то хрена эксепшн будет включен в json, но на работу это не влияет
         return res;
     }
 
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
-    public String getEventById(@PathVariable final String eventId) {
-        String result = "not found";
+    //done
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody ResponseEntity<Event> getEventById(@PathVariable final String eventId) {
+        boolean isSuccessful = false;
+        Event event = new Event();
         try {
             int id = Integer.parseInt(eventId);
-            Event event = eService.getEventById(id);
-            if (event!=null) result = event.toString();
+            event = eService.getEventById(id);
+            if (event!=null) isSuccessful=true;
         }
         catch (NumberFormatException e){}
-        return result;
+        if (isSuccessful) return new ResponseEntity<Event>(event,HttpStatus.OK);
+        else return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
     }
 
+
+    //not done yet
     @RequestMapping(value = "/{eventId}", method = RequestMethod.POST)
     public String editEvent(@PathVariable final String eventId, @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId) {
         String res = "no such participant";
@@ -104,6 +114,8 @@ public class EventController {
         return res;
     }
 
+
+    //not done yet
     @RequestMapping(value = "/{eventId}", method = RequestMethod.DELETE)
     public String deleteEvent(@PathVariable final String eventId, @RequestParam(value = "id") final String partId) {
         String res = "no such participant";
