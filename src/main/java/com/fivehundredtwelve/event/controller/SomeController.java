@@ -89,11 +89,11 @@ public class SomeController {
 
     //auth an user
     //assign this to registration page !!!
-    @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public ResponseEntity<String> authUser(@RequestBody String s) {
-        System.out.println("baba");
+    @RequestMapping(value = "/auth", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody String authUser(@RequestBody String s) {
         String res = "some error";
         boolean isSuccessful = false;
+        Session session = new Session();
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode newEventJson = mapper.readTree(s);
@@ -106,7 +106,7 @@ public class SomeController {
                 if (truePass.equals(password))  {
                     String sessionID = String.valueOf(System.currentTimeMillis())+participant.getEmail();
                     sessionID = AuthorizationUtils.encodeMD5(sessionID);
-                    Session session = new Session(sessionID);
+                    session.setSessionID(sessionID);
                     pService.addSessionToParticipant(session, participant);
                     res = session.toString();
                     isSuccessful = true;
@@ -125,8 +125,8 @@ public class SomeController {
             res = "IOException";
         }
         System.out.println(res);
-        if(!isSuccessful) return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<String>(res,HttpStatus.OK);
+      //  if(!isSuccessful) return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        return res;
 
     }
 }
