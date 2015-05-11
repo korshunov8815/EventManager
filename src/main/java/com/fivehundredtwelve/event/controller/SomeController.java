@@ -90,7 +90,7 @@ public class SomeController {
     //auth an user
     //assign this to registration page !!!
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody String authUser(@RequestBody String s) {
+    public @ResponseBody Session authUser(@RequestBody String s) {
         String res = "some error";
         boolean isSuccessful = false;
         Session session = new Session();
@@ -125,7 +125,7 @@ public class SomeController {
             res = "IOException";
         }
         System.out.println(res);
-        return res;
+        return session;
 
     }
 }
