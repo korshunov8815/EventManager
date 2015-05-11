@@ -17,6 +17,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
@@ -85,6 +87,39 @@ public class SomeController {
         if (ifSuccessful) return new ResponseEntity<String>(res,HttpStatus.OK);
         else return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
+    }
+
+    class MyTry {
+        private String wow;
+
+        MyTry(String wow) {
+            setWow(wow);
+        }
+
+        public String getWow() {
+            return wow;
+        }
+
+        public void setWow(String wow) {
+            this.wow = wow;
+        }
+    }
+
+    @RequestMapping(value="/joke", method=RequestMethod.POST, produces={"application/json;charset=UTF-8"})    
+    public MyTry wow() {
+        return new MyTry("wowow");
+    }
+
+    @RequestMapping(value="/joke", method=RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    public MyTry joke(HttpServletResponse response, @RequestBody MyTry session) throws IOException {
+        // Session session = new Session();
+
+        // response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        // String sessionID = String.valueOf(System.currentTimeMillis());
+        // sessionID = AuthorizationUtils.encodeMD5(sessionID);
+        // session.setSessionID(sessionID);
+
+        return session;
     }
 
     //auth an user

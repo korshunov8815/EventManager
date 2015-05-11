@@ -1,5 +1,7 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 
 import javax.persistence.*;
@@ -13,10 +15,13 @@ public class Session {
 
     @Id
     @Column(name = "sessionID")
+    @JsonProperty
     private String sessionID;
+
     public String getSessionID() {
         return sessionID;
     }
+
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID;
     }
