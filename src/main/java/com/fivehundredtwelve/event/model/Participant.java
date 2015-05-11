@@ -81,6 +81,7 @@ public class Participant {
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
+    @JsonManagedReference(value="task-keeper")
     public Set<Task> getTasks() {return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
@@ -89,7 +90,7 @@ public class Participant {
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "sessionOwner")
-    @JsonManagedReference
+    @JsonManagedReference(value="session-keeper")
     public Set<Session> getSessions() {
         return sessions;
     }

@@ -1,4 +1,7 @@
 package com.fivehundredtwelve.event.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 /**
@@ -31,6 +34,7 @@ public class Task {
     }
 
     @ManyToOne
+    @JsonBackReference(value="task-EventKeeper")
     @JoinColumn(name = "event_id")
     public Event getTaskEventKeeper() {
         return taskEventKeeper;
@@ -41,6 +45,7 @@ public class Task {
     }
 
     @ManyToOne
+    @JsonBackReference(value="task-keeper")
     @JoinColumn(name = "participant_id")
     public Participant getTaskKeeper() {
         return taskKeeper;

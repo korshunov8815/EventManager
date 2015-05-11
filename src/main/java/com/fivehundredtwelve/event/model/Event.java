@@ -1,5 +1,6 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -74,11 +75,11 @@ public class Event {
     }
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "taskEventKeeper")
+    @JsonManagedReference(value="task-EventKeeper")
     @OnDelete(action= OnDeleteAction.CASCADE)
     public Set<Task> getTasks() {
         return tasks;
     }
-
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }

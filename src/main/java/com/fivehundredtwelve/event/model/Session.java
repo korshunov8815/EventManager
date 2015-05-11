@@ -30,7 +30,7 @@ public class Session {
     public Session(){};
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value="session-keeper")
     @JoinColumn(name = "participant_id")
     private Participant sessionOwner;
     public Participant getSessionOwner() {

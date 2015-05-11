@@ -11,6 +11,7 @@ import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
+import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -58,70 +59,37 @@ public class SomeController {
     }
 
     //create an user
-    //assign this to registration page !!!
-    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-    public ResponseEntity<String> registerUser(@RequestBody String s) {
+    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
         boolean ifSuccessful = false;
-        String res = "some error";
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode newEventJson = mapper.readTree(s);
-            String newUserEmail = newEventJson.get("mail").toString().replaceAll("^\"|\"$", "");
-            String password = newEventJson.get("password").toString().replaceAll("^\"|\"$", "");
-            password = AuthorizationUtils.encodeMD5(password);
-            Participant participant = pService.saveParticipant(new Participant(newUserEmail, password));
-            res = participant.toString();
+        Participant newParticipant = new Participant();
+        if (!pService.ifParticipantExistByEmail(participant.getEmail())) {
+            String password = AuthorizationUtils.encodeMD5(participant.getPassword());
+            newParticipant = pService.saveParticipant(new Participant(participant.getEmail(), password));
             ifSuccessful = true;
         }
-        catch (NumberFormatException e){
-            res = "NumberFormatException (probably userId is not a number)";
-        }
-        catch (JsonParseException e) {
-            res = "Json parse error";
-        }
-        catch (IOException e) {
-            res = "IOException";
-        }
-        if (ifSuccessful) return new ResponseEntity<String>(res,HttpStatus.OK);
-        else return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-
+        if (ifSuccessful) return new ResponseEntity<Participant>(newParticipant,HttpStatus.OK);
+        else return new ResponseEntity<Participant>(HttpStatus.BAD_REQUEST);
     }
 
     //auth an user
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<Session> authUser(@RequestBody String s) {
-        String res = "some error";
+    public @ResponseBody ResponseEntity<Session> authUser(@RequestBody Participant participant) {
+
         boolean isSuccessful = false;
         Session session = new Session();
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode newEventJson = mapper.readTree(s);
-            String loginEmail = newEventJson.get("mail").toString().replaceAll("^\"|\"$", "");
-            String password = newEventJson.get("password").toString().replaceAll("^\"|\"$", "");
-            password = AuthorizationUtils.encodeMD5(password);
-            if (!pService.ifParticipantExistByEmail(loginEmail)) res = "no such user"; else {
-                Participant participant = pService.getParticipantByEmail(loginEmail);
-                String truePass = participant.getPassword();
-                if (truePass.equals(password))  {
-                    String sessionID = String.valueOf(System.currentTimeMillis())+participant.getEmail();
-                    sessionID = AuthorizationUtils.encodeMD5(sessionID);
-                    session.setSessionID(sessionID);
-                    pService.addSessionToParticipant(session, participant);
-                    isSuccessful = true;
-                }
-                else res = "your password is shit";
+        if (pService.ifParticipantExistByEmail(participant.getEmail())) {
+            //participantDB is the real existing participant. participant - is object for a guy trying to log in
+            Participant participantDB = pService.getParticipantByEmail(participant.getEmail());
+            String truePass = participantDB.getPassword();
+            String checkPass = AuthorizationUtils.encodeMD5(participant.getPassword());
+            if (truePass.equals(checkPass)) {
+                String sessionID = String.valueOf(System.currentTimeMillis()) + participant.getEmail();
+                sessionID = AuthorizationUtils.encodeMD5(sessionID);
+                session.setSessionID(sessionID);
+                pService.addSessionToParticipant(session, participantDB);
+                isSuccessful = true;
             }
-
-        }
-
-        catch (NumberFormatException e){
-            res = "NumberFormatException (probably userId is not a number)";
-        }
-        catch (JsonParseException e) {
-            res = "Json parse error";
-        }
-        catch (IOException e) {
-            res = "IOException";
         }
         if (isSuccessful) return new ResponseEntity<Session>(session,HttpStatus.OK);
          else  return new ResponseEntity<Session>(HttpStatus.BAD_REQUEST);

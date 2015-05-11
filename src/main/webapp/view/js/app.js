@@ -39,7 +39,7 @@ eventManagerApp.controller("AuthCtrl", ["$scope", "$http", "AuthService",
 
         $scope.clear = function () {
             $scope.form = {
-                mail: null,
+                email: null,
                 password: null
             };
         };
