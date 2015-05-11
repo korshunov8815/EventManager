@@ -125,7 +125,6 @@ public class SomeController {
             res = "IOException";
         }
         System.out.println(res);
-      //  if(!isSuccessful) return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         return res;
 
     }
