@@ -1,7 +1,9 @@
 package com.fivehundredtwelve.event.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,6 +13,7 @@ import java.util.Set;
  * Created by anna on 06.04.15.
  */
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Table(name = "participant")
 public class Participant {
 
@@ -73,10 +76,11 @@ public class Participant {
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
-    @JsonBackReference(value="event-participants")
+
     public Set<Event> getEvents() {
         return events;
     }
+
     public void setEvents(Set<Event> events) {
         this.events = events;
     }

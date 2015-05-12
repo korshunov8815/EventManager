@@ -35,8 +35,6 @@ public class EventController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-
-    //job done
     @RequestMapping(method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
     public @ResponseBody
     List<Event> getAllEvent() {
@@ -45,35 +43,22 @@ public class EventController {
     }
 
 
-    //not done yet
-    @RequestMapping(method = RequestMethod.POST)
-    public String createEvent(@RequestBody String s) {
-        String res = "can't create event, participant with such id doesn't exist";
+    @RequestMapping(method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody ResponseEntity<Event> createEvent(@RequestBody Event event) {
+        boolean isSuccessful=false;
+        Event newEvent = new Event();
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode newEventJson = mapper.readTree(s);
-            String newEventTitle = newEventJson.get("title").toString().replaceAll("^\"|\"$", "");;
-            String newEventDescr = newEventJson.get("description").toString().replaceAll("^\"|\"$", "");;
-            int newEventuserID = Integer.parseInt(newEventJson.get("userId").toString().replaceAll("^\"|\"$", ""));
-            if (pService.getParticipantById(newEventuserID)!=null) {
-                Event event = eService.saveEvent(new Event(newEventTitle, newEventDescr, newEventuserID));
-                res = event.toString();
-            }
+                if (pService.getParticipantById(event.getEventCreatorId())!=null) {
+                newEvent = eService.saveEvent(new Event(event.getTitle(),event.getDescription(),event.getEventCreatorId()));
+                isSuccessful=true;
+                }
+
         }
-        catch (NumberFormatException e){
-            res = "NumberFormatException (probably userId is not a number)";
-        }
-        catch (JsonParseException e) {
-            res = "Json parse error";
-        }
-        catch (IOException e) {
-            res = "IOException";
-        }
-        System.out.println(res);
-        return res;
+        catch (NumberFormatException e){}
+        if (isSuccessful) return new ResponseEntity<Event>(newEvent,HttpStatus.OK);
+        else return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
     }
 
-    //done
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
     public @ResponseBody ResponseEntity<Event> getEventById(@PathVariable final String eventId) {
         boolean isSuccessful = false;
