@@ -19,3 +19,7 @@
 input.ng-invalid-email {
 	color: red;
 }
+
+button {
+	background-color: #848484;
+}

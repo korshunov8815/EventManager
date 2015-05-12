@@ -1,31 +1,37 @@
 <!doctype html>
 <html class="no-js" lang="en" ng-app="EventManagerApp">
 <head>
-    <meta charset="utf-8"/>
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <title>Organise</title>
-    <link rel="stylesheet" href="css/foundation.css"/>
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <title>Серые праздники</title>
 
-    <script src="js/angular.js"></script>
-    <script src="js/resource.js"></script>
-    <script src="js/app.js"></script>
-    <!-- Наши стили -->
+    <meta charset="utf-8"/>
+    
+    <link rel="stylesheet" href="/css/foundation.css"/>
+    <link rel="stylesheet" type="text/css" href="/app/styles/main.css">
+
+    <script src="/js/angular.js"></script>
+    <script src="/js/angular-ui-router.js"></script>
+    <script src="/js/resource.js"></script>
+
+    <script src="/app/scripts/app.js"></script>
+
+    <script src="/app/scripts/resources/Event.js"></script>
+    
+    <script src="/app/scripts/services/AuthService.js"></script>
+    
+    <script src="/app/scripts/controllers/EventController.js"></script>
 </head>
-<body>
+<body ng-controller="ApplicationController">
 <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
         <li class="name">
-            <h1><a href="#">Organise</a></h1>
+            <h1><a href="#">Серые праздники</a></h1>
         </li>
     </ul>
 
     <section class="top-bar-section">
-        <!-- Right Nav Section -->
         <ul class="right">
             <li><a href="#">Участники</a></li>
             <li><a href="#">Трекер задач</a></li>
-            <!-- <li><a href="#">Флудилка</a></li> -->
             <li><a class="add-button" href="#" data-reveal-id="myModal"><span>+</span></a></li>
         </ul>
     </section>
@@ -34,70 +40,29 @@
 <div class="row">
     <div class="large-8 small-8 columns">
         <div class="panel">
-            <h3>Организуй свое мероприятие</h3>
+            <h2>Серые праздники</h2>
 
-            <h2>Начало в 9.00</h2>
+            <h3>Здесь организуется настоящее веселье</h3>
 
-            <!-- <div ng-controller="MainPageCtrl">
-                <h3>Формочка для Ани</h3>
-                <form>
-                    <input type="text" ng-model="form.title"/>
-                    <textarea cols="30" rows="10" ng-model="form.description"></textarea>
-                    <input type="text" ng-model="form.userId" value="1"/>
-                    <button type="submit" ng-click="submit(form)">Нажми меня</button>
-                </form>
-            </div> -->
+            <h4>Но для начала необходимо войти</h4>
+            <a ui-sref="events">wow</a>
 
-            <!-- <div ng-controller="RegCtrl">
-                <h3>Формочка для регистрации (тоже для Ани)</h3>
-                <form>
-                    <input type="text" ng-model="form.mail">
-                    <input type="password" ng-model="form.password">
-                    <button type="submit" ng-click="login()">Login</button>
-                </form>
-            </div>
-
-            <div ng-controller="AuthCtrl">
-                <h3>Формочка для аутентификации (тоже для Ани)</h3>
-                <form>
-                    <input type="text" ng-model="form.mail">
-                    <input type="password" ng-model="form.password">
-                    <button type="submit" ng-click="login()">Login</button>
-                </form>
-            </div> -->
-
-            <!-- <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
-                rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt,
-                explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui
-                dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora
-                incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-                exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem
-                vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum,
-                qui dolorem eum fugiat, quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos
-                ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
-                excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt
-                mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-                distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id,
-                quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
-                autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates
-                repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut
-                reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p> -->
+            <div ui-view></div>
         </div>
     </div>
     <div class="large-4 small-4 columns">
-        <div class="panel chat" ng-controller="AuthCtrl">
+        <div class="panel chat" ng-controller="LoginController">
             <div ng-hide="logged()">
                 <div>
                     <h3>Login/Register</h3>
                 </div>
                 <form>
-                    <input type="email" ng-model="form.email" placeholder="email">
-                    <span ng-hide="form.email">Нормальный адрес укажи</span>
-                    <input type="password" ng-model="form.password" placeholder="password">
-                    <span ng-hide="form.password">и пароль</span>
+                    <input type="email" ng-model="credentials.email" placeholder="email">
+                    <span ng-hide="credentials.email">Нормальный адрес укажи</span>
+                    <input type="password" ng-model="credentials.password" placeholder="password">
+                    <span ng-hide="credentials.password">и пароль</span>
                     <div>
-                    <button ng-click="login()">Login</button>
+                    <button ng-click="login(credentials)">Login</button>
                     <button ng-click="register()">Register</button>
                     <div>{{ message }}</div>
                     </div>
@@ -110,11 +75,6 @@
                 <button ng-click="logout()">Logout</button>
             </div>
         </div>
-        <!-- <div class="panel">
-            <div>
-                Tracker
-            </div>
-        </div> -->
     </div>
 </div>
 <div id="myModal" class="reveal-modal" data-reveal>
@@ -137,19 +97,6 @@
                 </span>
             </div>
         </div>
-        <!--<div class="row collapse">-->
-            <!--<div class="small-1 columns" style="margin-right: 0">-->
-                <!--<img src="http://gravatar.com/avatar/?s=37&d=mm" alt=""/>-->
-            <!--</div>-->
-            <!--<div class="small-10 columns">-->
-                <!--<input type="email" name="email" placeholder="e-mail"/>-->
-            <!--</div>-->
-            <!--<div class="small-1 columns">-->
-                <!--<span class="postfix">-->
-                    <!--+-->
-                <!--</span>-->
-            <!--</div>-->
-        <!--</div>-->
     </form>
     <div class="add_participant"><a href="#"><span>+</span> Добавить участника</a></div>
     <!--<div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>-->
