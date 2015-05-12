@@ -17,6 +17,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.List;
 import java.util.Set;
@@ -42,14 +45,23 @@ public class EventController {
         return eService.getAllEvents();
     }
 
-
+    //Влад, тут мы боремся за утят
     @RequestMapping(method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<Event> createEvent(@RequestBody Event event) {
+    public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, @RequestBody Event event) {
         boolean isSuccessful=false;
         Event newEvent = new Event();
+        Cookie[] cookie = request.getCookies();
+        String currentSessionId="";
+        Participant participant = new Participant();
+        for (Cookie c : cookie) {
+            if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
+        }
+        if (sService.ifSessionExist(currentSessionId)) {
+            participant = sService.getParticipantBySession(currentSessionId);
+        }
         try {
-                if (pService.getParticipantById(event.getEventCreatorId())!=null) {
-                newEvent = eService.saveEvent(new Event(event.getTitle(),event.getDescription(),event.getEventCreatorId()));
+                if (pService.getParticipantById(participant.getId())!=null) {
+                newEvent = eService.saveEvent(new Event(event.getTitle(),event.getDescription(),participant.getId()));
                 isSuccessful=true;
                 }
 

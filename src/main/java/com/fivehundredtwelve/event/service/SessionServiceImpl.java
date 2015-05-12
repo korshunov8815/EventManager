@@ -2,6 +2,7 @@ package com.fivehundredtwelve.event.service;
 
 import com.fivehundredtwelve.event.dao.SessionDao;
 import com.fivehundredtwelve.event.dao.TaskDao;
+import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,4 +29,14 @@ public class SessionServiceImpl implements SessionService {
     public List<Session> getAllSessions() {
         return dao.getAllSessions();
     }
+
+    @Override
+    public boolean ifSessionExist(String sessionId) {
+        return dao.ifSessionExist(sessionId);
+    }
+
+    @Override
+    public Participant getParticipantBySession(String sessionId) {return dao.getParticipantBySession(sessionId);}
+
+
 }
