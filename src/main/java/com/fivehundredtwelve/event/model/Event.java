@@ -1,6 +1,8 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +14,7 @@ import java.util.Set;
  * Created by anna on 06.04.15.
  */
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Table(name = "event")
 public class Event {
 
@@ -67,9 +70,11 @@ public class Event {
     }
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events")
+
     public Set<Participant> getParticipants() {
         return participants;
     }
+
     public void setParticipants(Set<Participant> participants) {
         this.participants = participants;
     }

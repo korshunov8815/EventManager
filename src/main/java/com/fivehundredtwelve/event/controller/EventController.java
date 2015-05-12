@@ -17,7 +17,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author anna
@@ -33,53 +38,55 @@ public class EventController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String getAllEvent() {
+    @RequestMapping(method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody
+    List<Event> getAllEvent() {
         logger.info("/events");
-        return eService.getAllEvents().toString();
+        return eService.getAllEvents();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String createEvent(@RequestBody String s) {
-        String res = "can't create event, participant with such id doesn't exist";
+    //Влад, тут мы боремся за утят
+    @RequestMapping(method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, @RequestBody Event event) {
+        boolean isSuccessful=false;
+        Event newEvent = new Event();
+        Cookie[] cookie = request.getCookies();
+        String currentSessionId="";
+        Participant participant = new Participant();
+        for (Cookie c : cookie) {
+            if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
+        }
+        if (sService.ifSessionExist(currentSessionId)) {
+            participant = sService.getParticipantBySession(currentSessionId);
+        }
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode newEventJson = mapper.readTree(s);
-            String newEventTitle = newEventJson.get("title").toString().replaceAll("^\"|\"$", "");;
-            String newEventDescr = newEventJson.get("description").toString().replaceAll("^\"|\"$", "");;
-            int newEventuserID = Integer.parseInt(newEventJson.get("userId").toString().replaceAll("^\"|\"$", ""));
-            if (pService.getParticipantById(newEventuserID)!=null) {
-                Event event = eService.saveEvent(new Event(newEventTitle, newEventDescr, newEventuserID));
-                res = event.toString();
-            }
-        }
-        catch (NumberFormatException e){
-            res = "NumberFormatException (probably userId is not a number)";
-        }
-        catch (JsonParseException e) {
-            res = "Json parse error";
-        }
-        catch (IOException e) {
-            res = "IOException";
-        }
-        System.out.println(res);
-        //баги - если вызвать NumberFormatException, а потом попробовать нормально доабвить ивент
-        //то какого-то хрена эксепшн будет включен в json, но на работу это не влияет
-        return res;
-    }
+                if (pService.getParticipantById(participant.getId())!=null) {
+                newEvent = eService.saveEvent(new Event(event.getTitle(),event.getDescription(),participant.getId()));
+                isSuccessful=true;
+                }
 
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
-    public String getEventById(@PathVariable final String eventId) {
-        String result = "not found";
-        try {
-            int id = Integer.parseInt(eventId);
-            Event event = eService.getEventById(id);
-            if (event!=null) result = event.toString();
         }
         catch (NumberFormatException e){}
-        return result;
+        if (isSuccessful) return new ResponseEntity<Event>(newEvent,HttpStatus.OK);
+        else return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody ResponseEntity<Event> getEventById(@PathVariable final String eventId) {
+        boolean isSuccessful = false;
+        Event event = new Event();
+        try {
+            int id = Integer.parseInt(eventId);
+            event = eService.getEventById(id);
+            if (event!=null) isSuccessful=true;
+        }
+        catch (NumberFormatException e){}
+        if (isSuccessful) return new ResponseEntity<Event>(event,HttpStatus.OK);
+        else return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+    }
+
+
+    //not done yet
     @RequestMapping(value = "/{eventId}", method = RequestMethod.POST)
     public String editEvent(@PathVariable final String eventId, @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId) {
         String res = "no such participant";
@@ -104,6 +111,8 @@ public class EventController {
         return res;
     }
 
+
+    //not done yet
     @RequestMapping(value = "/{eventId}", method = RequestMethod.DELETE)
     public String deleteEvent(@PathVariable final String eventId, @RequestParam(value = "id") final String partId) {
         String res = "no such participant";

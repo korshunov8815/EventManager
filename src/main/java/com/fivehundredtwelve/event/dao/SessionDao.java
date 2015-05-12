@@ -1,5 +1,6 @@
 package com.fivehundredtwelve.event.dao;
 
+import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 
@@ -11,4 +12,6 @@ import java.util.List;
 public interface SessionDao {
     public Session saveSession(Session session);
     public List<Session> getAllSessions();
+    public boolean ifSessionExist(String sessionId);
+    public Participant getParticipantBySession (String sessionId);
 }

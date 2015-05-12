@@ -15,9 +15,13 @@ import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
@@ -60,7 +64,7 @@ public class SomeController {
 
     //create an user
     @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
+    public @ResponseBody ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
         boolean ifSuccessful = false;
         Participant newParticipant = new Participant();
         if (!pService.ifParticipantExistByEmail(participant.getEmail())) {
@@ -73,14 +77,15 @@ public class SomeController {
     }
 
     //auth an user
-    @RequestMapping(value = "/auth", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<Session> authUser(@RequestBody Participant participant) {
+    @RequestMapping(value = "/auth", method = RequestMethod.POST)
+    public Participant authUser(HttpServletResponse response, @RequestBody Participant participant) throws IOException {
 
         boolean isSuccessful = false;
         Session session = new Session();
+        Participant participantDB = null;
         if (pService.ifParticipantExistByEmail(participant.getEmail())) {
             //participantDB is the real existing participant. participant - is object for a guy trying to log in
-            Participant participantDB = pService.getParticipantByEmail(participant.getEmail());
+            participantDB = pService.getParticipantByEmail(participant.getEmail());
             String truePass = participantDB.getPassword();
             String checkPass = AuthorizationUtils.encodeMD5(participant.getPassword());
             if (truePass.equals(checkPass)) {
@@ -91,8 +96,10 @@ public class SomeController {
                 isSuccessful = true;
             }
         }
-        if (isSuccessful) return new ResponseEntity<Session>(session,HttpStatus.OK);
-         else  return new ResponseEntity<Session>(HttpStatus.BAD_REQUEST);
-
+        response.addCookie(new Cookie("sessionId", session.getSessionID()));
+        if (!isSuccessful) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return participantDB;
     }
 }
