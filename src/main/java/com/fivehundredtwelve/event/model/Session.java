@@ -1,4 +1,4 @@
-package com.fivehundredtwelve.event.model;
+git package com.fivehundredtwelve.event.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
