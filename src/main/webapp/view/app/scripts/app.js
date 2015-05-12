@@ -1,13 +1,19 @@
 "use strict";
 
-var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.router"],
-    function ($stateProvider, $urlRouterProvider) {
+var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.router"])
+    .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         // $locationProvider.html5Mode({
         //   enabled: true,
         //   requireBase: false
         // });
-
         // $locationProvider.hashPrefix('!');
+
+        $httpProvider.interceptors.push([
+          '$injector',
+          function ($injector) {
+            return $injector.get('AuthInterceptor');
+          }
+        ]);
 
         $stateProvider
             .state("events", {
@@ -15,6 +21,16 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
                 templateUrl: "app/views/events.html",
                 controller: "EventCtrl"
             })
+    })
+    .factory('AuthInterceptor', function ($q) {
+      return {
+        responseError: function (response) {
+          if (response.status == 401) {
+            // location = "/";
+          }
+          return $q.reject(response);
+        }
+      };
     });
 
 eventManagerApp.constant('AUTH_EVENTS', {
@@ -73,16 +89,22 @@ eventManagerApp.controller("LoginController",
 
         $scope.login = function (credentials) {
             AuthService.login(credentials).then(function (user) {
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                $scope.setCurrentUser(user);
-            }, function () {
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                // $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                // $scope.setCurrentUser(user);
+                console.log(user);
             });
             // $scope.message = AuthService.login($scope.form);
             // console.log(AuthService.logged());
             // $scope.form.password = null;
         }
 
+        $scope.register = function (credentials) {
+            AuthService.register(credentials).then(function (user) {
+                console.log("good:" + user);
+            }, function () {
+                console.log("bad");
+            })
+        }
         // $scope.register = function () {
         //     $scope.message = AuthService.register($scope.form);
         //     console.log(AuthService.logged());
@@ -98,31 +120,31 @@ eventManagerApp.controller("LoginController",
         // }
     });
 
-eventManagerApp.controller('ApplicationController', function ($scope,
-                                               USER_ROLES,
-                                               AuthService) {
-  $scope.currentUser = null;
-  $scope.userRoles = USER_ROLES;
-  $scope.isAuthorized = AuthService.isAuthorized;
+// eventManagerApp.controller('ApplicationController', function ($scope,
+//                                                USER_ROLES,
+//                                                AuthService) {
+//   $scope.currentUser = null;
+//   $scope.userRoles = USER_ROLES;
+//   $scope.isAuthorized = AuthService.isAuthorized;
  
-  $scope.setCurrentUser = function (user) {
-    $scope.currentUser = user;
-  };
-});
+//   $scope.setCurrentUser = function (user) {
+//     $scope.currentUser = user;
+//   };
+// });
 
-eventManagerApp.service('Session', function () {
-    this.create = function (sessionID) {
-        this.sessionID = sessionID;
-    }
-  // this.create = function (sessionId, userId, userRole) {
-  //   this.id = sessionId;
-  //   this.userId = userId;
-  //   this.userRole = userRole;
-  // };
-  this.destroy = function () {
-    this.sessionID = null;
-    // this.id = null;
-    // this.userId = null;
-    // this.userRole = null;
-  };
-});
+// eventManagerApp.service('Session', function () {
+//     this.create = function (sessionID) {
+//         this.sessionID = sessionID;
+//     }
+//   // this.create = function (sessionId, userId, userRole) {
+//   //   this.id = sessionId;
+//   //   this.userId = userId;
+//   //   this.userRole = userRole;
+//   // };
+//   this.destroy = function () {
+//     this.sessionID = null;
+//     // this.id = null;
+//     // this.userId = null;
+//     // this.userRole = null;
+//   };
+// });

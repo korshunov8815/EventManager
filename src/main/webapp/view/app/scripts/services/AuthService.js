@@ -1,7 +1,7 @@
 "use strict";
 
 eventManagerApp.factory("AuthService",
-    function($http, Session) {
+    function($http) {
         var authService = {};
 
         authService.login = function (creadentials) {
@@ -9,13 +9,11 @@ eventManagerApp.factory("AuthService",
             return $http
                 .post("/api/auth", creadentials)
                 .then(function (res) {
-                    Session.create(res.data.sessionID);
                     return res.data.sessionID;
                 });
         };
 
         authService.isAuthenticated = function () {
-            return !!Session.userId;
         };
 
         authService.isAuthorized = function (authorizedRoles) {
@@ -23,10 +21,10 @@ eventManagerApp.factory("AuthService",
                 authorizedRoles = [authorizedRoles];
             }
 
-            return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+            // return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
         };
 
-        return authService;
+
 
 
         // var logged = false;
@@ -52,20 +50,20 @@ eventManagerApp.factory("AuthService",
         //     console.log("logout");
         // };
 
-        // var register = function (credentials) {
-        //     var message = "register";
+        authService.register = function (credentials) {
+            // var message = "register";
             
-        //     $http.post("/api/registration", credentials).then(
-        //             function (data, status, headers, config) {
-        //                 console.log(data);
-        //                 message = "";
-        //             },
-        //             function (data, status, headers, config) {
-        //                 message = "Some trouble, я чувствую. Возможно, пользователь с таким мылом уже есть";
-        //             });
+            return $http.post("/api/registration", credentials).then(
+                    function (data, status, headers, config) {
+                        console.log(data);
+                        // message = "";
+                    },
+                    function (data, status, headers, config) {
+                        // message = "Some trouble, я чувствую. Возможно, пользователь с таким мылом уже есть";
+                    });
 
-        //     return message;
-        // };
+            // return message;
+        };
 
         // var isLogged = function () {
         //     return logged;
@@ -77,4 +75,5 @@ eventManagerApp.factory("AuthService",
         //     register: register,
         //     logged: isLogged
         // }
+        return authService;
     });
