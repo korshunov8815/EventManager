@@ -28,7 +28,7 @@ import java.util.Set;
  * @author anna
  */
 @RestController
-@RequestMapping(value = "/events", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/events", produces = "text/plain;charset=UTF-8")
 public class EventController {
 
     private static final Logger logger = Logger.getLogger(EventController.class);
