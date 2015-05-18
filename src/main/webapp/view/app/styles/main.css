@@ -31,3 +31,11 @@ button {
 	color: black;
 	background-color: rgb(194, 194, 194);
 }
+
+.event-title:first-letter {
+	color: red;
+}
+
+.event-description {
+
+}

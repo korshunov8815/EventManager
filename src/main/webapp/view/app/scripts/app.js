@@ -28,7 +28,7 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookie
                 templateUrl: "/app/views/events.html",
                 controller: "EventsCtrl",
                 resolve: {
-                    Events: function (Event) {
+                    events: function (Event) {
                         return Event.query().$promise;
                     }
                 }
@@ -36,7 +36,12 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookie
             .state("event", {
                 url: "/events/:id",
                 templateUrl: "/app/views/event.html",
-                controller: "EventCtrl"
+                controller: "EventCtrl",
+                resolve: {
+                    event: function (Event, $stateParams) {
+                        return Event.get({id: $stateParams.id}).$promise;
+                    }
+                }
             })
     })
 

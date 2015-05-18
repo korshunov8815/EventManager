@@ -1,6 +1,7 @@
 "use strict";
 
 eventManagerApp.controller("EventCtrl",
-    function ($scope) {
+    function ($scope, event) {
+    	$scope.event = event;
     	console.log("wowow");
     });

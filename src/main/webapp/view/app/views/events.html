@@ -1,7 +1,7 @@
 <div>
 	<div ng-show="show_events">
 		<h1>Список мероприятий</h1>
-		<a ng-repeat="event in Events" href="#/events/{{ event.id }}">
+		<a ng-repeat="event in events" href="#/events/{{ event.id }}">
 			<div class="events" >
 				<span>{{ event.title }}</span>
 			</div>
