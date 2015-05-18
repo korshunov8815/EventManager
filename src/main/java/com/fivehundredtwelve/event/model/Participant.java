@@ -1,9 +1,6 @@
 package com.fivehundredtwelve.event.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,6 +17,7 @@ public class Participant {
     private int id;
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
     private Set<Event> events = new HashSet<Event>();
     private Set<Task> tasks = new HashSet<Task>();
@@ -53,7 +51,9 @@ public class Participant {
     }
 
     @Column(name="password", nullable = true)
+    @JsonIgnore
     public String getPassword() {return password;}
+    @JsonProperty
     public void setPassword(String password) { this.password=password;}
 
 

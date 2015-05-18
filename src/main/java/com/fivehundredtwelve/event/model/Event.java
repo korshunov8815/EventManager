@@ -22,7 +22,7 @@ public class Event {
     private String title;
     private String description;
     private Set<Task> tasks;
-    private int eventCreatorId;
+    private Participant eventCreator;
 
     private Set<Participant> participants = new HashSet<Participant>();
 
@@ -52,18 +52,18 @@ public class Event {
         this.description = description;
     }
 
-    @Column(name = "eventCreatorId", nullable = false)
-    public int getEventCreatorId() {
-        return eventCreatorId;
+    @OneToOne(fetch = FetchType.EAGER)
+    public Participant getEventCreator() {
+        return eventCreator;
     }
-    public void setEventCreatorId(int eventCreatorId) {
-        this.eventCreatorId = eventCreatorId;
+    public void setEventCreator(Participant eventCreator) {
+        this.eventCreator = eventCreator;
     }
 
-    public Event(String title, String description, int id) {
+    public Event(String title, String description, Participant eventCreator) {
         this.title = title;
         this.description = description;
-        this.eventCreatorId = id;
+        this.eventCreator = eventCreator;
     }
 
     public Event() {

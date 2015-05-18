@@ -9,6 +9,7 @@ import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -29,16 +30,17 @@ public class SomeController {
 
     private static final Logger logger = Logger.getLogger(SomeController.class);
     private static ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
-    private static EventService eService = (EventService)context.getBean("eventService");
+    @Autowired
+    private EventService eService;
     private static ParticipantService pService = (ParticipantService)context.getBean("participantService");
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
     @RequestMapping("/test")
     public void seeEvents() {
-        Event event1 = eService.saveEvent(new Event("first", "so good рашан", 1));
-        Event event2 = eService.saveEvent(new Event("second", "not so good", 2));
-        Event event3 = eService.saveEvent(new Event("third", "boring", 1));
+       /* Event event1 = eService.saveEvent(new Event("first", "so good рашан", 1));
+       // Event event2 = eService.saveEvent(new Event("second", "not so good", 2));
+       // Event event3 = eService.saveEvent(new Event("third", "boring", 1));
         Participant participant1 = new Participant("vanya","vanya@mail.ru");
         Participant participant2 = new Participant("petya", "petya@mail.ru");
         Participant participant3 = new Participant("anya","anya@mail.ru");
@@ -55,7 +57,7 @@ public class SomeController {
         eService.addTaskToEvent(task3, event3);
         pService.addTaskToParticipant(task1, participant1);
         pService.addTaskToParticipant(task3, participant1);
-        pService.addTaskToParticipant(task2, participant2);
+        pService.addTaskToParticipant(task2, participant2); */
     }
 
     //create an user

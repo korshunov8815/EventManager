@@ -7,6 +7,7 @@ import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class EventController {
             if (participant == null) {
                 throw new Exception("no session defined");
             }
-            event.setEventCreatorId(participant.getId());
+            event.setEventCreator(participant);
             eService.saveEvent(event);
             return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
@@ -81,7 +82,7 @@ public class EventController {
             Participant participant = pService.getParticipantById(pId);
             if (participant!=null) {
                 if (event != null) {
-                    if (event.getEventCreatorId() == pId) {
+                    if (event.getEventCreator() == participant) {
                         res = eService.editEvent(eId, t, d).toString();
                     } else {
                         res = "no rights to edit event";
@@ -107,7 +108,7 @@ public class EventController {
             Participant participant = pService.getParticipantById(pId);
             if (participant!=null) {
                 if (event != null) {
-                    if (event.getEventCreatorId() == pId) {
+                    if (event.getEventCreator() == participant) {
                         res = eService.deleteEvent(eId, pService).toString();
                     } else {
                         res = "no rights to delete event";
