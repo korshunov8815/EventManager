@@ -1,7 +1,7 @@
 "use strict";
 
 eventManagerApp.controller("EventsCtrl",
-    function ($scope, Event, Events) {
+    function ($scope, $state, Event, Events) {
     	$scope.show_events = true;
 
     	$scope.event = new Event();
@@ -13,7 +13,11 @@ eventManagerApp.controller("EventsCtrl",
     	};
 
     	$scope.createEvent = function () {
-    		$scope.event.$save();
+    		$scope.event.$save().then(function () {
+    			$scope.Events = Event.query();
+    			$scope.toggle_show_events();
+    			console.log($scope.Events);
+    		});
     	}
 
     	$scope.addEvent = function () {

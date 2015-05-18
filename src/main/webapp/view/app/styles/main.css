@@ -23,3 +23,11 @@ input.ng-invalid-email {
 button {
 	background-color: #848484;
 }
+
+.events {
+	margin: 10px;
+	padding: 10px;
+	margin-left: 0;
+	color: black;
+	background-color: rgb(194, 194, 194);
+}
