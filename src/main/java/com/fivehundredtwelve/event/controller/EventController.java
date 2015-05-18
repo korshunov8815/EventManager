@@ -46,6 +46,7 @@ public class EventController {
             if (participant == null) {
                 throw new Exception("no session defined");
             }
+            event.setEventCreatorId(participant.getId());
             eService.saveEvent(event);
             return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
