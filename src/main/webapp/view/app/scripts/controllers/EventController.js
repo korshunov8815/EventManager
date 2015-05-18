@@ -24,7 +24,6 @@ eventManagerApp.controller("EventCtrl",
     	};
 
     	$scope.cancelEditEvent = function () {
-    		$scope.event = $scope.event.$get();
     		$scope.toggle_editing();
     	};
 
