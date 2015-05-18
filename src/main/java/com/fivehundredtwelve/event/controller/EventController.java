@@ -1,12 +1,7 @@
 package com.fivehundredtwelve.event.controller;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
-import com.fivehundredtwelve.event.model.Session;
-import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
@@ -18,11 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author anna
@@ -49,27 +41,17 @@ public class EventController {
     //Влад, тут мы боремся за утят
     @RequestMapping(method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
     public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, @RequestBody Event event) {
-        boolean isSuccessful=false;
-        Event newEvent = new Event();
-        Cookie[] cookie = request.getCookies();
-        String currentSessionId="";
-        Participant participant = new Participant();
-        for (Cookie c : cookie) {
-            if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
-        }
-        if (sService.ifSessionExist(currentSessionId)) {
-            participant = sService.getParticipantBySession(currentSessionId);
-        }
         try {
-                if (pService.getParticipantById(participant.getId())!=null) {
-                newEvent = eService.saveEvent(new Event(event.getTitle(),event.getDescription(),participant.getId()));
-                isSuccessful=true;
-                }
-
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            eService.saveEvent(event);
+            return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
-        catch (NumberFormatException e){}
-        if (isSuccessful) return new ResponseEntity<Event>(newEvent,HttpStatus.OK);
-        else return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        catch (final Exception e) {
+            return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})

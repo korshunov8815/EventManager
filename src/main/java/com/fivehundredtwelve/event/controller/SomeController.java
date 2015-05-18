@@ -1,7 +1,4 @@
 package com.fivehundredtwelve.event.controller;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
@@ -11,11 +8,9 @@ import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
-import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
 
 /**
  * @author anna
@@ -108,18 +103,8 @@ public class SomeController {
     //ifAuth
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
     public @ResponseBody Participant checkIfAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean ifAuth=false;
-        Cookie[] cookie = request.getCookies();
-        String currentSessionId="";
-        Participant participant = new Participant();
-        for (Cookie c : cookie) {
-            if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
-        }
-        if (sService.ifSessionExist(currentSessionId)) {
-            participant = sService.getParticipantBySession(currentSessionId);
-            ifAuth = true;
-        }
-        if (!ifAuth) {
+        Participant participant = AuthorizationUtils.authorize(request, sService);
+        if (participant == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
         return participant;
