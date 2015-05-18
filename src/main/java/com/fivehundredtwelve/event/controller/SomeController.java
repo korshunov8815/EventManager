@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
@@ -38,7 +39,7 @@ public class SomeController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-    @RequestMapping("/api/test")
+    @RequestMapping("/test")
     public void seeEvents() {
         Event event1 = eService.saveEvent(new Event("first", "so good рашан", 1));
         Event event2 = eService.saveEvent(new Event("second", "not so good", 2));
@@ -63,7 +64,7 @@ public class SomeController {
     }
 
     //create an user
-    @RequestMapping(value = "/api/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
         boolean ifSuccessful = false;
         Participant newParticipant = new Participant();
@@ -77,7 +78,7 @@ public class SomeController {
     }
 
     //auth an user
-    @RequestMapping(value = "/api/auth", method = RequestMethod.POST)
+    @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public Participant authUser(HttpServletResponse response, @RequestBody Participant participant) throws IOException {
 
         boolean isSuccessful = false;
@@ -102,4 +103,26 @@ public class SomeController {
         }
         return participantDB;
     }
+
+
+    //ifAuth
+    @RequestMapping(value = "/auth", method = RequestMethod.GET)
+    public @ResponseBody Participant checkIfAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean ifAuth=false;
+        Cookie[] cookie = request.getCookies();
+        String currentSessionId="";
+        Participant participant = new Participant();
+        for (Cookie c : cookie) {
+            if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
+        }
+        if (sService.ifSessionExist(currentSessionId)) {
+            participant = sService.getParticipantBySession(currentSessionId);
+            ifAuth = true;
+        }
+        if (!ifAuth) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return participant;
+    }
+
 }
