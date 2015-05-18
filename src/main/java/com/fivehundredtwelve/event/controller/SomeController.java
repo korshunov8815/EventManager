@@ -28,7 +28,7 @@ import java.io.*;
  * @author anna
  */
 @RestController
-@RequestMapping
+@RequestMapping(value = "/api", produces = "application/json;charset=UTF-8")
 public class SomeController {
 
     private static final Logger logger = Logger.getLogger(SomeController.class);
