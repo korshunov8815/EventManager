@@ -16,7 +16,7 @@ eventManagerApp.controller("EventsCtrl",
     		$scope.event.$save().then(function () {
     			$scope.Events = Event.query();
     			$scope.toggle_show_events();
-    			console.log($scope.Events);
+    			$scope.event = new Event();
     		});
     	}
 

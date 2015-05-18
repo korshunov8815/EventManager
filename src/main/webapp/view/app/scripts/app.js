@@ -33,8 +33,8 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookie
                     }
                 }
             })
-            .state("events.instance", {
-                url: "^/:id",
+            .state("event", {
+                url: "/events/:id",
                 templateUrl: "/app/views/event.html",
                 controller: "EventCtrl"
             })
