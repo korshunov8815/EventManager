@@ -28,6 +28,7 @@ import java.util.Set;
  * @author anna
  */
 @RestController
+
 @RequestMapping(value = "/api/events", produces = "application/json;charset=UTF-8")
 public class EventController {
 

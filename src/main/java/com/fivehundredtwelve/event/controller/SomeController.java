@@ -38,7 +38,7 @@ public class SomeController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-    @RequestMapping("/test")
+    @RequestMapping("/api/test")
     public void seeEvents() {
         Event event1 = eService.saveEvent(new Event("first", "so good рашан", 1));
         Event event2 = eService.saveEvent(new Event("second", "not so good", 2));
@@ -63,7 +63,7 @@ public class SomeController {
     }
 
     //create an user
-    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/api/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
         boolean ifSuccessful = false;
         Participant newParticipant = new Participant();
@@ -77,7 +77,7 @@ public class SomeController {
     }
 
     //auth an user
-    @RequestMapping(value = "/auth", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/auth", method = RequestMethod.POST)
     public Participant authUser(HttpServletResponse response, @RequestBody Participant participant) throws IOException {
 
         boolean isSuccessful = false;
