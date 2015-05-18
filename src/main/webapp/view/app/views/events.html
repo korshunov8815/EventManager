@@ -1,9 +1,11 @@
 <div>
 	<div ng-show="show_events">
 		<h1>Список мероприятий</h1>
-		<div ng-repeat="event in Events">
-			<span>{{ event.title }}</span>
-		</div>
+		<a ng-repeat="event in Events" href="#/events/{{ event.id }}">
+			<div class="events" >
+				<span>{{ event.title }}</span>
+			</div>
+		</a>
 		<button ng-click="toggle_show_events()">Создать мероприятие</button>
 	</div>
 	<div ng-hide="show_events">

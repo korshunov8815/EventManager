@@ -1,6 +1,8 @@
 "use strict";
 
-var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.router"])
+
+
+var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookies", "ui.router"])
     .config(function ($httpProvider, $stateProvider, $urlRouterProvider, $locationProvider) {
         // $locationProvider.html5Mode({
         //   enabled: true,
@@ -31,7 +33,7 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
                     }
                 }
             })
-            .state("index.events.instance", {
+            .state("events.instance", {
                 url: "^/:id",
                 templateUrl: "/app/views/event.html",
                 controller: "EventCtrl"

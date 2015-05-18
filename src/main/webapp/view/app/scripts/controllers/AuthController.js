@@ -14,6 +14,10 @@ eventManagerApp.controller("AuthController",
             AuthService.login(credentials);
         };
 
+        $scope.logout = function () {
+            AuthService.logout();
+        };
+
         $scope.register = function (credentials) {
             AuthService.register(credentials).then(function (user) {
                 console.log("good:" + user);

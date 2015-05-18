@@ -24,7 +24,7 @@ eventManagerApp.factory("AuthService",
                     $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 }, function (res) {
                     console.log("getUser fail")
-                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed)
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                 })
         }
 
@@ -34,7 +34,8 @@ eventManagerApp.factory("AuthService",
 
         authService.logout = function () {
             authService.user = null;
-            location = "/";
+            console.log(ipCookie("sessionId"));
+            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
         };
 
         authService.register = function (credentials) {
