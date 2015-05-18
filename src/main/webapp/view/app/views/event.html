@@ -11,12 +11,12 @@
 		<h1>Редактирование</h1>
 		<form  ng-submit="saveEvent()">
 			<label>Название</label>
-			<input ng-model="event.title">
+			<input ng-model="form.title">
 			<label>Описание</label>
-			<textarea ng-model="event.description"></textarea>
+			<textarea ng-model="form.description"></textarea>
 			<div>
 				<button>Сохранить</button>
-				<button type="button" ng-click="toggle_editing()">Отмена</button>
+				<button type="button" ng-click="cancelEditEvent()">Отмена</button>
 			</div>
 		</form>
 	</div>

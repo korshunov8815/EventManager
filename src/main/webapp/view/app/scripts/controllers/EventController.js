@@ -3,7 +3,7 @@
 eventManagerApp.controller("EventCtrl",
     function ($scope, $state, event) {
     	$scope.event = event;
-    	$scope.form = {};
+    	$scope.form = {}
     	$scope.editing = false;
 
     	$scope.toggle_editing = function () {
@@ -20,6 +20,11 @@ eventManagerApp.controller("EventCtrl",
     		$scope.form.title = $scope.event.title;
     		$scope.form.description = $scope.event.description;
 
+    		$scope.toggle_editing();
+    	};
+
+    	$scope.cancelEditEvent = function () {
+    		$scope.event = $scope.event.$get();
     		$scope.toggle_editing();
     	};
 
