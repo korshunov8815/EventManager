@@ -24,7 +24,12 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
             .state("events", {
                 url: "/events",
                 templateUrl: "/app/views/events.html",
-                controller: "EventsCtrl"
+                controller: "EventsCtrl",
+                resolve: {
+                    Events: function (Event) {
+                        return Event.query().$promise;
+                    }
+                }
             })
             .state("index.events.instance", {
                 url: "^/:id",

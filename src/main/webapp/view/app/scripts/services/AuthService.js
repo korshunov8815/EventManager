@@ -19,7 +19,6 @@ eventManagerApp.factory("AuthService",
         authService.getUser = function () {
             return $http
                 .get("/api/auth")
-                // .post("/api/auth", {email: "q@q", password: "qw"})
                 .then(function (res) {
                     authService.user = res.data;
                     $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
@@ -42,10 +41,8 @@ eventManagerApp.factory("AuthService",
             return $http.post("/api/registration", credentials).then(
                     function (data, status, headers, config) {
                         console.log(data);
-                        // message = "";
                     },
                     function (data, status, headers, config) {
-                        // message = "Some trouble, я чувствую. Возможно, пользователь с таким мылом уже есть";
                     });
         };
 

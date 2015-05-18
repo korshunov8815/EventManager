@@ -10,17 +10,8 @@ eventManagerApp.controller("AuthController",
             password: ''
         };
 
-        // $scope.clear();
-
         $scope.login = function (credentials) {
-            AuthService.login(credentials).then(function (user) {
-                // $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                // $scope.setCurrentUser(user);
-                console.log(user);
-            });
-            // $scope.message = AuthService.login($scope.form);
-            // console.log(AuthService.logged());
-            // $scope.form.password = null;
+            AuthService.login(credentials);
         };
 
         $scope.register = function (credentials) {
@@ -30,18 +21,4 @@ eventManagerApp.controller("AuthController",
                 console.log("bad");
             })
         };
-
-        // $scope.register = function () {
-        //     $scope.message = AuthService.register($scope.form);
-        //     console.log(AuthService.logged());
-        //     $scope.form.password = null;
-        // }
-
-        // $scope.logout = function () {
-        //     AuthService.logout();
-        // }
-
-        // $scope.logged = function () {
-        //     return AuthService.logged();
-        // }
     });

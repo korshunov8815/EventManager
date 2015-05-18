@@ -1,1 +1,22 @@
-<div>{{ wow }}</div>
+<div>
+	<div ng-show="show_events">
+		<h1>Список мероприятий</h1>
+		<div ng-repeat="event in Events">
+			<span>{{ event.title }}</span>
+		</div>
+		<button ng-click="toggle_show_events()">Создать мероприятие</button>
+	</div>
+	<div ng-hide="show_events">
+		<h1>Создание мероприятия</h1>
+		<form  ng-submit="createEvent()">
+			<label>Название</label>
+			<input ng-model="event.title">
+			<label>Описание</label>
+			<textarea ng-model="event.description"></textarea>
+			<div>
+				<button>Создать</button>
+				<button type="button" ng-click="toggle_show_events()">Отмена</button>
+			</div>
+		</form>
+	</div>
+</div>
