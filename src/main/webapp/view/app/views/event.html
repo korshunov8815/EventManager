@@ -1,4 +1,23 @@
 <div>
-	<h1 class="event-title">{{ event.title }}</h1>
-	<div class="event-description">{{ event.description }}</div>
+	<div ng-hide="editing">
+		<h1 class="event-title">{{ event.title }}</h1>
+		<div class="event-description">{{ event.description }}</div>
+
+		<button type="button" ng-click="editEvent()">Редактировать</button>
+		<button type="button" ng-click="deleteEvent()">Удалить</button>
+	</div>
+
+	<div ng-show="editing">
+		<h1>Редактирование</h1>
+		<form  ng-submit="saveEvent()">
+			<label>Название</label>
+			<input ng-model="event.title">
+			<label>Описание</label>
+			<textarea ng-model="event.description"></textarea>
+			<div>
+				<button>Сохранить</button>
+				<button type="button" ng-click="toggle_editing()">Отмена</button>
+			</div>
+		</form>
+	</div>
 </div>

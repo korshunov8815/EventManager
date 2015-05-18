@@ -19,7 +19,7 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookie
 
         $stateProvider
             .state("index", {
-                url: "/",
+                url: "",
                 templateUrl: "/app/views/index.html",
                 controller: "IndexCtrl"
             })
