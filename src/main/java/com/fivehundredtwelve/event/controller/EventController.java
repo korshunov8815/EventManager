@@ -6,6 +6,7 @@ import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
+import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -97,28 +98,26 @@ public class EventController {
     }
 
 
-    //not done yet
     @RequestMapping(value = "/{eventId}", method = RequestMethod.DELETE)
-    public String deleteEvent(@PathVariable final String eventId, @RequestParam(value = "id") final String partId) {
-        String res = "no such participant";
+    public @ResponseBody ResponseEntity<Event> deleteEvent(HttpServletRequest request, @PathVariable final String eventId) {
+        Event event = new Event();
+        Participant participant = new Participant();
         try {
             int eId = Integer.parseInt(eventId);
-            int pId = Integer.parseInt(partId);
-            Event event = eService.getEventById(eId);
-            Participant participant = pService.getParticipantById(pId);
-            if (participant!=null) {
-                if (event != null) {
-                    if (event.getEventCreator() == participant) {
-                        res = eService.deleteEvent(eId, pService).toString();
-                    } else {
-                        res = "no rights to delete event";
-                    }
-                } else {
-                    res = "event not found";
+            event = eService.getEventById(eId);
+            participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            if (event != null) {
+                if (event.getEventCreator().getId() == participant.getId()) {
+                    eService.deleteEvent(eId, pService);
                 }
             }
         }
-        catch (NumberFormatException e){}
-        return res;
+        catch (final Exception e) {
+            return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Event>(event, HttpStatus.OK);
     }
 }
