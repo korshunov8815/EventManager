@@ -16,6 +16,7 @@
     <script src="/app/scripts/app.js"></script>
 
     <script src="/app/scripts/resources/Event.js"></script>
+    <script src="/app/scripts/resources/Profile.js"></script>
     
     <script src="/app/scripts/services/AuthService.js"></script>
     
@@ -23,6 +24,7 @@
     <script src="/app/scripts/controllers/EventsController.js"></script>
     <script src="/app/scripts/controllers/IndexController.js"></script>
     <script src="/app/scripts/controllers/AuthController.js"></script>
+    <script src="/app/scripts/controllers/ProfileController.js"></script>
 </head>
 
 <body ng-controller="AppCtrl">
@@ -76,9 +78,13 @@
                         <span>Profile</span>
                     </h2>
                     <div>
-                        <span>email: {{ AuthService.user.email }}</span>
+                        <div>email: {{ AuthService.user.email }}</div>
+                        <div>name: {{ AuthService.user.name }}</div>
                     </div>
                     <button ng-click="logout()">Logout</button>
+                    <a ui-sref="profile">
+                        <button>Edit</button>
+                    </a>
                 </div>
             </div>
         </div>

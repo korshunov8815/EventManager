@@ -24,7 +24,6 @@ eventManagerApp.factory("AuthService",
                     authService.user = res.data;
                     $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 }, function (res) {
-                    console.log("getUser fail")
                     $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                 })
         }

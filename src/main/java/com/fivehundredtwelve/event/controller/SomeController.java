@@ -118,4 +118,9 @@ public class SomeController {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
+    @RequestMapping(value = "/auth", method = RequestMethod.PUT)
+    public void update(HttpServletResponse response) throws IOException {
+        
+    }    
+
 }

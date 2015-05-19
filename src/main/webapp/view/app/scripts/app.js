@@ -23,6 +23,16 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
                 templateUrl: "/app/views/index.html",
                 controller: "IndexCtrl"
             })
+            .state("profile", {
+                url: "/profile",
+                templateUrl: "/app/views/profile.html",
+                controller: "ProfileCtrl",
+                resolve: {
+                    user: function (Profile) {
+                        return Profile.get().$promise;
+                    }
+                }
+            })
             .state("events", {
                 url: "/events",
                 templateUrl: "/app/views/events.html",
