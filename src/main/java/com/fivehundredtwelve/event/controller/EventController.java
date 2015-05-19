@@ -73,28 +73,25 @@ public class EventController {
 
 
     //not done yet
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.POST)
-    public String editEvent(@PathVariable final String eventId, @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId) {
-        String res = "no such participant";
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody ResponseEntity<Event> editEvent(HttpServletRequest request, @PathVariable final String eventId, @RequestBody Event event){
+        // @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId
         try {
-            int eId = Integer.parseInt(eventId);
-            int pId = Integer.parseInt(partId);
-            Event event = eService.getEventById(eId);
-            Participant participant = pService.getParticipantById(pId);
-            if (participant!=null) {
-                if (event != null) {
-                    if (event.getEventCreator() == participant) {
-                        res = eService.editEvent(eId, t, d).toString();
-                    } else {
-                        res = "no rights to edit event";
-                    }
-                } else {
-                    res = "event not found";
-                }
+            int eId = event.getId();
+            Participant owner = event.getEventCreator();
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
             }
+            if (owner.getId() == participant.getId()) {
+                eService.editEvent(event.getId(), event.getTitle(), event.getDescription());
+            }
+
         }
-        catch (NumberFormatException e){}
-        return res;
+        catch (final Exception e) {
+            return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Event>(event, HttpStatus.OK);
     }
 
 

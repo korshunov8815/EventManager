@@ -10,7 +10,7 @@ import java.util.Set;
  * Created by anna on 06.04.15.
  */
 @Entity
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = Participant.class)
 @Table(name = "participant")
 public class Participant {
 
