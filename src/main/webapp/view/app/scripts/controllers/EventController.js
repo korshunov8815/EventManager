@@ -11,9 +11,11 @@ eventManagerApp.controller("EventCtrl",
     	}
 
     	$scope.deleteEvent = function () {
-    		$scope.event.$delete();
+    		$scope.event.$delete().then(
+    			function () {
+    				$state.go("events");
+    			});
 
-    		$state.go("events");
     	};
 
     	$scope.editEvent = function () {
