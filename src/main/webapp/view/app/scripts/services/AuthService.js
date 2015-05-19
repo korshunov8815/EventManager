@@ -34,9 +34,12 @@ eventManagerApp.factory("AuthService",
         };
 
         authService.logout = function () {
-            authService.user = null;
-            console.log(ipCookie("sessionId"));
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+            return $http
+                .delete("/api/auth")
+                .error(function () {
+                    authService.user = null;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                })
         };
 
         authService.register = function (credentials) {

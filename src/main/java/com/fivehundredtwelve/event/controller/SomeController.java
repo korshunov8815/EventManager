@@ -61,7 +61,7 @@ public class SomeController {
     }
 
     //create an user
-    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
         boolean ifSuccessful = false;
         Participant newParticipant = new Participant();
@@ -110,6 +110,12 @@ public class SomeController {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
         return participant;
+    }
+
+    @RequestMapping(value = "/auth", method = RequestMethod.DELETE)
+    public void logout(HttpServletResponse response) throws IOException {
+        response.addCookie(new Cookie("sessionId", ""));
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 }

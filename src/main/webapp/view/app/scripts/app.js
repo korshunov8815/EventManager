@@ -2,7 +2,7 @@
 
 
 
-var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookies", "ui.router"])
+var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.router"])
     .config(function ($httpProvider, $stateProvider, $urlRouterProvider, $locationProvider) {
         // $locationProvider.html5Mode({
         //   enabled: true,
