@@ -51,7 +51,7 @@
         </div>
         <div class="large-4 small-4 columns">
             <div class="panel chat" ng-controller="AuthController">
-                <div ng-hide="AuthService.user">
+                <div ng-hide="AuthService.user" class="profile">
                     <div>
                         <h3>Login/Register</h3>
                     </div>
@@ -67,10 +67,14 @@
                         </div>
                     </form>
                 </div>
-                <div ng-show="AuthService.user">
+                <div ng-show="AuthService.user" class="profile">
                     <h2>
-                        Profile
+                        <img ng-src="{{ avatar }}">
+                        <span>Profile</span>
                     </h2>
+                    <div>
+                        <span>email: {{ AuthService.user.email }}</span>
+                    </div>
                     <button ng-click="logout()">Logout</button>
                 </div>
             </div>

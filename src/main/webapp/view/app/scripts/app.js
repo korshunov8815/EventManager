@@ -70,9 +70,9 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ngCookie
     })
 
     .controller("AppCtrl", function ($rootScope, $state, AUTH_EVENTS) {
-        $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-            $state.go("events");
-        });
+        // $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+        //     $state.go("events");
+        // });
         
         $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
             $state.go("index");

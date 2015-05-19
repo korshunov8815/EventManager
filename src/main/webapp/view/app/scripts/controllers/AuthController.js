@@ -1,7 +1,9 @@
 "use strict";
 
 eventManagerApp.controller("AuthController",
-    function ($scope, $rootScope, AuthService) {
+    function ($scope, $rootScope, AuthService, AUTH_EVENTS) {
+
+        $scope.avatar = "http://gravatar.com/avatar/?s=50&d=retro";
 
         $scope.AuthService = AuthService;
 
@@ -25,4 +27,9 @@ eventManagerApp.controller("AuthController",
                 console.log("bad");
             })
         };
+
+        $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+            console.log("yes i'm here")
+            $scope.avatar = "http://gravatar.com/avatar/" + hex_md5(AuthService.user.email) + "?s=50&d=retro";
+        });
     });

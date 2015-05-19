@@ -37,5 +37,23 @@ button {
 }
 
 .event-description {
-	
+
 }
+
+.profile {
+	margin: 10px;
+}
+
+.profile h2 {
+	margin-top: 0;
+}
+
+.profile h3 {
+	margin-top: 10px;
+}
+
+.profile button {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+

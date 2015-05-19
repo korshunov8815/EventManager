@@ -12,6 +12,7 @@ eventManagerApp.factory("AuthService",
                 .post("/api/auth", creadentials)
                 .then(function (res) {
                     authService.user = res.data;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                     $state.go("events");
                 });
         };
@@ -21,6 +22,7 @@ eventManagerApp.factory("AuthService",
                 .get("/api/auth")
                 .then(function (res) {
                     authService.user = res.data;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 }, function (res) {
                     console.log("getUser fail")
                     $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
