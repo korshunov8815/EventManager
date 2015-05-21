@@ -1,7 +1,6 @@
 package com.fivehundredtwelve.event.auth;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
@@ -13,7 +12,7 @@ public class Mailer {
 
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
-    public static void send(String to, String content) throws AddressException, MessagingException {
+    public static void send(String to, String content) throws MessagingException {
         final String username = "noreplyeventorganizer@gmail.com";
         final String password = "Ifmo3512";
         boolean flag = false;
@@ -30,19 +29,13 @@ public class Mailer {
                         return new PasswordAuthentication(username, password);
                     }
                 });
-
-        try {
-
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(to));
-            message.setSubject("Confirm your registration");
-            message.setText(content);
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(to));
+        message.setSubject("Confirm your registration");
+        message.setText(content);
+        Transport.send(message);
     }
 
 }

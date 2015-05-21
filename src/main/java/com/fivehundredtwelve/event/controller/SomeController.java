@@ -1,9 +1,7 @@
 package com.fivehundredtwelve.event.controller;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
-import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
-import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
@@ -63,41 +61,44 @@ public class SomeController {
     //create an user
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Participant> registerUser(@RequestBody Participant participant) {
-        boolean ifSuccessful = false;
-        Participant newParticipant = new Participant();
-        if (!pService.ifParticipantExistByEmail(participant.getEmail())) {
-            String password = AuthorizationUtils.encodeMD5(participant.getPassword());
-            String regId = AuthorizationUtils.encodeMD5(java.util.UUID.randomUUID().toString()+participant.getPassword());
-            AuthorizationUtils.registration(participant.getEmail(),regId);
-            newParticipant = pService.saveParticipant(new Participant(participant.getEmail(), password, regId));
-            ifSuccessful = true;
+        try {
+            Participant newParticipant = null;
+            if (!pService.ifParticipantExistByEmail(participant.getEmail())) {
+                String password = AuthorizationUtils.encodeMD5(participant.getPassword());
+                String regId = AuthorizationUtils.encodeMD5(java.util.UUID.randomUUID().toString() + participant.getPassword());
+                AuthorizationUtils.registration(participant.getEmail(), regId);
+                newParticipant = pService.saveParticipant(new Participant(participant.getEmail(), password, regId));
+            }
+            return new ResponseEntity<Participant>(newParticipant,HttpStatus.OK);
+
         }
-        if (ifSuccessful) return new ResponseEntity<Participant>(newParticipant,HttpStatus.OK);
-        else return new ResponseEntity<Participant>(HttpStatus.BAD_REQUEST);
+        catch (final Exception e) {
+            return new ResponseEntity<Participant>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     //auth an user
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public Participant authUser(HttpServletResponse response, @RequestBody Participant participant) throws IOException {
-
-        boolean isSuccessful = false;
-        Session session = new Session();
         Participant participantDB = null;
-        if (pService.ifParticipantExistByEmail(participant.getEmail())) {
-            //participantDB is the real existing participant. participant - is object for a guy trying to log in
-            participantDB = pService.getParticipantByEmail(participant.getEmail());
-            String truePass = participantDB.getPassword();
-            String checkPass = AuthorizationUtils.encodeMD5(participant.getPassword());
-            if (truePass.equals(checkPass) && participantDB.getIsActive()) {
-                String sessionID = String.valueOf(System.currentTimeMillis()) + participant.getEmail();
-                sessionID = AuthorizationUtils.encodeMD5(sessionID);
-                session.setSessionID(sessionID);
-                pService.addSessionToParticipant(session, participantDB);
-                isSuccessful = true;
+        try {
+            Session session = new Session();
+            if (pService.ifParticipantExistByEmail(participant.getEmail())) {
+                //participantDB is the real existing participant. participant - is object for a guy trying to log in
+                participantDB = pService.getParticipantByEmail(participant.getEmail());
+                String truePass = participantDB.getPassword();
+                String checkPass = AuthorizationUtils.encodeMD5(participant.getPassword());
+                if (truePass.equals(checkPass) && participantDB.getIsActive()) {
+                    String sessionID = String.valueOf(System.currentTimeMillis()) + participant.getEmail();
+                    sessionID = AuthorizationUtils.encodeMD5(sessionID);
+                    session.setSessionID(sessionID);
+                    pService.addSessionToParticipant(session, participantDB);
+                    response.addCookie(new Cookie("sessionId", session.getSessionID()));
+                }
+                else throw new Exception("authorization failed");
             }
         }
-        response.addCookie(new Cookie("sessionId", session.getSessionID()));
-        if (!isSuccessful) {
+        catch (final Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
         return participantDB;

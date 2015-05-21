@@ -3,13 +3,7 @@ package com.fivehundredtwelve.event.auth;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.service.SessionService;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,17 +34,9 @@ public class AuthorizationUtils {
         }
     }
 
-    public static boolean registration(String email, String id) {
+    public static void registration(String email, String id) throws MessagingException{
         String content = "dude check this link http://localhost:8181/api/confirm/"+id;
-        try {
-            Mailer.send(email,content);
-            return true;
-        }
-        catch (final Exception e) {
-            return false;
-        }
-
-
+        Mailer.send(email,content);
     }
 
 
