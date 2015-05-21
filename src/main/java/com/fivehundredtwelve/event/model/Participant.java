@@ -22,7 +22,16 @@ public class Participant {
     private Set<Event> events = new HashSet<Event>();
     private Set<Task> tasks = new HashSet<Task>();
     private Set<Session> sessions = new HashSet<Session>();
+    @JsonIgnore
+    private String regId;
+    @JsonIgnore
+    private Boolean isActive;
 
+    @Column(name="regId", nullable = false)
+    @JsonIgnore
+    public String getRegId() { return regId;}
+    @JsonProperty
+    public void setRegId(String regId) { this.regId = regId;}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +42,12 @@ public class Participant {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Column(name="isActive", nullable =false)
+    @JsonIgnore
+    public Boolean getIsActive() {return isActive;}
+    @JsonProperty
+    public void setIsActive(Boolean isActive) {this.isActive = isActive;}
 
     @Column(name = "name",length = 100, nullable = false)
     public String getName() {
@@ -60,16 +75,16 @@ public class Participant {
     public Participant() {
     }
 
-    public Participant(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
 
-    public Participant(String email, String password) {
+
+
+    public Participant(String email, String password, String regId) {
         this.email = email;
         this.name = "unnamed jerk";
         this.password = password;
+        this.regId = regId;
+        this.isActive = false;
+
     }
 
     @ManyToMany(fetch = FetchType.EAGER)

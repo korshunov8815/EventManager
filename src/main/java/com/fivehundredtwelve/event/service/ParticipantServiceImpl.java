@@ -59,7 +59,14 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Transactional
     @Override
     public void editParticipantName (int id, String name) {
-        dao.editParticipantName(id,name);
+        dao.editParticipantName(id, name);
     }
+
+    @Override
+    public Participant getParticipantByregId(String regId) {return dao.getParticipantByregId(regId);}
+
+    @Transactional
+    @Override
+    public void activate(int id) {dao.activate(id);}
 }
 

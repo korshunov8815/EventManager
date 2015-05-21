@@ -60,4 +60,5 @@ public class EventServiceImpl implements EventService{
        return dao.deleteEvent(id, ps);
     }
 
+
 }

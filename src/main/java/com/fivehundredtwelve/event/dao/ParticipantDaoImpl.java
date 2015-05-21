@@ -76,4 +76,18 @@ public class ParticipantDaoImpl implements ParticipantDao {
         em.flush();
     }
 
+    @Override
+    public Participant getParticipantByregId(String regId) {
+        Query q1 = em.createQuery("SELECT p FROM Participant p WHERE p.regId LIKE :regId").setParameter("regId",regId);
+        Participant participant = (Participant)q1.getSingleResult();
+        return participant;
+    }
+
+    @Override
+    public void activate(int id){
+        Participant p = em.find(Participant.class, id);
+        p.setIsActive(true);
+        em.flush();
+    }
+
 }

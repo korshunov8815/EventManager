@@ -67,7 +67,9 @@ public class SomeController {
         Participant newParticipant = new Participant();
         if (!pService.ifParticipantExistByEmail(participant.getEmail())) {
             String password = AuthorizationUtils.encodeMD5(participant.getPassword());
-            newParticipant = pService.saveParticipant(new Participant(participant.getEmail(), password));
+            String regId = AuthorizationUtils.encodeMD5(java.util.UUID.randomUUID().toString()+participant.getPassword());
+            AuthorizationUtils.registration(participant.getEmail(),regId);
+            newParticipant = pService.saveParticipant(new Participant(participant.getEmail(), password, regId));
             ifSuccessful = true;
         }
         if (ifSuccessful) return new ResponseEntity<Participant>(newParticipant,HttpStatus.OK);
@@ -86,7 +88,7 @@ public class SomeController {
             participantDB = pService.getParticipantByEmail(participant.getEmail());
             String truePass = participantDB.getPassword();
             String checkPass = AuthorizationUtils.encodeMD5(participant.getPassword());
-            if (truePass.equals(checkPass)) {
+            if (truePass.equals(checkPass) && participantDB.getIsActive()) {
                 String sessionID = String.valueOf(System.currentTimeMillis()) + participant.getEmail();
                 sessionID = AuthorizationUtils.encodeMD5(sessionID);
                 session.setSessionID(sessionID);
@@ -124,6 +126,22 @@ public class SomeController {
             Participant participantBD = pService.getParticipantById(participant.getId());
             if (participantBD==null) throw new Exception("participant not found");
             pService.editParticipantName(participantBD.getId(), participant.getName());
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @RequestMapping(value = "/confirm/{regId}", method = RequestMethod.GET)
+    public ResponseEntity confirmation(HttpServletResponse response, @PathVariable final String regId) throws IOException {
+        try {
+            Participant participantBD = pService.getParticipantByregId(regId);
+            if (participantBD==null) {
+                throw new Exception("participant not found");
+            }
+            pService.activate(participantBD.getId());
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (final Exception e){
