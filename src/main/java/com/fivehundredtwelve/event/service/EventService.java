@@ -5,6 +5,7 @@ import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Task;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by anna on 06.04.15.

@@ -119,8 +119,17 @@ public class SomeController {
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.PUT)
-    public void update(HttpServletResponse response) throws IOException {
-        
-    }    
+    public ResponseEntity update(HttpServletResponse response, @RequestBody Participant participant) throws IOException {
+        try {
+            Participant participantBD = pService.getParticipantById(participant.getId());
+            if (participantBD==null) throw new Exception("participant not found");
+            pService.editParticipantName(participantBD.getId(), participant.getName());
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 }

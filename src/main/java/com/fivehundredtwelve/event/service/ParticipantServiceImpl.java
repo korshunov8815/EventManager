@@ -55,5 +55,11 @@ public class ParticipantServiceImpl implements ParticipantService {
     public void addSessionToParticipant (Session session, Participant participant){
         dao.addSessionToParticipant(session,participant);
     }
+
+    @Transactional
+    @Override
+    public void editParticipantName (int id, String name) {
+        dao.editParticipantName(id,name);
+    }
 }
 

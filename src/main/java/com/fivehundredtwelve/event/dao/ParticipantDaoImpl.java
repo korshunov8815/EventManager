@@ -68,4 +68,12 @@ public class ParticipantDaoImpl implements ParticipantDao {
         participant.getSessions().add(session);
         session.setSessionOwner(participant);
     }
+
+    @Override
+    public void editParticipantName (int id, String name){
+        Participant p = em.find(Participant.class, id);
+        p.setName(name);
+        em.flush();
+    }
+
 }

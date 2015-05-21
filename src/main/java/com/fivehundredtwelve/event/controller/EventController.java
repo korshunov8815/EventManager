@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author anna
@@ -50,6 +51,7 @@ public class EventController {
             }
             event.setEventCreator(participant);
             eService.saveEvent(event);
+            eService.addParticipantToEvent(participant,event);
             return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
         catch (final Exception e) {
@@ -72,10 +74,9 @@ public class EventController {
     }
 
 
-    //not done yet
+
     @RequestMapping(value = "/{eventId}", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
     public @ResponseBody ResponseEntity<Event> editEvent(HttpServletRequest request, @PathVariable final String eventId, @RequestBody Event event){
-        // @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId
         try {
             int eId = event.getId();
             Participant owner = event.getEventCreator();
@@ -86,23 +87,22 @@ public class EventController {
             if (owner.getId() == participant.getId()) {
                 eService.editEvent(event.getId(), event.getTitle(), event.getDescription());
             }
+            return new ResponseEntity<Event>(event, HttpStatus.OK);
 
         }
         catch (final Exception e) {
             return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Event>(event, HttpStatus.OK);
+
     }
 
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.DELETE)
     public @ResponseBody ResponseEntity<Event> deleteEvent(HttpServletRequest request, @PathVariable final String eventId) {
-        Event event = new Event();
-        Participant participant = new Participant();
-        try {
+       try {
             int eId = Integer.parseInt(eventId);
-            event = eService.getEventById(eId);
-            participant = AuthorizationUtils.authorize(request, sService);
+            Event event = eService.getEventById(eId);
+            Participant participant = AuthorizationUtils.authorize(request, sService);
             if (participant == null) {
                 throw new Exception("no session defined");
             }
@@ -111,10 +111,27 @@ public class EventController {
                     eService.deleteEvent(eId, pService);
                 }
             }
+            return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
         catch (final Exception e) {
             return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Event>(event, HttpStatus.OK);
+
     }
+
+    @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    public @ResponseBody ResponseEntity<Set<Participant>> showParticipants(HttpServletRequest request, @PathVariable final String eventId) {
+       try {
+           int eId = Integer.parseInt(eventId);
+           Event event = eService.getEventById(eId);
+           if (event == null) {
+               throw new Exception("event not found");
+           }
+           return new ResponseEntity<Set<Participant>>(event.getParticipants(), HttpStatus.OK);
+       }
+       catch (final Exception e) {
+            return new ResponseEntity<Set<Participant>>(HttpStatus.BAD_REQUEST);
+       }
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by anna on 06.04.15.
@@ -58,4 +59,5 @@ public class EventServiceImpl implements EventService{
     public Event deleteEvent(int id, ParticipantService ps) {
        return dao.deleteEvent(id, ps);
     }
+
 }

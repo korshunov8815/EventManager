@@ -17,4 +17,5 @@ public interface ParticipantDao {
     public Participant getParticipantById(int id);
     public Participant getParticipantByEmail (String mail);
     public void addSessionToParticipant (Session session, Participant participant);
+    public void editParticipantName (int id, String name);
 }
