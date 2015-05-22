@@ -8,24 +8,26 @@ eventManagerApp.controller("EventCtrl",
             event: false,
             task: false
         };
-        $scope.tasks = [
-            {
-                id: 1,
-                "participant": {
-                    id: 2,
-                    "name": "ganshinv@gmail.com"
-                },
-                "description": "Just do it"
-            },
-            {
-                id: 2,
-                "participant": {
-                    id: 2,
-                    "name": "ganshinv@gmail.com"
-                },
-                "description": "Just do it"
-            }
-        ];
+
+        // private String content;
+        // private Participant taskKeeper;
+        // private Event taskEventKeeper;
+
+        // $scope.tasks = [
+        //     {
+        //         id: 1,
+        //         "participant": {
+        //             id: 2,
+        //             "name": "ganshinv@gmail.com"
+        //         },
+        //         "content": "Just do it"
+        //     },
+        //     {
+        //         id: 2,
+        //         "taskKeeper": 2,
+        //         "content": "Just do it"
+        //     }
+        // ];
 
     	$scope.toggle_editing = function (val) {
 			$scope.editing[val] = !$scope.editing[val];
@@ -66,7 +68,7 @@ eventManagerApp.controller("EventCtrl",
         }
 
         $scope.addTask= function () {
-            $scope.editTask(new Task({event: $scope.event.id}));
+            $scope.editTask(new Task({taskEventKeeper: $scope.event.id}));
         };
 
         $scope.saveTask = function () {
@@ -96,8 +98,8 @@ eventManagerApp.controller("EventCtrl",
 
         $scope.confirmTask = function (task) {
             console.log(task);
-            console.log({id: task.id, confirm: true});
-            var to_confirm = new Task({id: task.id, confirm: true});
+            console.log({id: task.id, isDone: true});
+            var to_confirm = new Task({id: task.id, isDone: true});
             to_confirm.$patch().then(
                 function () {
                     console.log("Good confirm");

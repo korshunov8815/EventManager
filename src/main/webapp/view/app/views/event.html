@@ -25,7 +25,7 @@
 			<h1>Озадачивание</h1>
 			<form ng-submit="saveTask()">
 				<input type="text" ng-model="task.taskKeeper" placeholder="Участник">
-				<input type="text" ng-model="task.description" placeholder="Задача">
+				<input type="text" ng-model="task.content" placeholder="Задача">
 				<button type="submit">Да, озадачить</button>
 				<button type="button" ng-click="cancelEditTask()">Нет, не стоит</button>
 			</form>
