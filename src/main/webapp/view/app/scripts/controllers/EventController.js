@@ -42,7 +42,7 @@ eventManagerApp.controller("EventCtrl",
     	};
 
         $scope.addTask= function () {
-            $scope.task = new Task();
+            $scope.task = new Task({event: $scope.event.id});
 
             $scope.toggle_editing("task");
 
