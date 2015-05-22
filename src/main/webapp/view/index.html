@@ -76,16 +76,15 @@
                 <div ng-show="AuthService.user" class="profile">
                     <h2>
                         <img ng-src="{{ avatar }}">
-                        <span>Profile</span>
+                        <a ui-sref="profile"><span>{{ AuthService.user.name }}</span></a>
                     </h2>
                     <div>
                         <div>email: {{ AuthService.user.email }}</div>
-                        <div>name: {{ AuthService.user.name }}</div>
                     </div>
                     <button ng-click="logout()">Logout</button>
-                    <a ui-sref="profile">
-                        <button>Edit</button>
-                    </a>
+                    <!-- <a ui-sref="profile"> -->
+                        <!-- <button>Edit</button> -->
+                    <!-- </a> -->
                 </div>
             </div>
         </div>

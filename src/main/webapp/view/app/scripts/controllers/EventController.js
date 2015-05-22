@@ -8,6 +8,22 @@ eventManagerApp.controller("EventCtrl",
             event: false,
             task: false
         };
+        $scope.tasks = [
+            {
+                "participant": {
+                    "id": 2,
+                    "name": "ganshinv@gmail.com"
+                },
+                "description": "Just do it"
+            },
+            {
+                "participant": {
+                    "id": 2,
+                    "name": "ganshinv@gmail.com"
+                },
+                "description": "Just do it"
+            }
+        ];
 
     	$scope.toggle_editing = function (val) {
 			$scope.editing[val] = !$scope.editing[val];
@@ -41,11 +57,14 @@ eventManagerApp.controller("EventCtrl",
     		$scope.toggle_editing();
     	};
 
+        $scope.editTask = function (task) {
+            $scope.task = new Task(task);
+            
+            $scope.toggle_editing("task");            
+        }
+
         $scope.addTask= function () {
-            $scope.task = new Task({event: $scope.event.id});
-
-            $scope.toggle_editing("task");
-
+            $scope.editTask(new Task({event: $scope.event.id}));
         };
 
         $scope.saveTask = function () {
@@ -62,4 +81,24 @@ eventManagerApp.controller("EventCtrl",
         $scope.cancelEditTask = function () {
             $scope.toggle_editing("task");
         };
+
+        $scope.deleteTask = function (task) {
+            var to_delete = new Task(task);
+            to_delete.$delete().then(
+                function () {
+                    console.log("Good deletion");
+                }, function () {
+                    console.log("Bad deletion");
+                })
+        };
+
+        $scope.confirmTask = function (task) {
+            var to_confirm = new Task({id: task.id, confirm: true});
+            to_confirm.$patch().then(
+                function () {
+                    console.log("Good confirm");
+                }, function () {
+                    console.log("Bad confirm");
+                });
+        }
     });
