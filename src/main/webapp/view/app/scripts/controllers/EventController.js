@@ -10,15 +10,17 @@ eventManagerApp.controller("EventCtrl",
         };
         $scope.tasks = [
             {
+                id: 1,
                 "participant": {
-                    "id": 2,
+                    id: 2,
                     "name": "ganshinv@gmail.com"
                 },
                 "description": "Just do it"
             },
             {
+                id: 2,
                 "participant": {
-                    "id": 2,
+                    id: 2,
                     "name": "ganshinv@gmail.com"
                 },
                 "description": "Just do it"
@@ -93,6 +95,8 @@ eventManagerApp.controller("EventCtrl",
         };
 
         $scope.confirmTask = function (task) {
+            console.log(task);
+            console.log({id: task.id, confirm: true});
             var to_confirm = new Task({id: task.id, confirm: true});
             to_confirm.$patch().then(
                 function () {
