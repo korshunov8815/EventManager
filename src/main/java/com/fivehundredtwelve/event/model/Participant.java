@@ -21,6 +21,7 @@ public class Participant {
     private String password;
     private Set<Event> events = new HashSet<Event>();
     private Set<Task> tasks = new HashSet<Task>();
+    @JsonIgnore
     private Set<Session> sessions = new HashSet<Session>();
     @JsonIgnore
     private String regId;
@@ -112,9 +113,11 @@ public class Participant {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "sessionOwner")
     @JsonManagedReference(value="session-keeper")
+    @JsonIgnore
     public Set<Session> getSessions() {
         return sessions;
     }
+    @JsonProperty
     public void setSessions(Set<Session> sessions) {
         this.sessions = sessions;
     }

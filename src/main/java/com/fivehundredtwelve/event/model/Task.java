@@ -14,6 +14,7 @@ public class Task {
     private String content;
     private Participant taskKeeper;
     private Event taskEventKeeper;
+    private Boolean isDone;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +29,15 @@ public class Task {
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
+
+
+    @Column(name = "isDone")
+    public Boolean getIsDone() { return isDone; }
+    public void setIsDone(Boolean isDone) { this.isDone = isDone; }
+
 
     @ManyToOne
     @JsonBackReference(value="task-EventKeeper")
@@ -57,6 +63,13 @@ public class Task {
 
     public Task(String content) {
         this.content = content;
+    }
+
+    public Task(String content, Participant taskKeeper, Event taskEventKeeper) {
+        this.content=content;
+        this.taskEventKeeper=taskEventKeeper;
+        this.taskKeeper=taskKeeper;
+        this.isDone=false;
     }
 
     public Task() {

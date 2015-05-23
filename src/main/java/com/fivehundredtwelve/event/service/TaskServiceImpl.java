@@ -29,4 +29,7 @@ public class TaskServiceImpl implements TaskService {
         return dao.getAllTasks();
     }
 
+    @Override
+    public Task getTaskById(int id) { return dao.getTaskById(id);}
+
 }

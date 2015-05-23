@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -120,7 +121,7 @@ public class EventController {
     }
 
     @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<Set<Participant>> showParticipants(HttpServletRequest request, @PathVariable final String eventId) {
+    public @ResponseBody ResponseEntity<Set<Participant>> showParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
        try {
            int eId = Integer.parseInt(eventId);
            Event event = eService.getEventById(eId);
