@@ -68,7 +68,7 @@ eventManagerApp.controller("EventCtrl",
         }
 
         $scope.addTask= function () {
-            $scope.editTask(new Task({taskEventKeeper: $scope.event.id}));
+            $scope.editTask(new Task({taskEventKeeper: {id: $scope.event.id}}));
         };
 
         $scope.saveTask = function () {
