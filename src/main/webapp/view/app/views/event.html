@@ -11,8 +11,8 @@
 		</table> -->
 
 		<h3>Задачи</h3>
-		<div ng-repeat="task in tasks">
-			<span>{{ task.description }}</span>
+		<div ng-repeat="task in event.tasks">
+			<span>{{ task.content }}</span>
 			(<a ui-sref="event( {id: task.participant.id} )">{{ task.participant.name }}</a>)
 			<a href="" ng-click="confirmTask(task)">v</a>
 			<a href="" ng-click="editTask(task)">e</a>
