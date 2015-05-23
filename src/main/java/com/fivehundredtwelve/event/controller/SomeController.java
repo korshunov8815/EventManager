@@ -120,6 +120,7 @@ public class SomeController {
                 throw new Exception("participant not found");
             }
             pService.activate(participantBD.getId());
+            response.sendRedirect("/");
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (final Exception e){

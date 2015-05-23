@@ -1,5 +1,6 @@
 package com.fivehundredtwelve.event.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -87,7 +88,7 @@ public class Event {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "taskEventKeeper")
-    @JsonManagedReference(value = "task-EventKeeper")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@taskEventKeeper")
     @OnDelete(action = OnDeleteAction.CASCADE)
     public Set<Task> getTasks() {
         return tasks;
