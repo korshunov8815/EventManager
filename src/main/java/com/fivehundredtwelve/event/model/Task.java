@@ -34,7 +34,7 @@ public class Task {
     }
 
 
-    @Column(name = "isDone")
+    @Column(name = "isDone", nullable = false)
     public Boolean getIsDone() { return isDone; }
     public void setIsDone(Boolean isDone) { this.isDone = isDone; }
 
@@ -62,6 +62,7 @@ public class Task {
     }
 
     public Task(String content) {
+        isDone = false;
         this.content = content;
     }
 
@@ -73,6 +74,7 @@ public class Task {
     }
 
     public Task() {
+        isDone=false;
     }
 
     @Override

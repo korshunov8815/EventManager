@@ -36,19 +36,18 @@ public class TasksController {
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Set<Participant>> showParticipants(@PathVariable final String taskId, @RequestBody Task task) {
-    /*    try {
+    public @ResponseBody ResponseEntity<Task> showParticipants(@RequestBody Task task) {
+        try {
             Task taskDB = new Task();
-            taskDB.setContent();
-
-            return new ResponseEntity<Set<Participant>>(event.getParticipants(), HttpStatus.OK);
+            taskDB.setContent(task.getContent());
+            taskDB.setTaskEventKeeper(task.getTaskEventKeeper());
+            taskDB.setTaskKeeper(task.getTaskKeeper());
+            tService.saveTask(taskDB);
+            return new ResponseEntity<Task>(taskDB, HttpStatus.OK);
         }
         catch (final Exception e) {
-            return new ResponseEntity<Set<Participant>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
         }
-    }
-    */
-        return new ResponseEntity<Set<Participant>>(HttpStatus.OK);
     }
 
 }
