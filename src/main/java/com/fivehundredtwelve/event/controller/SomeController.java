@@ -34,29 +34,6 @@ public class SomeController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-    @RequestMapping("/test")
-    public void seeEvents() {
-       /* Event event1 = eService.saveEvent(new Event("first", "so good рашан", 1));
-       // Event event2 = eService.saveEvent(new Event("second", "not so good", 2));
-       // Event event3 = eService.saveEvent(new Event("third", "boring", 1));
-        Participant participant1 = new Participant("vanya","vanya@mail.ru");
-        Participant participant2 = new Participant("petya", "petya@mail.ru");
-        Participant participant3 = new Participant("anya","anya@mail.ru");
-        Task task1 = new Task("buy cake");
-        Task task2 = new Task("get musik");
-        Task task3 = new Task("inflate baloons");
-        eService.addParticipantToEvent(participant1, event1);
-        eService.addParticipantToEvent(participant2, event2);
-        eService.addParticipantToEvent(participant3, event3);
-        eService.addParticipantToEvent(participant1, event3);
-        eService.addParticipantToEvent(participant2, event3);
-        eService.addTaskToEvent(task1, event1);
-        eService.addTaskToEvent(task2, event3);
-        eService.addTaskToEvent(task3, event3);
-        pService.addTaskToParticipant(task1, participant1);
-        pService.addTaskToParticipant(task3, participant1);
-        pService.addTaskToParticipant(task2, participant2); */
-    }
 
     //create an user
     @RequestMapping(value = "/registration", method = RequestMethod.POST)

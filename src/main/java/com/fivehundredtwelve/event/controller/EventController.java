@@ -6,6 +6,8 @@ import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
+import com.fivehundredtwelve.event.utils.pWrapper;
+import com.fivehundredtwelve.event.utils.tWrapper;
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,7 @@ public class EventController {
     }
 
     //Влад, тут мы боремся за утят
-    @RequestMapping(method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, @RequestBody Event event) {
         try {
             Participant participant = AuthorizationUtils.authorize(request, sService);
@@ -60,7 +62,7 @@ public class EventController {
         }
     }
 
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<Event> getEventById(@PathVariable final String eventId) {
         boolean isSuccessful = false;
         Event event = new Event();
@@ -76,7 +78,7 @@ public class EventController {
 
 
 
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Event> editEvent(HttpServletRequest request, @PathVariable final String eventId, @RequestBody Event event){
         try {
             int eId = event.getId();
@@ -120,19 +122,39 @@ public class EventController {
 
     }
 
-    @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<Set<Participant>> showParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+
+    @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<pWrapper> showParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
        try {
            int eId = Integer.parseInt(eventId);
            Event event = eService.getEventById(eId);
            if (event == null) {
                throw new Exception("event not found");
            }
-           return new ResponseEntity<Set<Participant>>(event.getParticipants(), HttpStatus.OK);
+           pWrapper wrapper = new pWrapper(event.getParticipants());
+           return new ResponseEntity<pWrapper>(wrapper, HttpStatus.OK);
        }
        catch (final Exception e) {
-            return new ResponseEntity<Set<Participant>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<pWrapper>(HttpStatus.BAD_REQUEST);
        }
     }
+
+    @RequestMapping(value = "/{eventId}/tasks", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<tWrapper> showTasks(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            if (event == null) {
+                throw new Exception("event not found");
+            }
+            tWrapper wrapper = new tWrapper(event.getTasks());
+            return new ResponseEntity<tWrapper>(wrapper, HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity<tWrapper>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 }
