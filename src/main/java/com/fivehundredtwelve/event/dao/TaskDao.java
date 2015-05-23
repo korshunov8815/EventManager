@@ -10,5 +10,5 @@ import java.util.List;
 public interface TaskDao {
     public Task saveTask(Task task);
     public List<Task> getAllTasks();
-
+    public Task getTaskById(int id);
 }

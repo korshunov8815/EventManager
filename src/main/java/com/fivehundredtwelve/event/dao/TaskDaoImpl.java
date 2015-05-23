@@ -30,4 +30,7 @@ public class TaskDaoImpl implements TaskDao {
         return em.createQuery("from Task", Task.class).getResultList();
     }
 
+    @Override
+    public Task getTaskById(int id) {return em.find(Task.class, id );}
+
 }
