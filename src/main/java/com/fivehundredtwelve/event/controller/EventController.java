@@ -39,12 +39,13 @@ public class EventController {
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
     @RequestMapping(method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<List<Event>> getAllEvent() {
+    public @ResponseBody ResponseEntity<eWrapper> getAllEvent() {
         try {
-           return new ResponseEntity<List<Event>>(eService.getAllEvents(), HttpStatus.OK);
+            eWrapper wrapper = new eWrapper(eService.getAllEvents());
+            return new ResponseEntity<eWrapper>(wrapper, HttpStatus.OK);
         }
         catch (final Exception e) {
-            return new ResponseEntity<List<Event>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<eWrapper>(HttpStatus.BAD_REQUEST);
         }
     }
 
