@@ -63,10 +63,10 @@ public class Event {
     public Participant getEventCreator() {
         return eventCreator;
     }
-
     public void setEventCreator(Participant eventCreator) {
         this.eventCreator = eventCreator;
     }
+
 
     public Event(String title, String description, Participant eventCreator) {
         this.title = title;
@@ -78,22 +78,15 @@ public class Event {
     }
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events")
-
     public Set<Participant> getParticipants() {
         return participants;
     }
-
     public void setParticipants(Set<Participant> participants) {
         this.participants = participants;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "taskEventKeeper")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@taskEventKeeper")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    public Set<Task> getTasks() {
-        return tasks;
-    }
-
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskEventKeeper")
+    public Set<Task> getTasks() { return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }

@@ -6,6 +6,7 @@ import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
+import com.fivehundredtwelve.event.utils.eWrapper;
 import com.fivehundredtwelve.event.utils.pWrapper;
 import com.fivehundredtwelve.event.utils.tWrapper;
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
@@ -38,10 +39,13 @@ public class EventController {
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
     @RequestMapping(method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody
-    List<Event> getAllEvent() {
-        logger.info("/events");
-        return eService.getAllEvents();
+    public @ResponseBody ResponseEntity<List<Event>> getAllEvent() {
+        try {
+           return new ResponseEntity<List<Event>>(eService.getAllEvents(), HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity<List<Event>>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     //Влад, тут мы боремся за утят

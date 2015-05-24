@@ -1,6 +1,8 @@
 package com.fivehundredtwelve.event.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 
@@ -8,6 +10,7 @@ import javax.persistence.*;
  * Created by anna on 09.04.15.
  */
 @Entity
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Task.class)
 @Table(name = "task")
 public class Task {
     private int id;
@@ -44,7 +47,6 @@ public class Task {
     public Event getTaskEventKeeper() {
         return taskEventKeeper;
     }
-
     public void setTaskEventKeeper(Event taskEventKeeper) {
         this.taskEventKeeper = taskEventKeeper;
     }
@@ -54,7 +56,6 @@ public class Task {
     public Participant getTaskKeeper() {
         return taskKeeper;
     }
-
     public void setTaskKeeper(Participant taskKeeper) {
         this.taskKeeper = taskKeeper;
     }

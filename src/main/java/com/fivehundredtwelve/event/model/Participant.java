@@ -10,7 +10,7 @@ import java.util.Set;
  * Created by anna on 06.04.15.
  */
 @Entity
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = Participant.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Participant.class)
 @Table(name = "participant")
 public class Participant {
 
@@ -92,18 +92,15 @@ public class Participant {
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
-
     public Set<Event> getEvents() {
         return events;
     }
-
     public void setEvents(Set<Event> events) {
         this.events = events;
     }
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@taskKeeper")
     public Set<Task> getTasks() {return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
