@@ -2,13 +2,11 @@ package com.fivehundredtwelve.event.controller;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
+import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
-import com.fivehundredtwelve.event.utils.eWrapper;
-import com.fivehundredtwelve.event.utils.pWrapper;
-import com.fivehundredtwelve.event.utils.tWrapper;
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +26,6 @@ import java.util.Set;
  * @author anna
  */
 @RestController
-
 @RequestMapping(value = "/api/events", produces = "application/json;charset=UTF-8")
 public class EventController {
 
@@ -128,34 +126,36 @@ public class EventController {
 
 
     @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<pWrapper> showParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+    public @ResponseBody ResponseEntity<List<Participant>> showEventParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
        try {
            int eId = Integer.parseInt(eventId);
            Event event = eService.getEventById(eId);
            if (event == null) {
                throw new Exception("event not found");
            }
-           pWrapper wrapper = new pWrapper(event.getParticipants());
-           return new ResponseEntity<pWrapper>(wrapper, HttpStatus.OK);
+           List<Participant> list = new ArrayList<Participant>();
+           list.addAll(event.getParticipants());
+           return new ResponseEntity<List<Participant>>(list, HttpStatus.OK);
        }
        catch (final Exception e) {
-            return new ResponseEntity<pWrapper>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<Participant>>(HttpStatus.BAD_REQUEST);
        }
     }
 
     @RequestMapping(value = "/{eventId}/tasks", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<tWrapper> showTasks(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+    public @ResponseBody ResponseEntity<List<Task>> showEventTasks(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
         try {
             int eId = Integer.parseInt(eventId);
             Event event = eService.getEventById(eId);
             if (event == null) {
                 throw new Exception("event not found");
             }
-            tWrapper wrapper = new tWrapper(event.getTasks());
-            return new ResponseEntity<tWrapper>(wrapper, HttpStatus.OK);
+            List<Task> list = new ArrayList<Task>();
+            list.addAll(event.getTasks());
+            return new ResponseEntity<List<Task>>(list, HttpStatus.OK);
         }
         catch (final Exception e) {
-            return new ResponseEntity<tWrapper>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<Task>>(HttpStatus.BAD_REQUEST);
         }
     }
 

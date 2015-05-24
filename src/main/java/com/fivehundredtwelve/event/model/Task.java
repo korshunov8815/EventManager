@@ -10,7 +10,6 @@ import javax.persistence.*;
  * Created by anna on 09.04.15.
  */
 @Entity
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Task.class)
 @Table(name = "task")
 public class Task {
     private int id;
@@ -43,6 +42,7 @@ public class Task {
 
 
     @ManyToOne
+    @JsonBackReference("task-event")
     @JoinColumn(name = "event_id")
     public Event getTaskEventKeeper() {
         return taskEventKeeper;
@@ -52,6 +52,7 @@ public class Task {
     }
 
     @ManyToOne
+    @JsonBackReference("task-participant")
     @JoinColumn(name = "participant_id")
     public Participant getTaskKeeper() {
         return taskKeeper;

@@ -102,6 +102,7 @@ public class Participant {
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
+    @JsonBackReference("task-participant")
     public Set<Task> getTasks() {return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;

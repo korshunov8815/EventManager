@@ -86,6 +86,7 @@ public class Event {
     }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskEventKeeper")
+    @JsonManagedReference("task-event")
     public Set<Task> getTasks() { return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
