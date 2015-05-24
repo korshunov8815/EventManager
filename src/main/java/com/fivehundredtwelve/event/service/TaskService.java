@@ -12,4 +12,5 @@ public interface TaskService {
     public Task saveTask(Task task);
     public List<Task> getAllTasks();
     public Task getTaskById(int id);
+    public void deleteTask(int id, ParticipantService ps, EventService es);
 }

@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +46,28 @@ public class TasksController {
             return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value ="{taskId}", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity<Task> deleteTask(HttpServletRequest request, @PathVariable String taskId) {
+        try {
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            int tId = Integer.parseInt(taskId);
+            Task task = tService.getTaskById(tId);
+            if (!(participant.getId()==task.getTaskKeeper().getId() || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
+                throw new Exception("you have no rights");
+            }
+            tService.deleteTask(tId,pService,eService);
+            return new ResponseEntity<Task>(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 }

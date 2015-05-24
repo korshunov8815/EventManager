@@ -3,6 +3,8 @@ package com.fivehundredtwelve.event.dao;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Task;
+import com.fivehundredtwelve.event.service.EventService;
+import com.fivehundredtwelve.event.service.ParticipantService;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Repository;
 
@@ -31,7 +33,23 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public Task getTaskById(int id) {return em.find(Task.class, id );}
+    public Task getTaskById(int id) {return em.find(Task.class, id);}
+
+    @Override
+    public void deleteTask(int id, ParticipantService ps, EventService es) {
+        Task task = em.find(Task.class, id);
+        List<Event> events = es.getAllEvents();
+        List<Participant> participants = ps.getAllParticipants();
+        for (int i = 0; i < participants.size(); i++) {
+            participants.get(i).getTasks().remove(task);
+        }
+        for (int i = 0; i < events.size(); i++) {
+            events.get(i).getTasks().remove(task);
+        }
+        em.flush();
+        em.remove(task);
+        em.flush();
+    }
 
 
 }

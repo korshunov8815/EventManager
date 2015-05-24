@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by anna on 06.04.15.
  */
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Event.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Event.class)
 @Table(name = "event")
 public class Event {
 

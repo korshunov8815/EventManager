@@ -76,8 +76,6 @@ public class Participant {
     }
 
 
-
-
     public Participant(String email, String password, String regId) {
         this.email = email;
         this.name = "unnamed jerk";
