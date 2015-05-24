@@ -88,6 +88,7 @@ public class Participant {
 
     }
 
+    @JsonBackReference
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "participant_event",
             joinColumns = {@JoinColumn(name = "participant_id")},
