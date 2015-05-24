@@ -59,11 +59,52 @@ public class TasksController {
             if (!(participant.getId()==task.getTaskKeeper().getId() || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
                 throw new Exception("you have no rights");
             }
-            tService.deleteTask(tId,pService,eService);
+            tService.deleteTask(tId, pService, eService);
             return new ResponseEntity<Task>(HttpStatus.OK);
         }
         catch (final Exception e) {
             System.out.println(e.getMessage());
+            return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value ="{taskId}", method = RequestMethod.PATCH)
+    public @ResponseBody ResponseEntity<Task> makeTaskDone(HttpServletRequest request, @PathVariable String taskId) {
+        try {
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            int tId = Integer.parseInt(taskId);
+            Task task = tService.getTaskById(tId);
+            if (!(participant.getId()==task.getTaskKeeper().getId()) ) {
+                throw new Exception("you have no rights");
+            }
+            tService.makeDone(tId);
+            return new ResponseEntity<Task>(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value ="{taskId}", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<Task> editTask(HttpServletRequest request, @PathVariable String taskId, @RequestBody Task task) {
+        try {
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            int tId = Integer.parseInt(taskId);
+            int ownerId = tService.getTaskById(tId).getTaskKeeper().getId();
+            if (!(participant.getId()==ownerId || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
+                throw new Exception("you have no rights");
+            }
+            task = tService.editTask(tId,task.getContent(),task.getTaskKeeper().getId());
+            return new ResponseEntity<Task>(task, HttpStatus.OK);
+        }
+        catch (final Exception e) {
             return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
         }
     }

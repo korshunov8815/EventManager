@@ -15,4 +15,6 @@ public interface TaskDao {
     public List<Task> getAllTasks();
     public Task getTaskById(int id);
     public void deleteTask(int id, ParticipantService ps, EventService es);
+    public void makeDone(int id);
+    public Task editTask(int tId, String content, int pId);
 }

@@ -36,4 +36,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(int id, ParticipantService ps, EventService es) { dao.deleteTask(id,ps,es);};
 
+    @Transactional
+    @Override
+    public void makeDone(int id) { dao.makeDone(id);}
+
+    @Transactional
+    @Override
+    public Task editTask(int tId, String content, int pId) {return dao.editTask(tId, content,pId);}
+
 }

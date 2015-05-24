@@ -51,5 +51,22 @@ public class TaskDaoImpl implements TaskDao {
         em.flush();
     }
 
+    @Override
+    public void makeDone(int id){
+        Task t = em.find(Task.class, id);
+        t.setIsDone(true);
+        em.flush();
+    }
+
+    @Override
+    public Task editTask(int tId, String content, int pId) {
+        Task task = em.find(Task.class, tId);
+        task.setContent(content);
+        Participant participant = em.find(Participant.class, pId);
+        task.setTaskKeeper(participant);
+        em.flush();
+        return em.find(Task.class, tId);
+    }
+
 
 }
