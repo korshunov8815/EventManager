@@ -15,8 +15,8 @@
 			<span>{{ task.content }}</span>
 			(<a ui-sref="event( {id: task.participant.id} )">{{ task.participant.name }}</a>)
 			<a href="" ng-click="confirmTask(task)">v</a>
-			<a href="" ng-click="editTask(task)">e</a>
 			<a href="" ng-click="deleteTask(task)">x</a>
+			<a href="" ng-click="takeTask(task)">Взять</a>
 		</div>
 		<br/>
 

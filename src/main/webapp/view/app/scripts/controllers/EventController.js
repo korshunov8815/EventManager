@@ -61,6 +61,11 @@ eventManagerApp.controller("EventCtrl",
     		$scope.toggle_editing();
     	};
 
+        $scope.takeTask = function (task) {
+            var task = new Task(task);
+            task.$patch();
+        }
+
         $scope.editTask = function (task) {
             $scope.task = new Task(task);
             
