@@ -84,4 +84,24 @@ public class Task {
                 ", \"content\":\"" + content + '\"' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+
+        if (id != task.id) return false;
+        if (content != null ? !content.equals(task.content) : task.content != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        return result;
+    }
 }

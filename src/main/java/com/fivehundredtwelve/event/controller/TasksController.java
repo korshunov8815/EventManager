@@ -2,26 +2,18 @@ package com.fivehundredtwelve.event.controller;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
-import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Set;
 
 /**
  * @author anna
@@ -39,6 +31,11 @@ public class TasksController {
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Task> addTask(@RequestBody Task task) {
         try {
+            final Event event = eService.getEventById(task.getTaskEventKeeper().getId());
+            final Participant participant = pService.getParticipantById(task.getTaskKeeper().getId());
+            if (event==null || participant==null||!event.getParticipants().contains(participant)) throw new Exception("no participant in event");
+            task.setTaskKeeper(participant);
+            task.setTaskEventKeeper(event);
             tService.saveTask(task);
             return new ResponseEntity<Task>(task, HttpStatus.OK);
         }
