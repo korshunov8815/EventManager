@@ -66,12 +66,12 @@ public class Task {
         this.content = content;
     }
 
-    public Task(String content, Participant taskKeeper, Event taskEventKeeper) {
+    public Task(String content, Event taskEventKeeper) {
         this.content=content;
         this.taskEventKeeper=taskEventKeeper;
-        this.taskKeeper=taskKeeper;
         this.isDone=false;
     }
+
 
     public Task() {
         isDone=false;

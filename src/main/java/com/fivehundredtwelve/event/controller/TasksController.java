@@ -32,14 +32,12 @@ public class TasksController {
     public @ResponseBody ResponseEntity<Task> addTask(@RequestBody Task task) {
         try {
             final Event event = eService.getEventById(task.getTaskEventKeeper().getId());
-            final Participant participant = pService.getParticipantById(task.getTaskKeeper().getId());
-            if (event==null || participant==null||!event.getParticipants().contains(participant)) throw new Exception("no participant in event");
-            task.setTaskKeeper(participant);
-            task.setTaskEventKeeper(event);
+            if (event==null) throw new Exception("no participant in event");
             tService.saveTask(task);
             return new ResponseEntity<Task>(task, HttpStatus.OK);
         }
         catch (final Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -98,7 +96,7 @@ public class TasksController {
             if (!(participant.getId()==ownerId || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
                 throw new Exception("you have no rights");
             }
-            task = tService.editTask(tId,task.getContent(),task.getTaskKeeper().getId());
+            task = tService.editTask(tId, task.getContent(), task.getTaskKeeper().getId());
             return new ResponseEntity<Task>(task, HttpStatus.OK);
         }
         catch (final Exception e) {
