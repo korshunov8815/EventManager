@@ -77,6 +77,7 @@ public class Event {
     public Event() {
     }
 
+    @JsonBackReference
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "events")
     public Set<Participant> getParticipants() {
         return participants;
@@ -85,8 +86,9 @@ public class Event {
         this.participants = participants;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskEventKeeper")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "taskEventKeeper")
     @JsonManagedReference("task-event")
+    @OnDelete(action=OnDeleteAction.CASCADE)
     public Set<Task> getTasks() { return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;

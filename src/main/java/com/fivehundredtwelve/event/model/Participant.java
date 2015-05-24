@@ -10,7 +10,6 @@ import java.util.Set;
  * Created by anna on 06.04.15.
  */
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Participant.class)
 @Table(name = "participant")
 public class Participant {
 
@@ -102,7 +101,7 @@ public class Participant {
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "taskKeeper")
-    @JsonBackReference("task-participant")
+    @JsonManagedReference("task-participant")
     public Set<Task> getTasks() {return tasks;}
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
