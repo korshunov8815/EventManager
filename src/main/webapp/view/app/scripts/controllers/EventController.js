@@ -122,7 +122,6 @@ eventManagerApp.controller("EventCtrl",
         };
 
         $scope.strike_class = function (task) {
-            console.log("wow", task.isDone);
             return task.isDone?"strike":"";
         };
 

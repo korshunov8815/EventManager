@@ -5,14 +5,13 @@
 
 
 		<h3>Участники</h3>
-		<div ng-repeat="participant in participants" class="event-participant">
+		<div ng-repeat="participant in participants" class="block">
 			<span>{{ participant.name }}</span>
 		</div>
 
 		<h3>Задачи</h3>
-		<div ng-repeat="task in tasks" class="event-task">
+		<div ng-repeat="task in tasks" class="block">
 			<span ng-class="strike_class(task)">{{ task.content }}</span>
-			<!-- (<a ui-sref="event( {id: task.participant.id} )">{{ task.participant.name }}</a>) -->
 			<span class="pull-right">
 				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone || !isParticipant()">&#10004;</a>
 				<a href="" ng-click="deleteTask(task)" ng-show="isCreator()">&#10008;</a>
@@ -55,7 +54,7 @@
 		<button type="button" ng-click="takePart()">Покунить этот СССР</button>
 	</div>
 
-	<div ng-hide="isParticipant()">
+	<div ng-hide="isParticipant() || !authService.user">
 		<button type="button" ng-click="takePart()">Принять участие</button>
 	</div>
 </div>

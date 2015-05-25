@@ -1,3 +1,20 @@
 <h2>Серые праздники</h2>
 
 <h3>Здесь организуется настоящее веселье</h3>
+
+<script type="text/javascript">
+	
+</script>
+
+<form ng-controller="Wow" ng-submit="send()">
+	<label>Это просто файл</label>
+	<input type="file" name="file" ng-model="form.file">
+	<br>
+	<label>Это дата</label>
+	<input type="datetime" name="date" ng-model="form.date">
+	<br>
+	<span>{{ message }}</span>
+	<br>
+	<button>Send</button>
+
+</form>

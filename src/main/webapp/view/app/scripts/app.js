@@ -53,6 +53,16 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
                     }
                 }
             })
+            .state("participant", {
+                url: "/participant/:id",
+                templateUrl: "/app/views/participant.html",
+                controller: "ParticipantCtrl",
+                resolve: {
+                    user: function (Participant, $stateParams) {
+                        return Participant.get({id: $stateParams.id}).$promise;
+                    }
+                }
+            })
     })
 
     .constant('AUTH_EVENTS', {
@@ -88,3 +98,21 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
             $state.go("index");
         });
     });
+
+eventManagerApp.controller("Wow", function($scope, $http) {
+        $scope.form = {
+            file: null,
+            date: null
+        };
+        $scope.message = "wow";
+        $scope.send = function () {
+            console.log($scope.form);
+            $scope.message = "пжжжжжж....";
+            $http.post("/api/antoshka_zalivaet_fotki", $scope.form).then(
+                function () {
+                    $scope.message = "Supper good";
+                }, function () {
+                    $scope.message = "It's a big problem";
+                });
+        }
+    }); 
