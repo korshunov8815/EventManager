@@ -1,5 +1,6 @@
 package com.fivehundredtwelve.event.controller;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
+import com.fivehundredtwelve.event.model.Example;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.service.EventService;
@@ -19,6 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
+import java.sql.Blob;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author anna
@@ -151,5 +156,13 @@ public class SomeController {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
         return participantDB;
+    }
+
+    @RequestMapping(value="/antoshka_zalivaet_fotki", method = RequestMethod.POST)
+    public void getDate(@RequestParam Blob b){
+        try {
+            System.out.println(b.length());
+        }
+        catch (final Exception e) {}
     }
 }
