@@ -26,7 +26,6 @@
     <script src="/app/scripts/controllers/EventsController.js"></script>
     <script src="/app/scripts/controllers/IndexController.js"></script>
     <script src="/app/scripts/controllers/AuthController.js"></script>
-    <script src="/app/scripts/controllers/ProfileController.js"></script>
     <script src="/app/scripts/controllers/ParticipantController.js"></script>
 </head>
 
@@ -42,14 +41,9 @@
             <ul class="right">
                 <li><a ui-sref="events">События</a></li>
                 <li><a href="#">Задачи</a></li>
-                <!-- <li><a class="add-button" href="#" data-reveal-id="myModal"><span>+</span></a></li> -->
             </ul>
         </section>
     </nav>
-
-
-
-
 
     <div class="row">
         <div class="large-8 small-8 columns">
@@ -78,49 +72,20 @@
                 <div ng-show="AuthService.user" class="profile">
                     <h2>
                         <img ng-src="{{ avatar }}">
-                        <a ui-sref="profile"><span>{{ AuthService.user.name }}</span></a>
+                        <a ui-sref="participant({ id: AuthService.user.id })"><span>{{ AuthService.user.name }}</span></a>
                     </h2>
                     <div>
                         <div>email: {{ AuthService.user.email }}</div>
                     </div>
                     <button ng-click="logout()">Logout</button>
-                    <!-- <a ui-sref="profile"> -->
-                        <!-- <button>Edit</button> -->
-                    <!-- </a> -->
                 </div>
             </div>
         </div>
-    </div>
-    <div id="myModal" class="reveal-modal" data-reveal>
-        <h2>Пригласить участников</h2>
-
-        <p class="lead">Укажите e-mail адрес участников, которых хотите пригласить</p>
-
-        <form>
-            <div class="row collapse">
-                <div class="small-1 columns" style="margin-right: 0">
-                    <img src="http://gravatar.com/avatar/?s=37&d=mm" alt=""/>
-                </div>
-                <div class="small-10 columns">
-                    <input type="email" name="email" placeholder="e-mail"/>
-                </div>
-                <div class="small-1 columns">
-                    <div class="placeholder"></div>
-                    <span class="postfix add-button">
-                        +
-                    </span>
-                </div>
-            </div>
-        </form>
-        <div class="add_participant"><a href="#"><span>+</span> Добавить участника</a></div>
-        <!--<div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>-->
-        <a class="close-reveal-modal">&#215;</a>
     </div>
     
     <script src="js/vendor/modernizr.js"></script>
     <script src="js/foundation.min.js"></script>
     <script src="js/md5.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
     <!-- Наши скрипты -->
     <script>
         $(document).foundation();

@@ -28,4 +28,5 @@ eventManagerApp.controller("ProfileCtrl",
                     console.log("Bad confirm");
                 });
         };
+
     });

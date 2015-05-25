@@ -1,5 +1,17 @@
-<h1>{{ user.name }}<img ng-src="{{ avatar }}" align="right" style="margin-right: 3px;"></h1>
+<h1 ng-hide="my_profile()">{{ user.name }}<img ng-src="{{ avatar }}" align="right" style="margin-right: 3px;"></h1>
 
+<h1 ng-show="my_profile()">
+	<span ng-hide="status.editing">
+		{{ user.name }}
+		<a href="" ng-click="edit()">&#9998;</a>
+	</span>
+	<span ng-show="status.editing" style="width: 50px">
+		<input type="text" ng-model="form.name">
+		<a href="" ng-click="save_changes()">&#10004;</a>
+		<a href="" ng-click="cancelEdit()">&#10008;</a>
+	</span>
+		<img ng-src="{{ avatar }}" align="right" style="margin-right: 3px;">
+</h1>
 
 <div class="block">
 	<h3>{{ user.email }}</h3>
@@ -20,7 +32,7 @@
 		<div ng-repeat="task in tasks" class="block">
 			<span ng-class="strike_class(task)">{{ task.content }}</span>
 			<span class="pull-right">
-				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone">&#10004;</a>
+				<a href="" ng-click="confirmTask(task)" ng-show="!task.isDone && my_profile()">&#10004;</a>
 			</span>
 		</div>
 		<br/>

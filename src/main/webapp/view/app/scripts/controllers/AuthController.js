@@ -30,7 +30,6 @@ eventManagerApp.controller("AuthController",
         };
 
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
-            console.log("yes i'm here")
             $scope.avatar = "http://gravatar.com/avatar/" + hex_md5(AuthService.user.email) + "?s=50&d=retro";
         });
     });

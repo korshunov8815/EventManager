@@ -5,5 +5,6 @@ eventManagerApp.factory("Event", ["$resource",
         return $resource("/api/events/:id", {id: "@id"},
         	{put: {method: "PUT"},
         	 patch: {method: "PATCH"},
-        	 getEventsByParticipantId: {method: "GET", url: "/api/participants/:userId/events", isArray: true}});
+        	 getEventsByParticipantId: {method: "GET", url: "/api/participants/:userId/events", isArray: true},
+        	 leave: {method: "DELETE", url: "/api/events/:id/leave"}});
     }]);

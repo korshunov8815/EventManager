@@ -3,7 +3,6 @@
 eventManagerApp.controller("EventCtrl",
     function ($scope, $state, Task, Participant, AuthService, event) {
     	$scope.event = event;
-        console.log(new Task());
     	$scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
         $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
         $scope.form = {}
@@ -11,26 +10,6 @@ eventManagerApp.controller("EventCtrl",
             event: false,
             task: false
         };
-
-        // private String content;
-        // private Participant taskKeeper;
-        // private Event taskEventKeeper;
-
-        // $scope.tasks = [
-        //     {
-        //         id: 1,
-        //         "participant": {
-        //             id: 2,
-        //             "name": "ganshinv@gmail.com"
-        //         },
-        //         "content": "Just do it"
-        //     },
-        //     {
-        //         id: 2,
-        //         "taskKeeper": 2,
-        //         "content": "Just do it"
-        //     }
-        // ];
 
     	$scope.toggle_editing = function (val) {
             console.log($scope.editing[val]);
@@ -126,17 +105,33 @@ eventManagerApp.controller("EventCtrl",
         };
 
         $scope.isCreator = function () {
-            console.log("is creator");
             return AuthService.user && $scope.event.eventCreator.id == AuthService.user.id;
         };
 
         $scope.isParticipant = function() {
+            console.log($scope.participants.length);
             return $scope.participants.reduce(function (a, b) {
                 return a || (AuthService.user && b.id == AuthService.user.id);
             }, false);
         };
 
         $scope.takePart = function () {
-            $scope.event.$patch();
+            $scope.event.$patch().then(
+                function () {
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
+                    $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
+                }, function () {
+                    console.log("bad");
+                });
         };
+
+        $scope.leaveEvent = function () {
+            $scope.event.$leave().then(
+                function () {
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
+                    $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
+                }, function () {
+                    console.log("bad");
+                });
+        }
     });
