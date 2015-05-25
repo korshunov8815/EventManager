@@ -1,7 +1,8 @@
 "use strict";
 
 eventManagerApp.controller("EventCtrl",
-    function ($scope, $state, Task, Participant, AuthService, event) {
+    function ($scope, $state, $http, Task, Participant, AuthService, event) {
+        $scope.AuthService = AuthService;
     	$scope.event = event;
     	$scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
         $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
@@ -12,7 +13,6 @@ eventManagerApp.controller("EventCtrl",
         };
 
     	$scope.toggle_editing = function (val) {
-            console.log($scope.editing[val]);
 			$scope.editing[val] = !$scope.editing[val];
     	}
 
@@ -36,7 +36,6 @@ eventManagerApp.controller("EventCtrl",
     	};
 
     	$scope.saveEvent = function () {
-            console.log("saveEvent");
     		$scope.event.title = $scope.form.title;
     		$scope.event.description = $scope.form.description;
 
@@ -104,14 +103,13 @@ eventManagerApp.controller("EventCtrl",
             return task.isDone?"strike":"";
         };
 
-        $scope.isCreator = function () {
-            return AuthService.user && $scope.event.eventCreator.id == AuthService.user.id;
+        $scope.isCreator = function (user) {
+            return user && $scope.event.eventCreator.id == user.id;
         };
 
-        $scope.isParticipant = function() {
-            console.log($scope.participants.length);
+        $scope.isParticipant = function(user) {
             return $scope.participants.reduce(function (a, b) {
-                return a || (AuthService.user && b.id == AuthService.user.id);
+                return a || (user && b.id == user.id);
             }, false);
         };
 
@@ -120,8 +118,6 @@ eventManagerApp.controller("EventCtrl",
                 function () {
                     $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
                     $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
-                }, function () {
-                    console.log("bad");
                 });
         };
 
@@ -130,8 +126,14 @@ eventManagerApp.controller("EventCtrl",
                 function () {
                     $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
                     $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
-                }, function () {
-                    console.log("bad");
                 });
-        }
+        };
+
+        $scope.deleteParticipant = function (participant) {
+            $http.delete("/api/events/" + $scope.event.id + "/participants/" + participant.id, participant).success(
+                function () {
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
+                    $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
+                });
+        };
     });

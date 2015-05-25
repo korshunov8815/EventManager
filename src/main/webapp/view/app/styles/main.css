@@ -72,6 +72,10 @@ button {
 	display: block;	
 }
 
+.participants + .block {
+	background-color: rgb(207, 210, 101);
+}
+
 .pull-right {
 	float: right;
 }

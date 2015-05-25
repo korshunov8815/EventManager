@@ -4,20 +4,28 @@
 		<div class="event-description">{{ event.description }}</div>
 
 
-		<h3>Участники</h3>
-		<a  ng-repeat="participant in participants" href="" ui-sref="participant({ id: participant.id })">
-			<div class="block">
+		<h3 class="participants">Участники</h3>
+		<div class="block">
+			<a href="" ui-sref="participant({ id: AuthService.user.id })">
+				<span>{{ AuthService.user.name }}</span>
+			</a>
+		</div>
+		<div class="block" ng-repeat="participant in participants" ng-hide="isCreator(participant)">
+			<a href="" ui-sref="participant({ id: participant.id })">
 				<span>{{ participant.name }}</span>
-			</div>
-		</a>
+			</a>
+			<span class="pull-right">
+				<a href="" ng-click="deleteParticipant(participant)">&#10008;</a>
+			</span>
+		</div>
 
 		<h3>Задачи</h3>
 		<div ng-repeat="task in tasks" class="block">
 			<span ng-class="strike_class(task)">{{ task.content }}</span>
 			<span class="pull-right">
-				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone || !isParticipant()">&#10004;</a>
+				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone || !isParticipant(AuthService.user)">&#10004;</a>
 				<a href="" ng-click="deleteTask(task)" ng-show="isCreator()">&#10008;</a>
-				<a href="" ng-click="takeTask(task)" ng-hide="task.isTaken || !isParticipant()">&#9773;</a>
+				<a href="" ng-click="takeTask(task)" ng-hide="task.isTaken || !isParticipant(AuthService.user)">&#9773;</a>
 			</span>
 		</div>
 		<br/>
@@ -31,7 +39,7 @@
 			</form>
 		</div>
 
-		<div ng-show="!editing.task && isCreator()">
+		<div ng-show="!editing.task && isCreator(AuthService.user)">
 			<button type="button" ng-click="addTask()">Озадачить</button>
 			<button type="button" ng-click="editEvent()">Редактировать</button>
 			<button type="button" ng-click="deleteEvent()">Удалить</button>
@@ -52,11 +60,11 @@
 		</form>
 	</div>
 
-	<div ng-show="isParticipant() && !isCreator()">
+	<div ng-show="isParticipant(AuthService.user) && !isCreator(AuthService.user)">
 		<button type="button" ng-click="leaveEvent()">Покунить этот СССР</button>
 	</div>
 
-	<div ng-show="!isParticipant() && !authService.user">
+	<div ng-show="!isParticipant(AuthService.user) && !AuthService.user">
 		<button type="button" ng-click="takePart()">Принять участие</button>
 	</div>
 </div>
