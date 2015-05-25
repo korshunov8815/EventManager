@@ -94,7 +94,11 @@ public class EventDaoImpl implements EventDao {
         for (int i = 0; i < tasks.size(); i++) {
             tasks.get(i).setIsTaken(false);
             tasks.get(i).setIsDone(false);
+            participant.getTasks().remove(tasks.get(i));
+          //  System.out.println(tasks.get(i).getContent());
         }
+        for (Task t : participant.getTasks())
+            //System.out.println(t.getContent());
         em.flush();
     }
 
