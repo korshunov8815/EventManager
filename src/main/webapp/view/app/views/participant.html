@@ -19,6 +19,9 @@
 		<h3>Задачи</h3>
 		<div ng-repeat="task in tasks" class="block">
 			<span ng-class="strike_class(task)">{{ task.content }}</span>
+			<span class="pull-right">
+				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone">&#10004;</a>
+			</span>
 		</div>
 		<br/>
 	</div>
