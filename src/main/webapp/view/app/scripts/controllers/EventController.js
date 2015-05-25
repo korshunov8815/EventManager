@@ -37,6 +37,7 @@ eventManagerApp.controller("EventCtrl",
 
     	$scope.saveEvent = function () {
     		$scope.event.title = $scope.form.title;
+            $scope.event.datetime = $scope.form.datetime;
     		$scope.event.description = $scope.form.description;
 
     		$scope.event.$save();
