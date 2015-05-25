@@ -124,6 +124,28 @@ public class EventController {
 
     }
 
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.PATCH)
+    public @ResponseBody ResponseEntity takePart(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                response.sendError(401);
+                throw new Exception("no session defined");
+            }
+            if (event != null) {
+                eService.addParticipantToEvent(participant,event);
+            }
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+
 
     @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<List<Participant>> showEventParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
