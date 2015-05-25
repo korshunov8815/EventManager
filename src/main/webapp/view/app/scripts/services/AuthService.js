@@ -42,12 +42,7 @@ eventManagerApp.factory("AuthService",
         };
 
         authService.register = function (credentials) {
-            return $http.post("/api/registration", credentials).then(
-                    function (data, status, headers, config) {
-                        console.log(data);
-                    },
-                    function (data, status, headers, config) {
-                    });
+            return $http.post("/api/registration", credentials);
         };
 
         return authService;

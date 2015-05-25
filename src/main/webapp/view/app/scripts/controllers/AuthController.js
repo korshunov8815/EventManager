@@ -22,11 +22,12 @@ eventManagerApp.controller("AuthController",
 
         $scope.register = function (credentials) {
             $scope.message = "Секунду...";
-            AuthService.register(credentials).then(function (user) {
-                $scope.message = "Отлично. Го на мыло. Я отправил.";
-            }, function () {
-                $scope.message = "Все очень плохо, как никогда";
-            })
+            AuthService.register(credentials)
+                .success(function () {
+                    $scope.message = "Отлично. Го на мыло. Я отправил.";
+                }).error(function () {
+                    $scope.message = "Все очень плохо, как никогда";
+                });
         };
 
         $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
