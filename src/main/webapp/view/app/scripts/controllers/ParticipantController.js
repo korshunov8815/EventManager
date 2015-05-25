@@ -5,7 +5,7 @@ eventManagerApp.controller("ParticipantCtrl",
     	$scope.user = user;
         $scope.events = Event.getEventsByParticipantId({userId: $scope.user.id});
         $scope.tasks = Task.getTasksByParticipantId({userId: $scope.user.id});
-
+        $scope.avatar = "http://gravatar.com/avatar/" + hex_md5(user.email) + "?s=50&d=retro";
 
     	$scope.save_changes = function () {
     		$scope.user.$put()
