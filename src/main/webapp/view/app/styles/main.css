@@ -60,3 +60,8 @@ button {
 .edit-profile div {
 	margin-top: 10px;
 }
+
+.strike {
+	text-decoration: line-through;
+}
+

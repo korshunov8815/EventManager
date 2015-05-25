@@ -1,9 +1,12 @@
 "use strict";
 
 eventManagerApp.controller("EventCtrl",
-    function ($scope, $state, Task, event) {
+    function ($scope, $state, Task, Participant, event) {
     	$scope.event = event;
-    	$scope.form = {}
+        console.log(new Task());
+    	$scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
+        $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
+        $scope.form = {}
     	$scope.editing = {
             event: false,
             task: false
@@ -80,7 +83,7 @@ eventManagerApp.controller("EventCtrl",
             console.log("Сохраняю таск");
             $scope.task.$save().then(
                 function () {
-                    console.log("SUPER GOOD. TASK СОХРАНЕН");
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
                 }, function () {
                     console.log("Все очень плохо");
                 });
@@ -95,21 +98,24 @@ eventManagerApp.controller("EventCtrl",
             var to_delete = new Task(task);
             to_delete.$delete().then(
                 function () {
-                    console.log("Good deletion");
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
                 }, function () {
                     console.log("Bad deletion");
                 })
         };
 
         $scope.confirmTask = function (task) {
-            console.log(task);
-            console.log({id: task.id, isDone: true});
             var to_confirm = new Task({id: task.id, isDone: true});
-            to_confirm.$patch().then(
+            to_confirm.$put().then(
                 function () {
-                    console.log("Good confirm");
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
                 }, function () {
                     console.log("Bad confirm");
                 });
-        }
+        };
+
+        $scope.strike_class = function (task) {
+            console.log("wow", task.isDone);
+            return task.isDone?"strike":"";
+        };
     });
