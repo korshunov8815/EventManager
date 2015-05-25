@@ -59,6 +59,20 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
+    public void makeUndone(int id){
+        Task t = em.find(Task.class, id);
+        t.setIsDone(false);
+        em.flush();
+    }
+
+    @Override
+    public void makeUntook(int id){
+        Task t = em.find(Task.class, id);
+        t.setIsTaken(false);
+        em.flush();
+    }
+
+    @Override
     public Task editTask(int tId, String content, int pId) {
         Task task = em.find(Task.class, tId);
         task.setContent(content);
@@ -68,6 +82,8 @@ public class TaskDaoImpl implements TaskDao {
         em.flush();
         return em.find(Task.class, tId);
     }
+
+
 
 
 }

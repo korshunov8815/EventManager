@@ -44,4 +44,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task editTask(int tId, String content, int pId) {return dao.editTask(tId, content,pId);}
 
+    @Transactional
+    @Override
+    public void makeUndone(int id){dao.makeUndone(id);}
+
+    @Transactional
+    @Override
+    public void makeUntook(int id){dao.makeUntook(id);}
+
 }

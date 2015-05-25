@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -88,6 +89,12 @@ public class EventDaoImpl implements EventDao {
         Participant participant = ps.getParticipantById(pId);
         participant.getEvents().remove(event);
         event.getParticipants().remove(participant);
+        List<Task> tasks = new ArrayList<Task>();
+        tasks.addAll(participant.getTasks());
+        for (int i = 0; i < tasks.size(); i++) {
+            tasks.get(i).setIsTaken(false);
+            tasks.get(i).setIsDone(false);
+        }
         em.flush();
     }
 
