@@ -53,7 +53,7 @@ public class TasksController {
             }
             int tId = Integer.parseInt(taskId);
             Task task = tService.getTaskById(tId);
-            if (!(participant.getId()==task.getTaskKeeper().getId() || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
+            if (!(participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
                 response.sendError(403);
                 throw new Exception("you have no rights");
             }
@@ -61,7 +61,7 @@ public class TasksController {
             return new ResponseEntity<Task>(HttpStatus.OK);
         }
         catch (final Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
         }
     }

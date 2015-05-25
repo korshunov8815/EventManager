@@ -38,14 +38,12 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public void deleteTask(int id, ParticipantService ps, EventService es) {
         Task task = em.find(Task.class, id);
-        List<Event> events = es.getAllEvents();
-        List<Participant> participants = ps.getAllParticipants();
-        for (int i = 0; i < participants.size(); i++) {
-            participants.get(i).getTasks().remove(task);
+        Event event = task.getTaskEventKeeper();
+        if (task.getIsTaken()==true) {
+            Participant participant = task.getTaskKeeper();
+            participant.getTasks().remove(task);
         }
-        for (int i = 0; i < events.size(); i++) {
-            events.get(i).getTasks().remove(task);
-        }
+        event.getTasks().remove(task);
         em.flush();
         em.remove(task);
         em.flush();
