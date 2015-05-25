@@ -68,5 +68,9 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Transactional
     @Override
     public void activate(int id) {dao.activate(id);}
+
+    @Transactional
+    @Override
+    public void deleteSession(int pId, String sId) { dao.deleteSession(pId, sId);}
 }
 

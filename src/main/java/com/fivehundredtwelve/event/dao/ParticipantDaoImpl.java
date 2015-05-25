@@ -78,7 +78,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
 
     @Override
     public Participant getParticipantByregId(String regId) {
-        Query q1 = em.createQuery("SELECT p FROM Participant p WHERE p.regId LIKE :regId").setParameter("regId",regId);
+        Query q1 = em.createQuery("SELECT p FROM Participant p WHERE p.regId LIKE :regId").setParameter("regId", regId);
         Participant participant = (Participant)q1.getSingleResult();
         return participant;
     }
@@ -90,4 +90,14 @@ public class ParticipantDaoImpl implements ParticipantDao {
         em.flush();
     }
 
+    @Override
+    public void deleteSession(int pId, String sId) {
+        Query q1 = em.createQuery("SELECT s FROM Session s WHERE s.sessionID LIKE :sId").setParameter("sId",sId);
+        Session session = (Session)q1.getSingleResult();
+        Participant participant = em.find(Participant.class, pId);
+        participant.getSessions().remove(session);
+        em.flush();
+        em.remove(session);
+        em.flush();
+    }
 }
