@@ -135,5 +135,9 @@ eventManagerApp.controller("EventCtrl",
             return $scope.participants.reduce(function (a, b) {
                 return a || (AuthService.user && b.id == AuthService.user.id);
             }, false);
-        }
+        };
+
+        $scope.takePart = function () {
+            $scope.event.$patch();
+        };
     });

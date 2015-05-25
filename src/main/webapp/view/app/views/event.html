@@ -51,7 +51,11 @@
 		</form>
 	</div>
 
+	<div ng-show="isParticipant() && !isCreator()">
+		<button type="button" ng-click="takePart()">Покунить этот СССР</button>
+	</div>
+
 	<div ng-hide="isParticipant()">
-		<button type="buuton" ng-click="takePart()">Принять участие</button>
+		<button type="button" ng-click="takePart()">Принять участие</button>
 	</div>
 </div>
