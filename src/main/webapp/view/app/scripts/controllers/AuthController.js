@@ -21,10 +21,11 @@ eventManagerApp.controller("AuthController",
         };
 
         $scope.register = function (credentials) {
+            $scope.message = "Секунду...";
             AuthService.register(credentials).then(function (user) {
-                console.log("good:" + user);
+                $scope.message = "Отлично. Го на мыло. Я отправил.";
             }, function () {
-                console.log("bad");
+                $scope.message = "Все очень плохо, как никогда";
             })
         };
 

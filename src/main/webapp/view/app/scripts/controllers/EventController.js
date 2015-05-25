@@ -1,7 +1,7 @@
 "use strict";
 
 eventManagerApp.controller("EventCtrl",
-    function ($scope, $state, Task, Participant, event) {
+    function ($scope, $state, Task, Participant, AuthService, event) {
     	$scope.event = event;
         console.log(new Task());
     	$scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
@@ -33,6 +33,7 @@ eventManagerApp.controller("EventCtrl",
         // ];
 
     	$scope.toggle_editing = function (val) {
+            console.log($scope.editing[val]);
 			$scope.editing[val] = !$scope.editing[val];
     	}
 
@@ -56,12 +57,13 @@ eventManagerApp.controller("EventCtrl",
     	};
 
     	$scope.saveEvent = function () {
+            console.log("saveEvent");
     		$scope.event.title = $scope.form.title;
     		$scope.event.description = $scope.form.description;
 
     		$scope.event.$save();
 
-    		$scope.toggle_editing();
+    		$scope.toggle_editing("event");
     	};
 
         $scope.takeTask = function (task) {
@@ -118,4 +120,15 @@ eventManagerApp.controller("EventCtrl",
             console.log("wow", task.isDone);
             return task.isDone?"strike":"";
         };
+
+        $scope.isCreator = function () {
+            console.log("is creator");
+            return AuthService.user && $scope.event.eventCreator.id == AuthService.user.id;
+        };
+
+        $scope.isParticipant = function() {
+            return $scope.participants.reduce(function (a, b) {
+                return a || (AuthService.user && b.id == AuthService.user.id);
+            }, false);
+        }
     });

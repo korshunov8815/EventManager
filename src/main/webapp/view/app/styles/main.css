@@ -65,3 +65,17 @@ button {
 	text-decoration: line-through;
 }
 
+.event-participant {
+	background-color: #ccc;
+	padding: 5px;
+}
+
+.event-task {
+	background-color: #ccc;
+	padding: 5px;
+	margin: 2px;	
+}
+
+.pull-right {
+	float: right;
+}
