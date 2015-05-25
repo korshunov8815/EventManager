@@ -53,8 +53,8 @@ public class ParticipantController {
     @RequestMapping(value = "/{participantId}/events", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<List<Event>> showParticipantEvents(@PathVariable final String participantId) {
         try {
-            int uId = Integer.parseInt(participantId);
-            Participant participant = pService.getParticipantById(uId);
+            int pId = Integer.parseInt(participantId);
+            Participant participant = pService.getParticipantById(pId);
             if (participant == null) {
                 throw new Exception("participant not found");
             }
@@ -67,6 +67,20 @@ public class ParticipantController {
         }
     }
 
+    @RequestMapping(value = "/{participantId}", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<Participant> showParticipant(@PathVariable final String participantId) {
+        try {
+            int pId = Integer.parseInt(participantId);
+            Participant participant = pService.getParticipantById(pId);
+            if (participant == null) {
+                throw new Exception("participant not found");
+            }
+            return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity<Participant>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 }

@@ -19,4 +19,5 @@ public interface EventDao {
     public Task addTaskToEvent(Task t, Event e);
     public Event editEvent(int id, String title, String description);
     public Event deleteEvent(int id, ParticipantService ps);
+    public void deleteParticipantFromEvent (int eId, int pId, ParticipantService ps);
 }

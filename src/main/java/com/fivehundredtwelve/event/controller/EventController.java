@@ -181,6 +181,56 @@ public class EventController {
         }
     }
 
+    @RequestMapping(value = "/{eventId}/participants/{participantId}", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity deleteParticipant(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId, @PathVariable final String participantId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            int pId = Integer.parseInt(participantId);
+            Participant participant = pService.getParticipantById(pId);
+            Participant owner = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                response.sendError(401);
+                throw new Exception("no session defined");
+            }
+            if (event == null) {
+                throw new Exception("event not found");
+            }
+            if (owner.getId()!=event.getEventCreator().getId()) {
+                response.sendError(403);
+                throw new Exception("you have no rights");
+            }
+            eService.deleteParticipantFromEvent(eId, pId, pService);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/{eventId}/leave", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity leaveEvent(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                response.sendError(401);
+                throw new Exception("no session defined");
+            }
+            if (event == null) {
+                throw new Exception("event not found");
+            }
+            eService.deleteParticipantFromEvent(eId,participant.getId(),pService);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
 
 
 }

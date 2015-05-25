@@ -60,5 +60,9 @@ public class EventServiceImpl implements EventService{
        return dao.deleteEvent(id, ps);
     }
 
+    @Transactional
+    @Override
+    public void deleteParticipantFromEvent (int eId, int pId, ParticipantService ps) {dao.deleteParticipantFromEvent(eId, pId, ps);}
+
 
 }

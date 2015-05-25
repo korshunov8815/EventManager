@@ -82,4 +82,13 @@ public class EventDaoImpl implements EventDao {
         return event;
     }
 
+    @Override
+    public void deleteParticipantFromEvent (int eId, int pId, ParticipantService ps){
+        Event event = em.find(Event.class, eId);
+        Participant participant = ps.getParticipantById(pId);
+        participant.getEvents().remove(event);
+        event.getParticipants().remove(participant);
+        em.flush();
+    }
+
 }
