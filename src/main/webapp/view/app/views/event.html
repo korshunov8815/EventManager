@@ -6,8 +6,8 @@
 
 		<h3 class="participants">Участники</h3>
 		<div class="block">
-			<a href="" ui-sref="participant({ id: AuthService.user.id })">
-				<span>{{ AuthService.user.name }}</span>
+			<a href="" ui-sref="participant({ id: event.eventCreator.id })">
+				<span>{{ event.eventCreator.name }}</span>
 			</a>
 		</div>
 		<div class="block" ng-repeat="participant in participants" ng-hide="isCreator(participant)">
