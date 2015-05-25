@@ -22,6 +22,7 @@ public interface ParticipantService {
     public void editParticipantName (int id, String name);
     public Participant getParticipantByregId(String regId);
     public void activate(int id);
+    public void deleteSession(int pId, String sId);
 
 }
 

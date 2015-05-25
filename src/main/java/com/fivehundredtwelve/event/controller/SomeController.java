@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
 /**
@@ -45,7 +46,7 @@ public class SomeController {
                 String regId = AuthorizationUtils.encodeMD5(java.util.UUID.randomUUID().toString() + participant.getPassword());
                 AuthorizationUtils.registration(participant.getEmail(), regId);
                 newParticipant = pService.saveParticipant(new Participant(participant.getEmail(), password, regId));
-            }
+            } else throw new Exception("such user exists");
             return new ResponseEntity<Participant>(newParticipant,HttpStatus.OK);
 
         }
@@ -70,7 +71,9 @@ public class SomeController {
                     sessionID = AuthorizationUtils.encodeMD5(sessionID);
                     session.setSessionID(sessionID);
                     pService.addSessionToParticipant(session, participantDB);
-                    response.addCookie(new Cookie("sessionId", session.getSessionID()));
+                    Cookie sessionCookie = new Cookie ("sessionId", session.getSessionID());
+                    sessionCookie.setMaxAge(999999999); // oO
+                    response.addCookie(sessionCookie);
                 }
                 else throw new Exception("authorization failed");
             }
@@ -93,9 +96,21 @@ public class SomeController {
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.DELETE)
-    public void logout(HttpServletResponse response) throws IOException {
-        response.addCookie(new Cookie("sessionId", ""));
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    public void logout(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        try {
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            Cookie[] cookie = request.getCookies();
+            String currentSessionId = "";
+            for (Cookie c : cookie) {
+                if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
+            }
+            pService.deleteSession(participant.getId(), currentSessionId);
+            response.addCookie(new Cookie("sessionId", ""));
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        catch (final Exception e){
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.PUT)
@@ -113,20 +128,29 @@ public class SomeController {
     }
 
     @RequestMapping(value = "/confirm/{regId}", method = RequestMethod.GET)
-    public ResponseEntity confirmation(HttpServletResponse response, @PathVariable final String regId) throws IOException {
+    public Participant confirmation(HttpServletResponse response, @PathVariable final String regId) throws IOException {
+        Participant participantDB = null;
         try {
-            Participant participantBD = pService.getParticipantByregId(regId);
-            if (participantBD==null) {
+            participantDB = pService.getParticipantByregId(regId);
+            if (participantDB==null) {
                 throw new Exception("participant not found");
             }
-            pService.activate(participantBD.getId());
+            pService.activate(participantDB.getId());
+            Session session = new Session();
+            String sessionID = String.valueOf(System.currentTimeMillis()) + participantDB.getEmail();
+            sessionID = AuthorizationUtils.encodeMD5(sessionID);
+            session.setSessionID(sessionID);
+            pService.addSessionToParticipant(session, participantDB);
+            Cookie sessionCookie = new Cookie ("sessionId", session.getSessionID());
+            sessionCookie.setPath("/api");
+            sessionCookie.setMaxAge(999999999); // oO
+            response.addCookie(sessionCookie);
             response.sendRedirect("/");
-            return new ResponseEntity(HttpStatus.OK);
         }
         catch (final Exception e){
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
-
+        return participantDB;
     }
 
 }
