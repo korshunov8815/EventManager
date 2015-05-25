@@ -64,7 +64,7 @@
 		<button type="button" ng-click="leaveEvent()">Покунить этот СССР</button>
 	</div>
 
-	<div ng-show="!isParticipant(AuthService.user) && !AuthService.user">
+	<div ng-show="!isParticipant(AuthService.user) && AuthService.user">
 		<button type="button" ng-click="takePart()">Принять участие</button>
 	</div>
 </div>
