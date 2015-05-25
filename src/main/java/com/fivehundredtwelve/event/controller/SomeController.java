@@ -159,9 +159,9 @@ public class SomeController {
     }
 
     @RequestMapping(value="/antoshka_zalivaet_fotki", method = RequestMethod.POST)
-    public void getDate(@RequestParam Blob b){
+    public void getDate(@RequestBody Example example){
         try {
-            System.out.println(b.length());
+            System.out.println(example.getDate().toString());
         }
         catch (final Exception e) {}
     }

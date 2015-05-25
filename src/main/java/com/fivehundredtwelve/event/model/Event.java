@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +28,9 @@ public class Event {
     private String description;
     private Set<Task> tasks;
     private Participant eventCreator;
+    private Date datetime;
 
-    private Set<Participant> participants = new HashSet<Participant>();
+   private Set<Participant> participants = new HashSet<Participant>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,10 +56,14 @@ public class Event {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Column(name="datetime")
+    public Date getDatetime() {return datetime;}
+    public void setDatetime(Date datetime) { this.datetime = datetime; }
+
 
     @OneToOne(fetch = FetchType.EAGER)
     public Participant getEventCreator() {
@@ -68,10 +74,10 @@ public class Event {
     }
 
 
-    public Event(String title, String description, Participant eventCreator) {
+    public Event(String title, String description, Date datetime) {
         this.title = title;
         this.description = description;
-        this.eventCreator = eventCreator;
+        this.datetime = datetime;
     }
 
     public Event() {
