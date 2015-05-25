@@ -16,7 +16,7 @@
 			<span class="pull-right">
 				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone || !isParticipant()">&#10004;</a>
 				<a href="" ng-click="deleteTask(task)" ng-show="isCreator()">&#10008;</a>
-				<a href="" ng-click="takeTask(task)" ng-hide="task.isDone || !isParticipant()">&#9773;</a>
+				<a href="" ng-click="takeTask(task)" ng-hide="task.isTaken || !isParticipant()">&#9773;</a>
 			</span>
 		</div>
 		<br/>
