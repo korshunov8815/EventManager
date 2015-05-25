@@ -7,6 +7,7 @@ import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author anna
@@ -43,15 +45,17 @@ public class TasksController {
     }
 
     @RequestMapping(value ="{taskId}", method = RequestMethod.DELETE)
-    public @ResponseBody ResponseEntity<Task> deleteTask(HttpServletRequest request, @PathVariable String taskId) {
+    public @ResponseBody ResponseEntity<Task> deleteTask(HttpServletRequest request, HttpServletResponse response, @PathVariable String taskId) {
         try {
             Participant participant = AuthorizationUtils.authorize(request, sService);
             if (participant == null) {
+                response.sendError(401);
                 throw new Exception("no session defined");
             }
             int tId = Integer.parseInt(taskId);
             Task task = tService.getTaskById(tId);
             if (!(participant.getId()==task.getTaskKeeper().getId() || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
+                response.sendError(403);
                 throw new Exception("you have no rights");
             }
             tService.deleteTask(tId, pService, eService);
@@ -64,20 +68,23 @@ public class TasksController {
     }
 
     @RequestMapping(value ="{taskId}", method = RequestMethod.PATCH)
-    public @ResponseBody ResponseEntity<Task> takeTask(HttpServletRequest request, @PathVariable String taskId) {
+    public @ResponseBody ResponseEntity<Task> takeTask(HttpServletRequest request, HttpServletResponse response, @PathVariable String taskId) {
         try {
             Participant participant = AuthorizationUtils.authorize(request, sService);
             if (participant == null) {
+                response.sendError(401);
                 throw new Exception("no session defined");
             }
             int tId = Integer.parseInt(taskId);
             Task task = tService.getTaskById(tId);
             Event event = eService.getEventById(task.getTaskEventKeeper().getId());
             if (!event.getParticipants().contains(participant)) {
+                response.sendError(403);
                 throw new Exception("you have no rights");
             }
             tService.editTask(tId, task.getContent(), participant.getId());
-            return new ResponseEntity<Task>(HttpStatus.OK);
+            task.setIsTaken(true);
+            return new ResponseEntity<Task>(task,HttpStatus.OK);
         }
         catch (final Exception e) {
            return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
@@ -85,19 +92,23 @@ public class TasksController {
     }
 
     @RequestMapping(value ="{taskId}", method = RequestMethod.PUT)
-    public @ResponseBody ResponseEntity<Task> makeTaskDone(HttpServletRequest request, @PathVariable String taskId) {
+    public @ResponseBody ResponseEntity<Task> makeTaskDone(HttpServletRequest request, HttpServletResponse response, @PathVariable String taskId) {
         try {
             Participant participant = AuthorizationUtils.authorize(request, sService);
             if (participant == null) {
+                response.sendError(401);
                 throw new Exception("no session defined");
             }
             int tId = Integer.parseInt(taskId);
             Task task = tService.getTaskById(tId);
             if (!(participant.getId()==task.getTaskKeeper().getId()) ) {
+                response.sendError(403);
                 throw new Exception("you have no rights");
             }
+            task.setTaskKeeper(participant);
             tService.makeDone(tId);
-            return new ResponseEntity<Task>(HttpStatus.OK);
+            task.setIsDone(true);
+            return new ResponseEntity<Task>(task, HttpStatus.OK);
         }
         catch (final Exception e) {
             return new ResponseEntity<Task>(HttpStatus.BAD_REQUEST);
@@ -106,15 +117,17 @@ public class TasksController {
 
 
     @RequestMapping(value ="{taskId}", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Task> editTask(HttpServletRequest request, @PathVariable String taskId, @RequestBody Task task) {
+    public @ResponseBody ResponseEntity<Task> editTask(HttpServletRequest request, HttpServletResponse response, @PathVariable String taskId, @RequestBody Task task) {
         try {
             Participant participant = AuthorizationUtils.authorize(request, sService);
             if (participant == null) {
+                response.sendError(401);
                 throw new Exception("no session defined");
             }
             int tId = Integer.parseInt(taskId);
             int ownerId = tService.getTaskById(tId).getTaskKeeper().getId();
             if (!(participant.getId()==ownerId || participant.getId()==task.getTaskEventKeeper().getEventCreator().getId())) {
+                response.sendError(403);
                 throw new Exception("you have no rights");
             }
             task = tService.editTask(tId, task.getContent(), task.getTaskKeeper().getId());

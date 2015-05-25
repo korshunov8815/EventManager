@@ -64,6 +64,7 @@ public class TaskDaoImpl implements TaskDao {
         task.setContent(content);
         Participant participant = em.find(Participant.class, pId);
         task.setTaskKeeper(participant);
+        task.setIsTaken(true);
         em.flush();
         return em.find(Task.class, tId);
     }
