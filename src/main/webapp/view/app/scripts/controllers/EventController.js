@@ -68,7 +68,12 @@ eventManagerApp.controller("EventCtrl",
 
         $scope.takeTask = function (task) {
             var task = new Task(task);
-            task.$patch();
+            task.$patch().then(
+                function () {
+                    $scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
+                }, function () {
+                    console.log("Все очень плохо");
+                });;
         }
 
         $scope.editTask = function (task) {
