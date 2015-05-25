@@ -54,7 +54,7 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
                 }
             })
             .state("participant", {
-                url: "/participant/:id",
+                url: "/participants/:id",
                 templateUrl: "/app/views/participant.html",
                 controller: "ParticipantCtrl",
                 resolve: {
