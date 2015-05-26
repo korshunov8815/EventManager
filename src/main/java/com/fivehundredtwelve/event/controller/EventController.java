@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,13 +49,18 @@ public class EventController {
 
     //Влад, тут мы боремся за утят
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, @RequestBody Event event) {
+    public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, HttpServletResponse response, @RequestBody Event event) {
         try {
             Participant participant = AuthorizationUtils.authorize(request, sService);
             if (participant == null) {
                 throw new Exception("no session defined");
             }
             event.setEventCreator(participant);
+            Date date = new Date();
+            if (event.getDatetime().compareTo(date)<0) {
+                response.sendError(405);
+                throw new Exception("dude that's too late go get a sleep");
+            }
             eService.saveEvent(event);
             eService.addParticipantToEvent(participant,event);
             return new ResponseEntity<Event>(event, HttpStatus.OK);
@@ -81,7 +87,7 @@ public class EventController {
 
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Event> editEvent(HttpServletRequest request, @PathVariable final String eventId, @RequestBody Event event){
+    public @ResponseBody ResponseEntity<Event> editEvent(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId, @RequestBody Event event){
         try {
             int eId = event.getId();
             Participant owner = event.getEventCreator();
@@ -89,8 +95,13 @@ public class EventController {
             if (participant == null) {
                 throw new Exception("no session defined");
             }
+            Date date = new Date();
+            if (event.getDatetime().compareTo(date)<0) {
+                response.sendError(405);
+                throw new Exception("dude that's too late go get a sleep");
+            }
             if (owner.getId() == participant.getId()) {
-                eService.editEvent(event.getId(), event.getTitle(), event.getDescription());
+                eService.editEvent(event.getId(), event.getTitle(), event.getDescription(), event.getDatetime());
             }
             return new ResponseEntity<Event>(event, HttpStatus.OK);
 

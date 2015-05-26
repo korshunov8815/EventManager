@@ -1,4 +1,5 @@
 package com.fivehundredtwelve.event.controller;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Example;
 import com.fivehundredtwelve.event.model.Participant;
@@ -14,11 +15,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Blob;
 import java.text.DateFormat;
@@ -159,10 +164,22 @@ public class SomeController {
     }
 
     @RequestMapping(value="/antoshka_zalivaet_fotki", method = RequestMethod.POST)
-    public void getDate(@RequestBody Example example){
-        try {
-            System.out.println(example.getDate().toString());
+    public void getDate(@RequestParam("file")MultipartFile file){
+        System.out.println(file);
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File("bob")));
+                stream.write(bytes);
+                stream.close();
+                System.out.println("You successfully uploaded " + "bob" + "!");
+            } catch (Exception e) {
+                System.out.println("You failed to upload " + "bob" + " => " + e.getMessage());
+            }
+        } else {
+            System.out.println("You failed to upload " + "bob" + " because the file was empty.");
         }
-        catch (final Exception e) {}
     }
+
 }

@@ -10,10 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by anna on 06.04.15.
@@ -63,10 +60,11 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public Event editEvent(int id, String title, String description) {
+    public Event editEvent(int id, String title, String description, Date date) {
         Event event = em.find(Event.class, id);
         event.setDescription(description);
         event.setTitle(title);
+        event.setDatetime(date);
         em.flush();
         return em.find(Event.class, id);
     }
