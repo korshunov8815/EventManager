@@ -4,6 +4,7 @@ eventManagerApp.controller("EventCtrl",
     function ($scope, $state, $http, Task, Participant, AuthService, event) {
         $scope.AuthService = AuthService;
     	$scope.event = event;
+        $scope.event.datetime = new Date($scope.event.datetime);
     	$scope.tasks = Task.getTasksByEventId({eventId: $scope.event.id});
         $scope.participants = Participant.getParticipantsByEventId({eventId: $scope.event.id});
         $scope.form = {}
@@ -11,6 +12,7 @@ eventManagerApp.controller("EventCtrl",
             event: false,
             task: false
         };
+
 
     	$scope.toggle_editing = function (val) {
 			$scope.editing[val] = !$scope.editing[val];
@@ -26,6 +28,7 @@ eventManagerApp.controller("EventCtrl",
 
     	$scope.editEvent = function () {
     		$scope.form.title = $scope.event.title;
+            $scope.form.datetime = $scope.event.datetime;
     		$scope.form.description = $scope.event.description;
 
     		$scope.toggle_editing("event");

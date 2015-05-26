@@ -97,6 +97,23 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
         $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
             $state.go("index");
         });
+
+        $rootScope.event_filter = function () {
+            var today = new Date();
+            today.setHours(0);
+            today.setMinutes(0);
+            today.setSeconds(0);
+            today.setMilliseconds(0);
+            return function (event) {
+                var date = new Date(event.datetime);
+                date.setHours(0);
+                date.setMinutes(0);
+                date.setSeconds(0);
+                date.setMilliseconds(0);
+                console.log(date, today, date >= today);
+                return date >= today;
+            };
+        };
     });
 
 eventManagerApp.controller("Wow", function($scope, $http) {

@@ -8,7 +8,7 @@ eventManagerApp.controller("ParticipantCtrl",
         $scope.avatar = "http://gravatar.com/avatar/" + hex_md5(user.email) + "?s=50&d=retro";
 
         $scope.my_profile = function () {
-            return AuthService.user.id == $scope.user.id;
+            return AuthService.user && AuthService.user.id == $scope.user.id;
         };
 
         $scope.status = {
@@ -32,7 +32,7 @@ eventManagerApp.controller("ParticipantCtrl",
             $scope.user.name = $scope.form.name;
     		$http.put("/api/auth", $scope.user)
     			.success(function () {
-    				AuthService.getUser().success(
+    				AuthService.getUser().then(
                         function () {
                             $scope.user = AuthService.user;
                         });

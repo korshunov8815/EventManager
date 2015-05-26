@@ -1,6 +1,6 @@
 <div>
 	<div ng-hide="editing.event">
-		<h1 class="event-title">{{ event.title }}</h1>
+		<h1 class="event-title">{{ event.title }} <span class="pull-right">{{ event.datetime | date}}</span></h1>
 		<div class="event-description">{{ event.description }}</div>
 
 
@@ -14,7 +14,7 @@
 			<a href="" ui-sref="participant({ id: participant.id })">
 				<span>{{ participant.name }}</span>
 			</a>
-			<span class="pull-right">
+			<span class="pull-right" ng-show="isCreator(AuthService.user)">
 				<a href="" ng-click="deleteParticipant(participant)">&#10008;</a>
 			</span>
 		</div>
