@@ -23,6 +23,7 @@ public interface ParticipantService {
     public Participant getParticipantByregId(String regId);
     public void activate(int id);
     public void deleteSession(int pId, String sId);
+    public void freeTask(int pId, int tId, TaskService ts);
 
 }
 

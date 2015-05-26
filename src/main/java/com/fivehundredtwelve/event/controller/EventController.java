@@ -200,7 +200,7 @@ public class EventController {
                 response.sendError(403);
                 throw new Exception("you have no rights");
             }
-            eService.deleteParticipantFromEvent(eId, pId, pService);
+            eService.deleteParticipantFromEvent(eId, pId, pService,tService);
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (final Exception e) {
@@ -221,7 +221,7 @@ public class EventController {
             if (event == null) {
                 throw new Exception("event not found");
             }
-            eService.deleteParticipantFromEvent(eId,participant.getId(),pService);
+            eService.deleteParticipantFromEvent(eId,participant.getId(),pService, tService);
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (final Exception e) {
