@@ -76,6 +76,10 @@ button {
 	display: block;	
 }
 
+.block.task {
+	margin-left: 10px;
+}
+
 .participants + .block {
 	background-color: rgb(207, 210, 101);
 }

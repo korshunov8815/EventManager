@@ -24,10 +24,18 @@
 
 
 		<h3>События</h3>
-		<a href="" ng-repeat="event in events" ui-sref="event({ id: event.id })" class="block">
-				<span>{{ event.title }}</span>
-		</a>
-
+		<div ng-repeat="event in events">
+			<a href="" ui-sref="event({ id: event.id })" class="block">
+					{{ event.title }}
+			</a>
+			<div ng-repeat="task in event.tasks" class="block task">
+				<span ng-class="strike_class(task)">{{ task.content }}</span>
+				<span class="pull-right">
+					<a href="" ng-click="confirmTask(task)" ng-show="!task.isDone && my_profile()">&#10004;</a>
+				</span>
+			</div>
+		</div>
+<!-- 
 		<h3>Задачи</h3>
 		<div ng-repeat="task in tasks" class="block">
 			<span ng-class="strike_class(task)">{{ task.content }}</span>
@@ -35,6 +43,6 @@
 				<a href="" ng-click="confirmTask(task)" ng-show="!task.isDone && my_profile()">&#10004;</a>
 			</span>
 		</div>
-		<br/>
+		<br/> -->
 	</div>
 </div>

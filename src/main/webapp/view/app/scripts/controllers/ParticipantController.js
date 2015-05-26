@@ -48,7 +48,7 @@ eventManagerApp.controller("ParticipantCtrl",
             var to_confirm = new Task({id: task.id, isDone: true});
             to_confirm.$put().then(
                 function () {
-                    $scope.tasks = Task.getTasksByParticipantId({userId: $scope.user.id});
+                    $scope.events = Event.getEventsByParticipantId({userId: $scope.user.id});
                 }, function () {
                     console.log("Bad confirm");
                 });
