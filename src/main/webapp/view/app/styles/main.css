@@ -69,15 +69,27 @@ button {
 	text-decoration: line-through;
 }
 
+.participant {
+	padding: 5px;
+	margin: 5px;
+	display: block;
+	font-weight: bold;
+}
+
 .block {
 	background-color: #ccc;
 	padding: 5px;
-	margin: 2px;
-	display: block;	
+	margin: 5px;
+	display: block;
+	font-weight: bold;
 }
 
-.block.task {
-	margin-left: 10px;
+.task {
+	margin-left: 30px;
+}
+
+.galka {
+	margin-left: 18px;
 }
 
 .participants + .block {
@@ -86,4 +98,8 @@ button {
 
 .pull-right {
 	float: right;
+}
+
+.past_event {
+	background-color: rgb(240, 196, 196);
 }

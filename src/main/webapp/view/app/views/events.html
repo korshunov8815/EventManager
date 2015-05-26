@@ -1,11 +1,11 @@
 <div>
 	<div ng-show="show_events">
 		<h1>Список мероприятий</h1>
-		<a ng-repeat="event in events | filter: event_filter()" ui-sref="event({ id: event.id })">
-			<div class="events" >
-				<span>{{ event.title }}</span>
+			<div class="events" ng-repeat="event in events" ng-class="is_past_event(event)">
+				<a ui-sref="event({ id: event.id })">
+					<span>{{ event.title }}</span>
+				</a>
 			</div>
-		</a>
 		<button ng-click="toggle_show_events()">Создать мероприятие</button>
 	</div>
 	<div ng-hide="show_events">

@@ -98,21 +98,19 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
             $state.go("index");
         });
 
-        $rootScope.event_filter = function () {
+        $rootScope.is_past_event = function (event) {
             var today = new Date();
+            var date = new Date(event.datetime);
             today.setHours(0);
-            today.setMinutes(0);
+            date.setHours(0);
             today.setSeconds(0);
+            date.setSeconds(0);
             today.setMilliseconds(0);
-            return function (event) {
-                var date = new Date(event.datetime);
-                date.setHours(0);
-                date.setMinutes(0);
-                date.setSeconds(0);
-                date.setMilliseconds(0);
-                console.log(date, today, date >= today);
-                return date >= today;
-            };
+            date.setMinutes(0);
+            today.setMinutes(0);
+            date.setMilliseconds(0);
+            console.log(event, date >= today);
+            return date>=today?"past_event":"";
         };
     });
 

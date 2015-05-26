@@ -10,7 +10,7 @@
 				<span>{{ event.eventCreator.name }}</span>
 			</a>
 		</div>
-		<div class="block" ng-repeat="participant in participants" ng-hide="isCreator(participant)">
+		<div class="participant" ng-repeat="participant in participants" ng-hide="isCreator(participant)">
 			<a href="" ui-sref="participant({ id: participant.id })">
 				<span>{{ participant.name }}</span>
 			</a>
