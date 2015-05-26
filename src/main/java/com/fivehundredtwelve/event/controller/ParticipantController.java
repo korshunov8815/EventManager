@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by korshunov on 24.05.15.
@@ -59,10 +61,15 @@ public class ParticipantController {
                 throw new Exception("participant not found");
             }
             List<Event> list = new ArrayList<Event>();
-            list.addAll(participant.getEvents());
+            Set<Event> events = participant.getEvents();
+            for (Event e: events){
+               e.setTasks(eService.eventTaskOwner(e.getId(),pId));
+            }
+            list.addAll(events);
             return new ResponseEntity<List<Event>>(list, HttpStatus.OK);
         }
         catch (final Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<List<Event>>(HttpStatus.BAD_REQUEST);
         }
     }

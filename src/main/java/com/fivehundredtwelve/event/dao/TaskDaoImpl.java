@@ -67,6 +67,7 @@ public class TaskDaoImpl implements TaskDao {
     public void makeUntook(int id){
         Task t = em.find(Task.class, id);
         t.setIsTaken(false);
+        t.setTaskKeeper(null);
         em.flush();
     }
 

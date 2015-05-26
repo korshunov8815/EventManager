@@ -3,6 +3,7 @@ package com.fivehundredtwelve.event.dao;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
+import com.fivehundredtwelve.event.service.TaskService;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface ParticipantDao {
     public Participant getParticipantByregId(String regId);
     public void activate(int id);
     public void deleteSession(int pId, String sId);
+    public void freeTask(int pId, int tId, TaskService ts);
 }

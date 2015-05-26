@@ -3,6 +3,7 @@ package com.fivehundredtwelve.event.dao;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
+import com.fivehundredtwelve.event.service.TaskService;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -92,7 +93,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
 
     @Override
     public void deleteSession(int pId, String sId) {
-        Query q1 = em.createQuery("SELECT s FROM Session s WHERE s.sessionID LIKE :sId").setParameter("sId",sId);
+        Query q1 = em.createQuery("SELECT s FROM Session s WHERE s.sessionID LIKE :sId").setParameter("sId", sId);
         Session session = (Session)q1.getSingleResult();
         Participant participant = em.find(Participant.class, pId);
         participant.getSessions().remove(session);
@@ -100,4 +101,13 @@ public class ParticipantDaoImpl implements ParticipantDao {
         em.remove(session);
         em.flush();
     }
+
+    @Override
+    public void freeTask(int pId, int tId, TaskService ts) {
+        Participant participant = em.find(Participant.class, pId);
+        Task task = ts.getTaskById(tId);
+        participant.getTasks().remove(task);
+        em.flush();
+    }
+
 }
