@@ -1,0 +1,72 @@
+<div>
+	<div ng-hide="editing.event">
+		<h1 class="event-title">{{ event.title }} <span class="pull-right">{{ event.datetime | date}}</span></h1>
+		<div class="event-description">{{ event.description }}</div>
+
+
+		<h3 class="participants">Участники</h3>
+		<div class="block">
+			<a href="" ui-sref="participant({ id: event.eventCreator.id })">
+				<span>{{ event.eventCreator.name }}</span>
+			</a>
+		</div>
+		<div class="participant" ng-repeat="participant in participants" ng-hide="isCreator(participant)">
+			<a href="" ui-sref="participant({ id: participant.id })">
+				<span>{{ participant.name }}</span>
+			</a>
+			<span class="pull-right" ng-show="isCreator(AuthService.user)">
+				<a href="" ng-click="deleteParticipant(participant)">&#10008;</a>
+			</span>
+		</div>
+
+		<h3>Задачи</h3>
+		<div ng-repeat="task in tasks" class="block">
+			<span ng-class="strike_class(task)">{{ task.content }}</span>
+			<span class="pull-right">
+				<!-- <a href="" ng-click="confirmTask(task)" ng-hide="task.isTaken">&#10004;</a> -->
+				<a href="" ng-click="deleteTask(task)" ng-show="isCreator(AuthService.user)">&#10008;</a>
+				<a href="" ng-click="takeTask(task)" ng-hide="task.isTaken || !isParticipant(AuthService.user)">&#9773;</a>
+			</span>
+		</div>
+		<br/>
+
+		<div ng-show="editing.task">
+			<h1>Озадачивание</h1>
+			<form ng-submit="saveTask()">
+				<input type="text" ng-model="task.content" placeholder="Задача">
+				<button type="submit">Да, озадачить</button>
+				<button type="button" ng-click="cancelEditTask()">Нет, не стоит</button>
+			</form>
+		</div>
+
+		<div ng-show="!editing.task && isCreator(AuthService.user)">
+			<button type="button" ng-click="addTask()">Озадачить</button>
+			<button type="button" ng-click="editEvent()">Редактировать</button>
+			<button type="button" ng-click="deleteEvent()">Удалить</button>
+		</div>
+	</div>
+
+	<div ng-show="editing.event">
+		<h1>Редактирование</h1>
+		<form  ng-submit="saveEvent()">
+			<label>Название</label>
+			<input ng-model="form.title">
+			<label>Дата и время (поле datetime)</label>
+			<input type="datetime-local" ng-model="form.datetime">
+			<label>Описание</label>
+			<textarea ng-model="form.description"></textarea>
+			<div>
+				<button>Сохранить</button>
+				<button type="button" ng-click="cancelEditEvent()">Отмена</button>
+			</div>
+		</form>
+	</div>
+
+	<div ng-show="isParticipant(AuthService.user) && !isCreator(AuthService.user)">
+		<button type="button" ng-click="leaveEvent()">Покунить этот СССР</button>
+	</div>
+
+	<div ng-show="!isParticipant(AuthService.user) && AuthService.user">
+		<button type="button" ng-click="takePart()">Принять участие</button>
+	</div>
+</div>

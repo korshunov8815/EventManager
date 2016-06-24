@@ -1,0 +1,49 @@
+<h1 ng-hide="my_profile()">{{ user.name }}<img ng-src="{{ avatar }}" align="right" style="margin-right: 3px;"></h1>
+
+<h1 ng-show="my_profile()">
+	<span ng-hide="status.editing">
+		{{ user.name }}
+		<a href="" ng-click="edit()">&#9998;</a>
+	</span>
+	<span ng-show="status.editing" style="width: 50px">
+		<input type="text" ng-model="form.name">
+		<a href="" ng-click="save_changes()">&#10004;</a>
+		<a href="" ng-click="cancelEdit()">&#10008;</a>
+	</span>
+		<img ng-src="{{ avatar }}" align="right" style="margin-right: 3px;">
+</h1>
+
+<div class="block">
+	<h3>{{ user.email }}</h3>
+</div>
+
+<div>
+	<div ng-hide="editing.event">
+		<h1 class="event-title">{{ event.title }}</h1>
+		<div class="event-description">{{ event.description }}</div>
+
+
+		<h3>События</h3>
+		<div ng-repeat="event in events">
+			<a href="" ui-sref="event({ id: event.id })" class="block" ng-class="is_past_event(event)">
+					{{ event.title }}
+			</a>
+			<div ng-repeat="task in event.tasks" class="task">
+				<span>
+					<a href="" ng-click="confirmTask(task)" ng-show="!task.isDone && my_profile()">&#10004;</a>
+					<span ng-show="task.isDone && my_profile()" class="galka"></span>
+				</span>
+				<span ng-class="strike_class(task)">{{ task.content }}</span>
+			</div>
+		</div>
+<!-- 
+		<h3>Задачи</h3>
+		<div ng-repeat="task in tasks" class="block">
+			<span ng-class="strike_class(task)">{{ task.content }}</span>
+			<span class="pull-right">
+				<a href="" ng-click="confirmTask(task)" ng-show="!task.isDone && my_profile()">&#10004;</a>
+			</span>
+		</div>
+		<br/> -->
+	</div>
+</div>

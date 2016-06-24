@@ -19,6 +19,11 @@ public interface ParticipantService {
     public Participant getParticipantById(int id);
     public Participant getParticipantByEmail (String email);
     public void addSessionToParticipant (Session session, Participant participant);
+    public void editParticipantName (int id, String name);
+    public Participant getParticipantByregId(String regId);
+    public void activate(int id);
+    public void deleteSession(int pId, String sId);
+    public void freeTask(int pId, int tId, TaskService ts);
 
 }
 

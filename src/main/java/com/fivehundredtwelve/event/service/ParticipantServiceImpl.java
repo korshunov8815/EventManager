@@ -55,5 +55,26 @@ public class ParticipantServiceImpl implements ParticipantService {
     public void addSessionToParticipant (Session session, Participant participant){
         dao.addSessionToParticipant(session,participant);
     }
+
+    @Transactional
+    @Override
+    public void editParticipantName (int id, String name) {
+        dao.editParticipantName(id, name);
+    }
+
+    @Override
+    public Participant getParticipantByregId(String regId) {return dao.getParticipantByregId(regId);}
+
+    @Transactional
+    @Override
+    public void activate(int id) {dao.activate(id);}
+
+    @Transactional
+    @Override
+    public void deleteSession(int pId, String sId) { dao.deleteSession(pId, sId);}
+
+    @Transactional
+    @Override
+    public void freeTask(int pId, int tId, TaskService ts) {dao.freeTask(pId, tId, ts);}
 }
 

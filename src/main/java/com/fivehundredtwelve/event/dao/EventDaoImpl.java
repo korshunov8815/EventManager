@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by anna on 06.04.15.
@@ -61,10 +60,11 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public Event editEvent(int id, String title, String description) {
+    public Event editEvent(int id, String title, String description, Date date) {
         Event event = em.find(Event.class, id);
         event.setDescription(description);
         event.setTitle(title);
+        event.setDatetime(date);
         em.flush();
         return em.find(Event.class, id);
     }
@@ -80,6 +80,35 @@ public class EventDaoImpl implements EventDao {
         em.remove(event);
         em.flush();
         return event;
+    }
+
+    @Override
+    public void deleteParticipantFromEvent (int eId, int pId, ParticipantService ps, TaskService ts){
+        Event event = em.find(Event.class, eId);
+        Participant participant = ps.getParticipantById(pId);
+        participant.getEvents().remove(event);
+        event.getParticipants().remove(participant);
+        List<Task> tasks = new ArrayList<Task>();
+        tasks.addAll(participant.getTasks());
+        for (int i = 0; i < tasks.size(); i++) {
+            tasks.get(i).setIsTaken(false);
+            tasks.get(i).setIsDone(false);
+            tasks.get(i).setTaskKeeper(null);
+            ps.freeTask(pId,tasks.get(i).getId(),ts);
+        }
+        em.flush();
+    }
+
+    @Override
+    public Set<Task> eventTaskOwner(int eId, int pId) {
+        Event event = em.find(Event.class, eId);
+        Set<Task> tasks= new HashSet<Task>();
+        for (Task t : event.getTasks())
+            if (t.getTaskKeeper()!=null)
+                if (t.getTaskKeeper().getId()==pId)
+                     tasks.add(t);
+        return tasks;
+
     }
 
 }

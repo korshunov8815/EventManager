@@ -1,7 +1,9 @@
 "use strict";
 
+
+
 var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.router"])
-    .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    .config(function ($httpProvider, $stateProvider, $urlRouterProvider, $locationProvider) {
         // $locationProvider.html5Mode({
         //   enabled: true,
         //   requireBase: false
@@ -16,135 +18,116 @@ var eventManagerApp = angular.module("EventManagerApp", ["ngResource", "ui.route
         ]);
 
         $stateProvider
+            .state("index", {
+                url: "",
+                templateUrl: "/app/views/index.html",
+                controller: "IndexCtrl"
+            })
+            .state("profile", {
+                url: "/profile",
+                templateUrl: "/app/views/profile.html",
+                controller: "ProfileCtrl",
+                resolve: {
+                    user: function (Profile) {
+                        return Profile.get().$promise;
+                    }
+                }
+            })
             .state("events", {
                 url: "/events",
-                templateUrl: "app/views/events.html",
-                controller: "EventCtrl"
+                templateUrl: "/app/views/events.html",
+                controller: "EventsCtrl",
+                resolve: {
+                    events: function (Event) {
+                        return Event.query().$promise;
+                    }
+                }
+            })
+            .state("event", {
+                url: "/events/:id",
+                templateUrl: "/app/views/event.html",
+                controller: "EventCtrl",
+                resolve: {
+                    event: function (Event, $stateParams) {
+                        return Event.get({id: $stateParams.id}).$promise;
+                    }
+                }
+            })
+            .state("participant", {
+                url: "/participants/:id",
+                templateUrl: "/app/views/participant.html",
+                controller: "ParticipantCtrl",
+                resolve: {
+                    user: function (Participant, $stateParams) {
+                        return Participant.get({id: $stateParams.id}).$promise;
+                    }
+                }
             })
     })
-    .factory('AuthInterceptor', function ($q) {
+
+    .constant('AUTH_EVENTS', {
+        loginSuccess: 'auth-login-success',
+        loginFailed: 'auth-login-failed',
+        logoutSuccess: 'auth-logout-success',
+        sessionTimeout: 'auth-session-timeout',
+        notAuthenticated: 'auth-not-authenticated',
+        notAuthorized: 'auth-not-authorized'
+    })
+
+    .run(function (AuthService) {
+        AuthService.getUser();
+    })
+
+    .factory('AuthInterceptor', function ($q, $rootScope, AUTH_EVENTS) {
       return {
         responseError: function (response) {
           if (response.status == 401) {
-            // location = "/";
+            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
           }
           return $q.reject(response);
         }
       };
-    });
+    })
 
-eventManagerApp.constant('AUTH_EVENTS', {
-  loginSuccess: 'auth-login-success',
-  loginFailed: 'auth-login-failed',
-  logoutSuccess: 'auth-logout-success',
-  sessionTimeout: 'auth-session-timeout',
-  notAuthenticated: 'auth-not-authenticated',
-  notAuthorized: 'auth-not-authorized'
-});
-
-eventManagerApp.constant('USER_ROLES', {
-  all: '*',
-  admin: 'admin',
-  editor: 'editor',
-  guest: 'guest'
-});
-
-eventManagerApp.controller("ApplicationController", ["$scope", "Event", "$http",
-    function ($scope, Event, $http) {
-
-        $scope.mother = $http.get("/events");
-        $scope.form = new Event();
-
-        $scope.mother.success(function(data, status, headers, config) {
-            console.log("json please");
-            console.log(data);
+    .controller("AppCtrl", function ($rootScope, $state, AUTH_EVENTS) {
+        // $rootScope.$on(AUTH_EVENTS.loginSuccess, function () {
+        //     $state.go("events");
+        // });
+        
+        $rootScope.$on(AUTH_EVENTS.loginFailed, function () {
+            $state.go("index");
         });
 
-        $scope.events = Event.query();
-        $scope.events.$promise.then(
-            function (data, status, headers, config) {
-                console.log($scope.events);
-            },
-            function () {
-                console.log("f*ck");
-            }
-        );
-
-        $scope.submit = function(form) {
-            console.log($scope.form);
-            $scope.form.$save();
+        $rootScope.is_past_event = function (event) {
+            var today = new Date();
+            var date = new Date(event.datetime);
+            today.setHours(0);
+            date.setHours(0);
+            today.setSeconds(0);
+            date.setSeconds(0);
+            today.setMilliseconds(0);
+            date.setMinutes(0);
+            today.setMinutes(0);
+            date.setMilliseconds(0);
+            console.log(event, date >= today);
+            return date>=today?"past_event":"";
         };
-    }]);
-
-
-eventManagerApp.controller("LoginController",
-    function ($scope, $rootScope, AUTH_EVENTS, AuthService) {
-
-        $scope.credentials = {
-            email: '',
-            password: ''
-        };
-
-        // $scope.clear();
-
-        $scope.login = function (credentials) {
-            AuthService.login(credentials).then(function (user) {
-                // $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                // $scope.setCurrentUser(user);
-                console.log(user);
-            });
-            // $scope.message = AuthService.login($scope.form);
-            // console.log(AuthService.logged());
-            // $scope.form.password = null;
-        }
-
-        $scope.register = function (credentials) {
-            AuthService.register(credentials).then(function (user) {
-                console.log("good:" + user);
-            }, function () {
-                console.log("bad");
-            })
-        }
-        // $scope.register = function () {
-        //     $scope.message = AuthService.register($scope.form);
-        //     console.log(AuthService.logged());
-        //     $scope.form.password = null;
-        // }
-
-        // $scope.logout = function () {
-        //     AuthService.logout();
-        // }
-
-        // $scope.logged = function () {
-        //     return AuthService.logged();
-        // }
     });
 
-// eventManagerApp.controller('ApplicationController', function ($scope,
-//                                                USER_ROLES,
-//                                                AuthService) {
-//   $scope.currentUser = null;
-//   $scope.userRoles = USER_ROLES;
-//   $scope.isAuthorized = AuthService.isAuthorized;
- 
-//   $scope.setCurrentUser = function (user) {
-//     $scope.currentUser = user;
-//   };
-// });
-
-// eventManagerApp.service('Session', function () {
-//     this.create = function (sessionID) {
-//         this.sessionID = sessionID;
-//     }
-//   // this.create = function (sessionId, userId, userRole) {
-//   //   this.id = sessionId;
-//   //   this.userId = userId;
-//   //   this.userRole = userRole;
-//   // };
-//   this.destroy = function () {
-//     this.sessionID = null;
-//     // this.id = null;
-//     // this.userId = null;
-//     // this.userRole = null;
-//   };
-// });
+eventManagerApp.controller("Wow", function($scope, $http) {
+        $scope.form = {
+            file: null,
+            date: null
+        };
+        $scope.message = "wow";
+        $scope.send = function () {
+            console.log($scope.form);
+            $scope.message = "пжжжжжж....";
+            $http.post("/api/antoshka_zalivaet_fotki", $scope.form).then(
+                function () {
+                    $scope.message = "Supper good";
+                }, function () {
+                    $scope.message = "It's a big problem";
+                });
+        }
+    }); 

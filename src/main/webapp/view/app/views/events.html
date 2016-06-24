@@ -1,1 +1,26 @@
-<div>{{ wow }}</div>
+<div>
+	<div ng-show="show_events">
+		<h1>Список мероприятий</h1>
+			<div class="events" ng-repeat="event in events" ng-class="is_past_event(event)">
+				<a ui-sref="event({ id: event.id })">
+					<span>{{ event.title }}</span>
+				</a>
+			</div>
+		<button ng-click="toggle_show_events()">Создать мероприятие</button>
+	</div>
+	<div ng-hide="show_events">
+		<h1>Создание мероприятия</h1>
+		<form  ng-submit="createEvent()">
+			<label>Название</label>
+			<input ng-model="event.title">
+			<label>Дата и время (поле datetime)</label>
+			<input type="datetime-local" ng-model="event.datetime">
+			<label>Описание</label>
+			<textarea ng-model="event.description"></textarea>
+			<div>
+				<button>Создать</button>
+				<button type="button" ng-click="toggle_show_events()">Отмена</button>
+			</div>
+		</form>
+	</div>
+</div>

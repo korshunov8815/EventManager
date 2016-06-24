@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by anna on 06.04.15.
@@ -49,8 +51,8 @@ public class EventServiceImpl implements EventService{
 
     @Transactional
     @Override
-    public Event editEvent(int id, String title, String description) {
-        return dao.editEvent(id, title, description);
+    public Event editEvent(int id, String title, String description, Date date) {
+        return dao.editEvent(id, title, description,date);
     }
 
     @Transactional
@@ -58,4 +60,15 @@ public class EventServiceImpl implements EventService{
     public Event deleteEvent(int id, ParticipantService ps) {
        return dao.deleteEvent(id, ps);
     }
+
+    @Transactional
+    @Override
+    public void deleteParticipantFromEvent (int eId, int pId, ParticipantService ps,TaskService ts) {dao.deleteParticipantFromEvent(eId, pId, ps,ts);}
+
+    @Transactional
+    @Override
+    public Set<Task> eventTaskOwner(int eId, int pId){return dao.eventTaskOwner(eId, pId);}
+
+
+
 }

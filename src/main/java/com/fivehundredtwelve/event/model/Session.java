@@ -1,4 +1,4 @@
-git package com.fivehundredtwelve.event.model;
+package com.fivehundredtwelve.event.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
@@ -46,5 +46,26 @@ public class Session {
                 "\"sessionID\":\"" + sessionID + '\"' +
                 '}';
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Session session = (Session) o;
+
+        if (sessionID != null ? !sessionID.equals(session.sessionID) : session.sessionID != null) return false;
+        if (sessionOwner != null ? !sessionOwner.equals(session.sessionOwner) : session.sessionOwner != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sessionID != null ? sessionID.hashCode() : 0;
+        result = 31 * result + (sessionOwner != null ? sessionOwner.hashCode() : 0);
+        return result;
     }
 }

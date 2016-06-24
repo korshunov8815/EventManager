@@ -3,6 +3,7 @@ package com.fivehundredtwelve.event.dao;
 import com.fivehundredtwelve.event.model.Participant;
 import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
+import com.fivehundredtwelve.event.service.TaskService;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -68,4 +69,45 @@ public class ParticipantDaoImpl implements ParticipantDao {
         participant.getSessions().add(session);
         session.setSessionOwner(participant);
     }
+
+    @Override
+    public void editParticipantName (int id, String name){
+        Participant p = em.find(Participant.class, id);
+        p.setName(name);
+        em.flush();
+    }
+
+    @Override
+    public Participant getParticipantByregId(String regId) {
+        Query q1 = em.createQuery("SELECT p FROM Participant p WHERE p.regId LIKE :regId").setParameter("regId", regId);
+        Participant participant = (Participant)q1.getSingleResult();
+        return participant;
+    }
+
+    @Override
+    public void activate(int id){
+        Participant p = em.find(Participant.class, id);
+        p.setIsActive(true);
+        em.flush();
+    }
+
+    @Override
+    public void deleteSession(int pId, String sId) {
+        Query q1 = em.createQuery("SELECT s FROM Session s WHERE s.sessionID LIKE :sId").setParameter("sId", sId);
+        Session session = (Session)q1.getSingleResult();
+        Participant participant = em.find(Participant.class, pId);
+        participant.getSessions().remove(session);
+        em.flush();
+        em.remove(session);
+        em.flush();
+    }
+
+    @Override
+    public void freeTask(int pId, int tId, TaskService ts) {
+        Participant participant = em.find(Participant.class, pId);
+        Task task = ts.getTaskById(tId);
+        participant.getTasks().remove(task);
+        em.flush();
+    }
+
 }

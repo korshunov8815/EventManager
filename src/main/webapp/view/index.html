@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/foundation.css"/>
     <link rel="stylesheet" type="text/css" href="/app/styles/main.css">
 
+    <script src="js/jquery-2.1.4.js"></script>
     <script src="/js/angular.js"></script>
     <script src="/js/angular-ui-router.js"></script>
     <script src="/js/resource.js"></script>
@@ -15,101 +16,78 @@
     <script src="/app/scripts/app.js"></script>
 
     <script src="/app/scripts/resources/Event.js"></script>
+    <script src="/app/scripts/resources/Profile.js"></script>
+    <script src="/app/scripts/resources/Task.js"></script>
+    <script src="/app/scripts/resources/Participant.js"></script>
     
     <script src="/app/scripts/services/AuthService.js"></script>
     
     <script src="/app/scripts/controllers/EventController.js"></script>
+    <script src="/app/scripts/controllers/EventsController.js"></script>
+    <script src="/app/scripts/controllers/IndexController.js"></script>
+    <script src="/app/scripts/controllers/AuthController.js"></script>
+    <script src="/app/scripts/controllers/ParticipantController.js"></script>
 </head>
-<body ng-controller="ApplicationController">
-<nav class="top-bar" data-topbar role="navigation">
-    <ul class="title-area">
-        <li class="name">
-            <h1><a href="#">Серые праздники</a></h1>
-        </li>
-    </ul>
 
-    <section class="top-bar-section">
-        <ul class="right">
-            <li><a href="#">Участники</a></li>
-            <li><a href="#">Трекер задач</a></li>
-            <li><a class="add-button" href="#" data-reveal-id="myModal"><span>+</span></a></li>
+<body ng-controller="AppCtrl">
+    <nav class="top-bar" data-topbar role="navigation">
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="#">Серые праздники</a></h1>
+            </li>
         </ul>
-    </section>
-</nav>
 
-<div class="row">
-    <div class="large-8 small-8 columns">
-        <div class="panel">
-            <h2>Серые праздники</h2>
+        <section class="top-bar-section">
+            <ul class="right">
+                <li><a ui-sref="events">События</a></li>
+            </ul>
+        </section>
+    </nav>
 
-            <h3>Здесь организуется настоящее веселье</h3>
-
-            <h4>Но для начала необходимо войти</h4>
-            <a ui-sref="events">wow</a>
-
-            <div ui-view></div>
+    <div class="row">
+        <div class="large-8 small-8 columns">
+            <div class="panel">
+                <div ui-view></div>
+            </div>
         </div>
-    </div>
-    <div class="large-4 small-4 columns">
-        <div class="panel chat" ng-controller="LoginController">
-            <div ng-hide="logged()">
-                <div>
-                    <h3>Login/Register</h3>
-                </div>
-                <form>
-                    <input type="email" ng-model="credentials.email" placeholder="email">
-                    <span ng-hide="credentials.email">Нормальный адрес укажи</span>
-                    <input type="password" ng-model="credentials.password" placeholder="password">
-                    <span ng-hide="credentials.password">и пароль</span>
+        <div class="large-4 small-4 columns">
+            <div class="panel chat" ng-controller="AuthController">
+                <div ng-hide="AuthService.user" class="profile">
                     <div>
-                    <button ng-click="login(credentials)">Login</button>
-                    <button ng-click="register(credentials)">Register</button>
-                    <div>{{ message }}</div>
+                        <h3>Login/Register</h3>
                     </div>
-                </form>
-            </div>
-            <div ng-show="logged()">
-                <div>
-                    Profile
+                    <form>
+                        <input type="email" ng-model="credentials.email" placeholder="email">
+                        <span ng-hide="credentials.email">Нормальный адрес укажи</span>
+                        <input type="password" ng-model="credentials.password" placeholder="password">
+                        <span ng-hide="credentials.password">и пароль</span>
+                        <div>
+                            <div>{{ message }}</div>
+                            <button ng-click="login(credentials)">Login</button>
+                            <button ng-click="register(credentials)">Register</button>
+                        </div>
+                    </form>
                 </div>
-                <button ng-click="logout()">Logout</button>
+                <div ng-show="AuthService.user" class="profile">
+                    <h2>
+                        <img ng-src="{{ avatar }}">
+                        <a ui-sref="participant({ id: AuthService.user.id })"><span>{{ AuthService.user.name }}</span></a>
+                    </h2>
+                    <div>
+                        <div>email: {{ AuthService.user.email }}</div>
+                    </div>
+                    <button ng-click="logout()">Logout</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div id="myModal" class="reveal-modal" data-reveal>
-    <h2>Пригласить участников</h2>
-
-    <p class="lead">Укажите e-mail адрес участников, которых хотите пригласить</p>
-
-    <form>
-        <div class="row collapse">
-            <div class="small-1 columns" style="margin-right: 0">
-                <img src="http://gravatar.com/avatar/?s=37&d=mm" alt=""/>
-            </div>
-            <div class="small-10 columns">
-                <input type="email" name="email" placeholder="e-mail"/>
-            </div>
-            <div class="small-1 columns">
-                <div class="placeholder"></div>
-                <span class="postfix add-button">
-                    +
-                </span>
-            </div>
-        </div>
-    </form>
-    <div class="add_participant"><a href="#"><span>+</span> Добавить участника</a></div>
-    <!--<div style="display: block;" class="icon success animate"> <span class="line tip animateSuccessTip"></span> <span class="line long animateSuccessLong"></span> <div class="placeholder"></div> <div class="fix"></div> </div>-->
-    <a class="close-reveal-modal">&#215;</a>
-</div>
-<script src="js/vendor/jquery.js"></script>
-<script src="js/vendor/modernizr.js"></script>
-<script src="js/foundation.min.js"></script>
-<script src="js/md5.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-<!-- Наши скрипты -->
-<script>
-    $(document).foundation();
-</script>
+    
+    <script src="js/vendor/modernizr.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script src="js/md5.js"></script>
+    <!-- Наши скрипты -->
+    <script>
+        $(document).foundation();
+    </script>
 </body>
 </html>

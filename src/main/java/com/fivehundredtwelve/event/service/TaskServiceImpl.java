@@ -29,4 +29,27 @@ public class TaskServiceImpl implements TaskService {
         return dao.getAllTasks();
     }
 
+    @Override
+    public Task getTaskById(int id) { return dao.getTaskById(id);}
+
+    @Transactional
+    @Override
+    public void deleteTask(int id, ParticipantService ps, EventService es) { dao.deleteTask(id,ps,es);};
+
+    @Transactional
+    @Override
+    public void makeDone(int id) { dao.makeDone(id);}
+
+    @Transactional
+    @Override
+    public Task editTask(int tId, String content, int pId) {return dao.editTask(tId, content,pId);}
+
+    @Transactional
+    @Override
+    public void makeUndone(int id){dao.makeUndone(id);}
+
+    @Transactional
+    @Override
+    public void makeUntook(int id){dao.makeUntook(id);}
+
 }

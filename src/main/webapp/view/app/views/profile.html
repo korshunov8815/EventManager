@@ -1,0 +1,55 @@
+<h1>Профиль</h1>
+
+<div>
+	<div ng-hide="editing.event">
+		<h1 class="event-title">{{ event.title }}</h1>
+		<div class="event-description">{{ event.description }}</div>
+
+
+		<h3>События</h3>
+		<a href="" ng-repeat="event in events" ui-sref="event({ id: event.id })" class="block">
+				<span>{{ event.title }}</span>
+		</a>
+
+		<h3>Задачи</h3>
+		<div ng-repeat="task in tasks" class="block">
+			<span ng-class="strike_class(task)">{{ task.content }}</span>
+			<span class="pull-right">
+				<a href="" ng-click="confirmTask(task)" ng-hide="task.isDone">&#10004;</a>
+			</span>
+		</div>
+		<br/>
+
+	</div>
+
+	<div ng-show="editing.event">
+		<h1>Редактирование</h1>
+		<form  ng-submit="saveEvent()">
+			<label>Название</label>
+			<input ng-model="form.title">
+			<label>Описание</label>
+			<textarea ng-model="form.description"></textarea>
+			<div>
+				<button>Сохранить</button>
+				<button type="button" ng-click="cancelEditEvent()">Отмена</button>
+			</div>
+		</form>
+	</div>
+
+	<div ng-show="isParticipant() && !isCreator()">
+		<button type="button" ng-click="takePart()">Покунить этот СССР</button>
+	</div>
+
+	<div ng-hide="isParticipant() || !authService.user">
+		<button type="button" ng-click="takePart()">Принять участие</button>
+	</div>
+</div>
+
+<form ng-submit="save_changes()" class="edit-profile">
+	<label>Имя</label>
+	<input ng-model="user.name">
+	<div>
+		<button>Сохранить</button>
+		<button ui-sref="events">Нет</button>
+	</div>
+</form>

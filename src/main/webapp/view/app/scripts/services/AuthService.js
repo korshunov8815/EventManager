@@ -1,79 +1,49 @@
 "use strict";
 
 eventManagerApp.factory("AuthService",
-    function($http) {
+    function($rootScope, $http, $state, AUTH_EVENTS) {
         var authService = {};
+
+        authService.user = null;
 
         authService.login = function (creadentials) {
             console.log(creadentials);
             return $http
                 .post("/api/auth", creadentials)
                 .then(function (res) {
-                    return res.data.sessionID;
+                    authService.user = res.data;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                    $state.go("events");
                 });
         };
 
-        authService.isAuthenticated = function () {
+        authService.getUser = function () {
+            return $http
+                .get("/api/auth")
+                .then(function (res) {
+                    authService.user = res.data;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                }, function (res) {
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                })
+        }
+
+        authService.isLogged = function () {
+            return !!authService.user;
         };
 
-        authService.isAuthorized = function (authorizedRoles) {
-            if (!angular.isArray(authorizedRoles)) {
-                authorizedRoles = [authorizedRoles];
-            }
-
-            // return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+        authService.logout = function () {
+            return $http
+                .delete("/api/auth")
+                .error(function () {
+                    authService.user = null;
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+                })
         };
-
-
-
-
-        // var logged = false;
-
-        // var login = function (credentials) {
-        //     var message = 'вообще, это сообщение должно сигнализировать о том, что логин или пароль неверный. (если будет написано на этом месте Errror) можешь глянуть в консоль';
-        //     $http.post("/api/auth", credentials).then(
-        //             function (data, status, headers, config) {
-        //                 logged = true;
-        //                 console.log("logged=" + logged);
-        //                 message = "Должно быть все ок. Вы не должны этого видеть";
-
-        //             },
-        //             function (data, status, headers, config) {
-        //                 console.log("Error logged=" + logged);
-        //                 message = "Errror";
-        //             });
-        //     return message;
-        // };
-
-        // var logout = function () {
-        //     logged = false;
-        //     console.log("logout");
-        // };
 
         authService.register = function (credentials) {
-            // var message = "register";
-            
-            return $http.post("/api/registration", credentials).then(
-                    function (data, status, headers, config) {
-                        console.log(data);
-                        // message = "";
-                    },
-                    function (data, status, headers, config) {
-                        // message = "Some trouble, я чувствую. Возможно, пользователь с таким мылом уже есть";
-                    });
-
-            // return message;
+            return $http.post("/api/registration", credentials);
         };
 
-        // var isLogged = function () {
-        //     return logged;
-        // };
-
-        // return {
-        //     login: login,
-        //     logout: logout,
-        //     register: register,
-        //     logged: isLogged
-        // }
         return authService;
     });

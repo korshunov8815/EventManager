@@ -1,26 +1,25 @@
 package com.fivehundredtwelve.event.controller;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fivehundredtwelve.event.auth.AuthorizationUtils;
 import com.fivehundredtwelve.event.model.Event;
 import com.fivehundredtwelve.event.model.Participant;
-import com.fivehundredtwelve.event.model.Session;
 import com.fivehundredtwelve.event.model.Task;
 import com.fivehundredtwelve.event.service.EventService;
 import com.fivehundredtwelve.event.service.ParticipantService;
 import com.fivehundredtwelve.event.service.SessionService;
 import com.fivehundredtwelve.event.service.TaskService;
+import com.sun.org.apache.xml.internal.dtm.ref.DTMDefaultBaseIterators;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ import java.util.Set;
  * @author anna
  */
 @RestController
-@RequestMapping(value = "/events", produces = "text/plain;charset=UTF-8")
+@RequestMapping(value = "/api/events", produces = "application/json;charset=UTF-8")
 public class EventController {
 
     private static final Logger logger = Logger.getLogger(EventController.class);
@@ -38,40 +37,40 @@ public class EventController {
     private static TaskService tService = (TaskService)context.getBean("taskService");
     private static SessionService sService = (SessionService)context.getBean("sessionService");
 
-    @RequestMapping(method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody
-    List<Event> getAllEvent() {
-        logger.info("/events");
-        return eService.getAllEvents();
+
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<List<Event>> getAllEvent() {
+        try {
+            return new ResponseEntity<List<Event>>(eService.getAllEvents(), HttpStatus.OK);
+        } catch (final Exception e) {
+            return new ResponseEntity<List<Event>>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     //Влад, тут мы боремся за утят
-    @RequestMapping(method = RequestMethod.POST, produces={"application/json;charset=UTF-8"})
-    public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, @RequestBody Event event) {
-        boolean isSuccessful=false;
-        Event newEvent = new Event();
-        Cookie[] cookie = request.getCookies();
-        String currentSessionId="";
-        Participant participant = new Participant();
-        for (Cookie c : cookie) {
-            if (c.getName().equalsIgnoreCase("sessionID")) currentSessionId = c.getValue();
-        }
-        if (sService.ifSessionExist(currentSessionId)) {
-            participant = sService.getParticipantBySession(currentSessionId);
-        }
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<Event> createEvent(HttpServletRequest request, HttpServletResponse response, @RequestBody Event event) {
         try {
-                if (pService.getParticipantById(participant.getId())!=null) {
-                newEvent = eService.saveEvent(new Event(event.getTitle(),event.getDescription(),participant.getId()));
-                isSuccessful=true;
-                }
-
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            event.setEventCreator(participant);
+            Date date = new Date();
+            if (event.getDatetime().compareTo(date)<0) {
+                response.sendError(405);
+                throw new Exception("dude that's too late go get a sleep");
+            }
+            eService.saveEvent(event);
+            eService.addParticipantToEvent(participant,event);
+            return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
-        catch (NumberFormatException e){}
-        if (isSuccessful) return new ResponseEntity<Event>(newEvent,HttpStatus.OK);
-        else return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        catch (final Exception e) {
+            return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET, produces={"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<Event> getEventById(@PathVariable final String eventId) {
         boolean isSuccessful = false;
         Event event = new Event();
@@ -86,54 +85,163 @@ public class EventController {
     }
 
 
-    //not done yet
+
     @RequestMapping(value = "/{eventId}", method = RequestMethod.POST)
-    public String editEvent(@PathVariable final String eventId, @RequestParam(value = "title") final String t, @RequestParam(value = "description") final String d, @RequestParam(value = "id") final String partId) {
-        String res = "no such participant";
+    public @ResponseBody ResponseEntity<Event> editEvent(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId, @RequestBody Event event){
         try {
-            int eId = Integer.parseInt(eventId);
-            int pId = Integer.parseInt(partId);
-            Event event = eService.getEventById(eId);
-            Participant participant = pService.getParticipantById(pId);
-            if (participant!=null) {
-                if (event != null) {
-                    if (event.getEventCreatorId() == pId) {
-                        res = eService.editEvent(eId, t, d).toString();
-                    } else {
-                        res = "no rights to edit event";
-                    }
-                } else {
-                    res = "event not found";
-                }
+            int eId = event.getId();
+            Participant owner = event.getEventCreator();
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
             }
+            Date date = new Date();
+            if (event.getDatetime().compareTo(date)<0) {
+                response.sendError(405);
+                throw new Exception("dude that's too late go get a sleep");
+            }
+            if (owner.getId() == participant.getId()) {
+                eService.editEvent(event.getId(), event.getTitle(), event.getDescription(), event.getDatetime());
+            }
+            return new ResponseEntity<Event>(event, HttpStatus.OK);
+
         }
-        catch (NumberFormatException e){}
-        return res;
+        catch (final Exception e) {
+            return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 
-    //not done yet
     @RequestMapping(value = "/{eventId}", method = RequestMethod.DELETE)
-    public String deleteEvent(@PathVariable final String eventId, @RequestParam(value = "id") final String partId) {
-        String res = "no such participant";
-        try {
+    public @ResponseBody ResponseEntity<Event> deleteEvent(HttpServletRequest request, @PathVariable final String eventId) {
+       try {
             int eId = Integer.parseInt(eventId);
-            int pId = Integer.parseInt(partId);
             Event event = eService.getEventById(eId);
-            Participant participant = pService.getParticipantById(pId);
-            if (participant!=null) {
-                if (event != null) {
-                    if (event.getEventCreatorId() == pId) {
-                        res = eService.deleteEvent(eId, pService).toString();
-                    } else {
-                        res = "no rights to delete event";
-                    }
-                } else {
-                    res = "event not found";
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                throw new Exception("no session defined");
+            }
+            if (event != null) {
+                if (event.getEventCreator().getId() == participant.getId()) {
+                    eService.deleteEvent(eId, pService);
                 }
             }
+            return new ResponseEntity<Event>(event, HttpStatus.OK);
         }
-        catch (NumberFormatException e){}
-        return res;
+        catch (final Exception e) {
+            return new ResponseEntity<Event>(HttpStatus.BAD_REQUEST);
+        }
+
     }
+
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.PATCH)
+    public @ResponseBody ResponseEntity takePart(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                response.sendError(401);
+                throw new Exception("no session defined");
+            }
+            if (event != null) {
+                eService.addParticipantToEvent(participant,event);
+            }
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+
+
+    @RequestMapping(value = "/{eventId}/participants", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<List<Participant>> showEventParticipants(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+       try {
+           int eId = Integer.parseInt(eventId);
+           Event event = eService.getEventById(eId);
+           if (event == null) {
+               throw new Exception("event not found");
+           }
+           List<Participant> list = new ArrayList<Participant>();
+           list.addAll(event.getParticipants());
+           return new ResponseEntity<List<Participant>>(list, HttpStatus.OK);
+       }
+       catch (final Exception e) {
+            return new ResponseEntity<List<Participant>>(HttpStatus.BAD_REQUEST);
+       }
+    }
+
+    @RequestMapping(value = "/{eventId}/tasks", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<List<Task>> showEventTasks(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            if (event == null) {
+                throw new Exception("event not found");
+            }
+            List<Task> list = new ArrayList<Task>();
+            list.addAll(event.getTasks());
+            return new ResponseEntity<List<Task>>(list, HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity<List<Task>>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/{eventId}/participants/{participantId}", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity deleteParticipant(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId, @PathVariable final String participantId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            int pId = Integer.parseInt(participantId);
+            Participant participant = pService.getParticipantById(pId);
+            Participant owner = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                response.sendError(401);
+                throw new Exception("no session defined");
+            }
+            if (event == null) {
+                throw new Exception("event not found");
+            }
+            if (owner.getId()!=event.getEventCreator().getId()) {
+                response.sendError(403);
+                throw new Exception("you have no rights");
+            }
+            eService.deleteParticipantFromEvent(eId, pId, pService,tService);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/{eventId}/leave", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity leaveEvent(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId) {
+        try {
+            int eId = Integer.parseInt(eventId);
+            Event event = eService.getEventById(eId);
+            Participant participant = AuthorizationUtils.authorize(request, sService);
+            if (participant == null) {
+                response.sendError(401);
+                throw new Exception("no session defined");
+            }
+            if (event == null) {
+                throw new Exception("event not found");
+            }
+            eService.deleteParticipantFromEvent(eId,participant.getId(),pService, tService);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (final Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
+
 }
